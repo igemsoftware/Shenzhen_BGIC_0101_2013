@@ -18,15 +18,14 @@ return declare( dijitDialog,
         var that = this;
         if( this.containerNode && ! this.actionBar ) {
             this.actionBar = dojo.create( 'div', { className: 'infoDialogActionBar dijitDialogPaneActionBar' });
-
             this._fillActionBar( this.actionBar );
             this.containerNode.appendChild( this.actionBar );
+
         }
     },
 
     _fillActionBar: function( actionBar ) {
     },
-
     show: function( callback ) {
         this._addActionBar();
         this.inherited( arguments );

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+<head>
+		<meta http-equiv="Content-Type" content = "text/html; charset=utf-8"/>
+    <title>dnd_demo</title>
+    <style type="text/css">
+    	@import url("src/dijit/themes/claro/claro.css");
+			@import url("src/dojo/resources/dojo.css");
+			html, body {
+				height: 100%;
+				width: 100%;
+			}
+			#navigator {
+				border: 1px solid black;
+			}
+
+			#workplace, #menu{
+				border: 1px solid black;
+			}
+	
+			.floatGene {
+				float:left;
+			}
+			.floatGene {
+				width:80px;
+				height:28px;
+				line-height:28px;
+				background:red;
+				color:#FFF;
+				margin:5px 10px;
+				font-size:12px;
+				display:block;
+				text-align:center;
+				text-decoration:none;
+				}
+				.floatGene :hover{
+				width:78px;
+				height:26px;
+				line-height:28px;
+				border:1px solid red;
+				color:red;
+				background:#FFF;
+			}
+    </style>
+    <script type="text/javascript" data-dojo-config="async: 1" src="src/dojo/dojo.js"></script>
+    <script type="text/javascript">
+    	require(["dijit/layout/BorderContainer", "dijit/layout/ContentPane", 
+    		"dojo/dom-class", "dojo/dom-attr", "dojo/dom", "dojo/dnd/Source", "dojo/topic", 
+    		"dijit/form/DropDownButton", "dijit/DropDownMenu", 
+    		"dijit/MenuItem", "dijit/PopupMenuItem", "dijit/Menu", "dojo/domReady!"], 
+    			function(BorderContainer, ContentPane, domClass, domAttr, dom, 
+    				Source, topic, DropDownButton, DropDownMenu, MenuItem, PopupMenuItem, Menu) {
+
+    				function _makeMenu() {
+    					var	menu = new DropDownMenu({ style: "display: none"});
+    					var subMenu = new Menu();
+    					subMenu.addChild(new MenuItem( {
+    						label: "Glycolysis",
+    						onClick: function() {
+    							dojo.xhrGet({
+    								url: "pathway.php",
+    								handleAs: "json",
+    								load: function(msg) {
+    									//this.catalog.clearItems();
+    									console.log(msg);
+    									window.catalog.selectAll();
+    									window.catalog.deleteSelectedNodes();
+    									for (var geneid in msg) {
+    										window.catalog.insertNodes(false, [{data: msg[geneid], type: ["gene"]}]);
+    									}
+    									window.catalog.forInItems(function(item, id, map){
+								        domClass.add(id, item.type[0]);
+									    });
+    									//this.catalog.insertNodes(false, {})})
+    								}
+    							});
+    							return true;
+    						}
+    					}))
+    					var popMenu = new PopupMenuItem({
+    						label: "Sce",
+    						popup: subMenu
+    					});
+    					menu.addChild(popMenu);
+
+    					var button = new DropDownButton({
+    						label: "Select Path way",
+    						name: "dropdown",
+    						dropDown: menu,
+    						id: "dropdownMenu"
+    					})
+    					dom.byId("dropMenuContainer").appendChild(button.domNode);
+    				}
+
+			      var appContainer = new BorderContainer({
+			        style: "height: 100%; width: 100%;"
+				    });
+
+
+			       var menu =new ContentPane({
+			       		id: "menu",
+			       		region: "top",
+			       		style: "height: 2em",
+			       		content: dojo.create("div", {id: "dropMenuContainer"}),
+			       		splitter: true
+			       });
+
+
+			       appContainer.addChild(menu);
+
+				    // create a ContentPane as the left pane in the BorderContainer
+				    var navigator = new ContentPane({
+				    		id: "navigator",
+				        region: "left",
+				        style: "width: 20%",
+				        splitter: true, 
+				    });
+				    navigator.setContent(dojo.create("ol", {id: "genelistNode"}));
+				    appContainer.addChild(navigator);
+
+				    // create a ContentPane as the center pane in the BorderContainer
+				    var workplace = new ContentPane({
+				    		id: "workplace",
+				        region: "center",
+				        class: "floatWorkplace"
+				    });
+				    appContainer.addChild(workplace);
+				 
+				    // put the top level widget into the document, and then call startup()
+				    appContainer.placeAt(document.body);
+				    appContainer.startup();
+
+				     var catalog = this.catalog = new Source("genelistNode",
+					        { 
+					        	accept: [ "gene"], 
+					        	creator: function( item, hint ) {
+					        		var div = dojo.create("li", {innerHTML: item.data||item});
+					        		console.log(div+ item.data||item);
+					        		return {node: div, data: item, type: ['gene']};
+					        	} 
+					      	});
+					    catalog.insertNodes(false, [
+					        { data: "Wrist watch",        type: [ "gene" ] },
+					        { data: "Life jacket",        type: [ "gene" ] },
+					        { data: "Toy bulldozer",      type: [ "gene" ] },
+					        { data: "Vintage microphone", type: [ "gene" ] },
+					        { data: "TIE fighter",        type: [ "gene" ] },
+					        { data: "Apples",             type: [ "gene" ] },
+					        { data: "Bananas",            type: [ "gene" ] },
+					        { data: "Tomatoes",           type: [ "gene" ] },
+					        { data: "Bread",              type: [ "gene" ] }
+					    ]);
+					    catalog.forInItems(function(item, id, map){
+					        domClass.add(id, item.type[0]);
+
+					    });
+					 		
+					 		topic.subscribe("/dnd/start", function() {
+					 			console.log("start received: ", arguments);
+					 		})
+					 		topic.subscribe("/dnd/drop", function() {
+					 			cart.forInItems( function(item, id, map) {
+					 					domClass.add(id, "floatGene");
+					 			});
+					 			console.log("drop received: ", arguments);
+					 		})
+
+					 		function floatCreator( item, hint ) {
+					 			var li = dojo.create("li", {innerHTML: item.data==undefined?item:item.data, class: "floatGene"});
+					 			console.log("creator: " + item.data);
+					 			console.log([item])
+					 			return {node: li, data: item.data==undefined ? item:item.data, type: ['gene']};
+					 		}
+
+					    var cart = new Source(workplace.domNode, {
+					    			 									accept: [ "gene" ],
+					    			 									creator: floatCreator});
+				
+				    window.onresize = function() {
+				    	appContainer.layout();
+				    	};
+				    	_makeMenu();
+			    });
+				require([""])
+					
+    </script>
+</head>
+<body class="claro" style="height: 300px; width: 1000px;">
+</body>
+</html>

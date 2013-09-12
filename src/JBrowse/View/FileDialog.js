@@ -76,7 +76,6 @@ return declare( null, {
                                                this.trackDispositionChoice[1].checked ? this.trackDispositionChoice[1].value :
                                                                                         undefined
                          });
-                         this.dialog.hide();
                      })
                    })
             .placeAt( actionBar );
@@ -102,12 +101,14 @@ return declare( null, {
 
         // connect the remote URLs control to the resource list
         dojo.connect( remoteURLsControl, 'onChange', function( urls ) {
+         
             resourceListControl.clearURLs();
             resourceListControl.addURLs( urls );
         });
 
         // connect the resource list to the track list
         dojo.connect( resourceListControl, 'onChange', function( resources ) {
+  
             trackListControl.update( resources );
         });
 
@@ -142,7 +143,8 @@ return declare( null, {
         var dragArea = dom.create('div', { className: 'dragArea' }, container );
 
         var fileBox = new dojox.form.Uploader({
-            multiple: true
+            multiple: true, 
+            url: "uploader.php"
         });
         fileBox.placeAt( dragArea );
 
@@ -161,7 +163,6 @@ return declare( null, {
 
         // little elements used to show pipeline-like connections between the controls
         dom.create( 'div', { className: 'connector', innerHTML: '&nbsp;'}, container );
-
         return { domNode: container, uploader: fileBox };
     },
 

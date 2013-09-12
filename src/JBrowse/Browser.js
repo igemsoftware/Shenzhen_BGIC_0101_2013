@@ -33,10 +33,12 @@ define( [
             'JBrowse/ConfigManager',
             'JBrowse/View/InfoDialog',
             'JBrowse/View/FileDialog',
+            'JBrowse/View/UploadDialog',
             'JBrowse/Model/Location',
             'JBrowse/View/LocationChoiceDialog',
             'JBrowse/View/Dialog/SetHighlight',
             'JBrowse/View/Dialog/QuickHelp',
+            'JBrowse/View/Dialog/Pathway',
             'dijit/focus',
             'lazyload', // for dynamic CSS loading
             'dojo/domReady!'
@@ -74,10 +76,12 @@ define( [
             ConfigManager,
             InfoDialog,
             FileDialog,
+            UploadDialog,
             Location,
             LocationChoiceDialog,
             SetHighlightDialog,
             HelpDialog,
+            PathwayWindow,
             dijitFocus,
             LazyLoad
         ) {
@@ -217,7 +221,7 @@ initPlugins: function() {
     return this._milestoneFunction( 'initPlugins', function( deferred ) {
         this.plugins = {};
         var plugins = this.config.plugins || [];
-
+        console.log(this.config.plugins);
         if( ! plugins ) {
             deferred.resolve({success: true});
             return;
@@ -295,6 +299,8 @@ initPlugins: function() {
 
                                  // instantiate the plugin
                                  this.plugins[ plugin.name ] = new pluginClass( args );
+
+                            
                              }
                          }, this );
                   }));
@@ -539,14 +545,19 @@ initView: function() {
             }
 
             // make the file menu
-            this.addGlobalMenuItem( 'file',
-                                    new dijitMenuItem(
+            this.addGlobalMenuItem( 'file', new dijitMenuItem(
                                         {
-                                            label: 'Open',
+                                            label: 'Add tracks',
                                             iconClass: 'dijitIconFolderOpen',
                                             onClick: dojo.hitch( this, 'openFileDialog' )
                                         })
                                   );
+            this.addGlobalMenuItem( 'file', new dijitMenuItem( 
+                {
+                    label: 'Add chromosome', 
+                    iconClass: 'dijitIconFolderOpen',
+                    onClick: dojo.hitch( this, 'openChromosome' )
+                }));
 
             this.addGlobalMenuItem( 'file', new dijitMenuItem(
                 {
@@ -590,7 +601,18 @@ initView: function() {
 
             this.renderGlobalMenu( 'view', {text: 'View'}, menuBar );
 
-
+/*
+            this.addGlobalMenuItem( 'tools', new dijitMenuItem({
+                label: 'path way selector',
+                iconClass: 'dijitIconFilter',
+                onClick: function() {
+                  new PathwayWindow( 
+                    lang.mixin( thisObj.config.pathway || {}, 
+                                { browser: thisObj } )).show();
+                }
+            }))
+            this.renderGlobalMenu( 'tools', {text: 'Tools'}, menuBar );
+  */
             // make the options menu
             this.renderGlobalMenu( 'options', { text: 'Options', title: 'configure JBrowse' }, menuBar );
         }
@@ -847,6 +869,14 @@ getTrackTypes: function() {
 },
 
 
+openChromosome: function() {
+    new UploadDialog({ browser: this })
+        .show({
+            openCallback: dojo.hitch( this, function( results ) {
+
+            })
+        });
+},
 
 openFileDialog: function() {
     new FileDialog({ browser: this })
@@ -858,6 +888,7 @@ openFileDialog: function() {
                     // tuck away each of the store configurations in
                     // our store configuration, and replace them with
                     // their names.
+                    console.warn(confs);
                     array.forEach( confs, function( conf ) {
                         var storeConf = conf.store;
                         if( storeConf && typeof storeConf == 'object' ) {
@@ -866,7 +897,7 @@ openFileDialog: function() {
                             conf.store = name;
                         }
                     },this);
-
+                    console.warn(confs);
                     // send out a message about how the user wants to create the new tracks
                     this.publish( '/jbrowse/v1/v/tracks/new', confs );
 
@@ -1009,9 +1040,9 @@ reportUsageStats: function() {
     if( this.config.suppressUsageStatistics )
         return;
 
-    var stats = this._calculateClientStats();
-    this._reportGoogleUsageStats( stats );
-    this._reportCustomUsageStats( stats );
+    //var stats = this._calculateClientStats();
+    //this._reportGoogleUsageStats( stats );
+    //this._reportCustomUsageStats( stats );
 },
 
 // phones home to google analytics
