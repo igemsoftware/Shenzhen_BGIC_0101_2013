@@ -131,9 +131,9 @@
       },
       {
          "feature" : [
-            "CDS:predicted",
-            "mRNA:exonerate",
-            "mRNA:predicted"
+            "CDS",
+            "mRNA",
+            "mRNA"
          ],
          "urlTemplate" : "http://www.ncbi.nlm.nih.gov/gquery/?term={name}-{start}-{end}",
          "phase" : 1,

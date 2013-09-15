@@ -39,7 +39,7 @@
       tooltip: null,
       nodes: null,
       links: null,
-
+      hasInstance: null,
 
       constructor: function(args) {
           this.width = window.screen.width*0.8;
@@ -592,10 +592,17 @@
 
       },
 
+      build: function() {
+        if (!this.hasInstance) {
+              this.buildsvg();
+              this._makeMenu();
+              this.hasInstance = true;
+        }
+      },
+
       show: function() {
             var that = this;
-             this.buildsvg();
-             this._makeMenu();
+            this.build();
               //$("body").addClass("user_select_none");
              /*
               window.onresize = function() {
@@ -603,10 +610,12 @@
                 };*/
            //     this._makeMenu();
         this.inherited( arguments );
+        /*
         on(that, "hide", function() {
             d3.select("#svgPane > svg").remove();
             console.log("remove");
         })
+  */
 
 /*
         aspect.after( that, 'hide', dojo.hitch( that, function() {

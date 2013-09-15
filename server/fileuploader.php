@@ -52,7 +52,7 @@ if ($flg == 2) {
 
 
 
-    $out = json_encode( $config );
+    $out = json_encode( $config, JSON_UNESCAPED_SLASHES );
     $fout = fopen("jbrowse_conf.json", "w");
     //error_log("5".($out), 3, 'server/debug.log');
     fwrite($fout, $out );

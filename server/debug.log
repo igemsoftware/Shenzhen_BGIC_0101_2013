@@ -6169,3 +6169,204 @@ Array
         )
 
 )
+Array
+(
+    [uploadedfiles] => Array
+        (
+            [name] => Array
+                (
+                    [0] => neochr.final.fa
+                    [1] => neochr.final.gff
+                )
+
+            [type] => Array
+                (
+                    [0] => application/octet-stream
+                    [1] => application/octet-stream
+                )
+
+            [tmp_name] => Array
+                (
+                    [0] => /tmp/phpo7jDQ2
+                    [1] => /tmp/php4zwErR
+                )
+
+            [error] => Array
+                (
+                    [0] => 0
+                    [1] => 0
+                )
+
+            [size] => Array
+                (
+                    [0] => 136987
+                    [1] => 20026
+                )
+
+        )
+
+)
+2Array
+(
+    [index] => 0
+    [name] => neochr.final.fa
+    [size] => 136987
+    [type] => 
+)
+Array
+(
+    [uploadedfiles] => Array
+        (
+            [name] => Array
+                (
+                    [0] => neochr.final.fa
+                    [1] => neochr.final.gff
+                )
+
+            [type] => Array
+                (
+                    [0] => application/octet-stream
+                    [1] => application/octet-stream
+                )
+
+            [tmp_name] => Array
+                (
+                    [0] => /tmp/php7I7Lq6
+                    [1] => /tmp/php6fQLsX
+                )
+
+            [error] => Array
+                (
+                    [0] => 0
+                    [1] => 0
+                )
+
+            [size] => Array
+                (
+                    [0] => 136987
+                    [1] => 20026
+                )
+
+        )
+
+)
+2Array
+(
+    [msg] => undefined
+)
+4Array
+(
+    [0] => 
+    [1] => working on refseq NeoChr
+    [2] => working on track ExampleFeatures
+    [3] => working on track NameTest
+    [4] => working on track snps
+    [5] => working on track Motifs
+    [6] => working on track malformed_alignments
+    [7] => working on track Genes
+    [8] => working on track ReadingFrame
+    [9] => working on track CDS
+    [10] => working on track Transcript
+    [11] => working on track Clones
+    [12] => working on track EST
+)
+4Array
+(
+    [0] => 
+    [1] => working on refseq NeoChr
+    [2] => working on track ExampleFeatures
+    [3] => working on track NameTest
+    [4] => working on track snps
+    [5] => working on track Motifs
+    [6] => working on track malformed_alignments
+    [7] => working on track Genes
+    [8] => working on track ReadingFrame
+    [9] => working on track CDS
+    [10] => working on track Transcript
+    [11] => working on track Clones
+    [12] => working on track EST
+)
+5{"plugins":[{"location":"plugins\/Genovo","name":"Genovo"}],"datasets":{"volvox":{"url":"?data=sample_data\/json\/volvox","name":"Volvox Example"},"modencode":{"url":"?data=sample_data\/json\/modencode","name":"MODEncode Example"},"yeast":{"url":"?data=sample_data\/json\/yeast","name":"Yeast Example"},"neochr":{"url":"?data=data\/neochr\/","name":"neochr"}}}
+5{"plugins":[{"location":"plugins\/Genovo","name":"Genovo"}],"datasets":{"volvox":{"url":"?data=sample_data\/json\/volvox","name":"Volvox Example"},"modencode":{"url":"?data=sample_data\/json\/modencode","name":"MODEncode Example"},"yeast":{"url":"?data=sample_data\/json\/yeast","name":"Yeast Example"},"neochr":{"url":"?data=data\/neochr\/","name":"neochr"}}}
+5.5  neochr5.5  neochr607Array
+(
+    [plugins] => Array
+        (
+            [0] => Array
+                (
+                    [location] => plugins/Genovo
+                    [name] => Genovo
+                )
+
+        )
+
+    [datasets] => Array
+        (
+            [volvox] => Array
+                (
+                    [url] => ?data=sample_data/json/volvox
+                    [name] => Volvox Example
+                )
+
+            [modencode] => Array
+                (
+                    [url] => ?data=sample_data/json/modencode
+                    [name] => MODEncode Example
+                )
+
+            [yeast] => Array
+                (
+                    [url] => ?data=sample_data/json/yeast
+                    [name] => Yeast Example
+                )
+
+            [neochr] => Array
+                (
+                    [url] => ?data=data/neochr/
+                    [name] => neochr
+                )
+
+        )
+
+)
+607Array
+(
+    [plugins] => Array
+        (
+            [0] => Array
+                (
+                    [location] => plugins/Genovo
+                    [name] => Genovo
+                )
+
+        )
+
+    [datasets] => Array
+        (
+            [volvox] => Array
+                (
+                    [url] => ?data=sample_data/json/volvox
+                    [name] => Volvox Example
+                )
+
+            [modencode] => Array
+                (
+                    [url] => ?data=sample_data/json/modencode
+                    [name] => MODEncode Example
+                )
+
+            [yeast] => Array
+                (
+                    [url] => ?data=sample_data/json/yeast
+                    [name] => Yeast Example
+                )
+
+            [neochr] => Array
+                (
+                    [url] => ?data=data/neochr/
+                    [name] => neochr
+                )
+
+        )
+
+)

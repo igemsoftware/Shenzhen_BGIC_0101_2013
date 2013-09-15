@@ -7,7 +7,13 @@
         $pathway = $_REQUEST['pathway'];
     
     
-        exec("Plugin/01.GrapGene.pl --species $species --pathway $pathway --pathdir pathway 2>&1", $result, $code);
+        exec("Plugin/01.GrapGene.pl --species $species --pathway $pathway --pathdir pathway 2>&1",
+        			$result, $code);
         echo json_encode($result);
+    }
+    if (isset($_REQUEST['GetPrice']) && isset($_REQUEST['enzyme'])) {
+    	$enzyme = $_REQUEST['enzyme'];
+  	exec("perl GetPrice/getPrice.pl -E $enzyme 2>&1", $result, $code);
+    	echo json_encode($result);
     }
 ?>
