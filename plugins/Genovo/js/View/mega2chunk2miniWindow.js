@@ -1,0 +1,144 @@
+  define( [
+              'dojo/_base/declare',
+              'JBrowse/View/InfoDialog',
+              "dijit/layout/BorderContainer", 
+              "dijit/layout/ContentPane",
+              "dijit/form/DropDownButton", 
+              'dijit/form/Button',
+              "dijit/DropDownMenu", 
+              "dijit/MenuItem", 
+              "dijit/PopupMenuItem", 
+              "dijit/Menu",
+              "dojo/aspect",
+              'dojo/on',
+              'dojo/dom',
+              'dijit/form/FilteringSelect',
+              'dijit/form/NumberTextBox',
+              'dojox/validate',
+              './jquery-1.7.2'
+          ],
+          function(
+              declare,
+              InfoDialog,
+              BorderContainer,
+              ContentPane,
+              DropDownButton, 
+              Button,
+              DropDownMenu, 
+              MenuItem, 
+              PopupMenuItem, 
+              Menu,
+              aspect,
+              on,
+              dom
+          ) {
+  return declare( InfoDialog, {
+
+      title: "Segmention",
+     // width: 1000,
+     // height: 300,
+
+      constructor: function(args) {
+    //      this.width = window.screen.width*0.8;
+    //      this.height = window.screen.height*0.64;
+          this.browser = args.browser;
+
+
+          this.defaultContent = this._makeDefaultContent();
+
+          if( ! args.content && ! args.href ) {
+              // make a div containing our help text
+              this.content = this.defaultContent;
+          }
+
+      },
+
+      _fillActionBar: function( actionBar ) {
+            var that = this;
+            new Button({
+                className: 'OK',
+                label: 'OK',
+                onClick: function() {
+                    dojo.xhrGet({
+                      url: "server/REST/index.php/Segmentation/mega2chunk2mini",
+                      content: {
+                        baseUrl: that.browser.config.baseUrl
+                      },
+                      load: function( d ) {
+                        console.log(d);
+                      }
+                    });
+                    that.hide();
+                },
+                focus: false
+            })
+            .placeAt( actionBar);
+            new Button({
+                label: 'Cancel',
+                onClick: dojo.hitch(this, 'hide'),
+                focus: false
+            }).placeAt( actionBar );
+      },
+
+      show: function() {
+          var that = this;
+        //  dijit.byId("")
+        	this.inherited( arguments );
+        	on(that, "hide", function() {
+          //  this.priceGrid.destroyRecursive(true);
+        	})
+        	
+      },
+
+      _makeDefaultContent: function() {
+      	var that = this;
+        var content = '<table cellpadding="0" cellspacing="2">'
+                    +     ' <tr><td valign="top"><strong>restriction enzyme sites list: </strong></td><td>'  
+                    +     ' <select name="re1" id="re1" dojoType="dijit.form.FilteringSelect">'
+                    +     '     <option value="Standard_and_IIB">Standard_and_IIB</option>'
+                    +     '     <option value="Standard_and_IIA">Standard_and_IIA</option>'
+                    +     '     <option value="Standard_and_IIP">Standard_and_IIP</option>'
+                    +     ' </select>'
+                    +     ' <tr><td valign="top"><strong>2k to 10k assembly strategy : </strong></td><td>'
+                    +     ' <select name="a2" id="a2" dojoType="dijit.form.FilteringSelect">'
+                    +     '     <option value="Gibson">Gibson</option>'
+                    +     '     <option value="Goldengate">Goldengate</option>'
+                    +     ' </select>'
+                    +     ' <tr><td valign="top"><strong>10k to 30k assembly strategy: </strong></td><td>'
+                    +     ' <select name="a10" id="a10" dojoType="dijit.form.FilteringSelect">'
+                    +     '     <option value="Goldengate">Goldengate</option>'
+                    +     '     <option value="Gibson">Gibson</option>'
+                    +     ' </select>'
+                    +     ' <tr><td valign="top"><strong>The maximum length of minichunks : </strong></td><td><input type="text" required="true" name="ckmax2" id="ckmax2" placeholder="2200" dojoType="dijit.form.NumberTextBox" missingMessage="The maximum length of minichunks(bp)" value=2200/></td></tr>'
+                    +     ' <tr><td valign="top"><strong>The minimum length of minichunks :  </strong></td><td><input type="text" required="true" name="ckmin2" id="ckmin2" placeholder="1800" dojoType="dijit.form.NumberTextBox" missingMessage="The minimum length of minichunks (bp)" value=1800/></td></tr>'
+                    +     ' <tr><td valign="top"><strong>The number of minichunks in a chunk :  </strong></td><td><input type="text" required="true" name="cknum" id="cknum" placeholder="5" dojoType="dijit.form.NumberTextBox" missingMessage="The number of minichunks in a chunk" value=5/></td></tr>'
+                    +     ' <tr><td valign="top"><strong>The first marker for selection alternately: </strong></td><td>'
+                    + '</table>'
+                    + '<table id=a2extern style:display>'
+                    +     ' <tr><td valign="top"><strong>The length of overlap(bp) : </strong></td><td><input type="text" required="true" name="ol2" id="ol2" placeholder="40" dojoType="dijit.form.NumberTextBox" missingMessage="The length of overlap(bp)" value="40"/></td></tr>'
+                    +     ' <tr><td valign="top"><strong>maximum melting temperature(℃) : </strong></td><td><input type="text" required="true" name="tmax2" id="tmax2" placeholder="60" dojoType="dijit.form.NumberTextBox" missingMessage="The maximum melting temperature of the overlap of minichunks" value="60"/></td></tr>'
+                    +     ' <tr><td valign="top"><strong>minimum melting temperature(℃) : </strong></td><td><input type="text" required="true" name="tmin2" id="tmin2" placeholder="56" dojoType="dijit.form.NumberTextBox" missingMessage="The minimum melting temperature of the overlap of minichunks" value="56"/></td></tr>'
+                    +     ' <tr><td valign="top"><strong>minimum free energy : </strong></td><td><input type="text" required="true" name="fe2" id="fe2" placeholder="-3" dojoType="dijit.form.NumberTextBox" missingMessage="The minimum free energy of the overlap of minichunks" value="-3"/></td></tr>'
+                    +     ' <tr><td valign="top"><strong>minimum distance between minichunks(bp) : </strong></td><td><input type="text" required="true" name="lo2" id="lo2" placeholder="40" dojoType="dijit.form.NumberTextBox" missingMessage="The minimum distance between minichunks overlap and loxpsym" value="40"/></td></tr>'
+                    +     ' <tr><td valign="top"><strong>temperature of enzyme(℃) : </strong></td><td><input type="text" required="true" name="et2" id="et2" placeholder="37" dojoType="dijit.form.NumberTextBox" missingMessage="The temperature of enzyme used in minichunks digestion" value="37"/></td></tr>'
+                    +     ' <tr><td valign="top"><strong>maximum unit price of enzyme($/unit) : </strong></td><td><input type="text" required="true" name="ep2" id="ep2" placeholder="0.5" dojoType="dijit.form.NumberTextBox" missingMessage="The maximum unit price of enzyme used in minichunks digestion" value="0.5"/></td></tr>'
+                    +     ' <tr><td valign="top"><strong>The type of exonuclease used for minichunks: </strong></td><td>'
+                    +     ' <select name="ex2" id="ex2" dojoType="dijit.form.FilteringSelect">'
+                    +         '   <option value="T5">T5</option>'
+                    +     ' </select>'
+                    +     ' <tr><td valign="top"><strong>The type of enzyme flanking minichunks: </strong></td><td>'
+                    +     ' <select name="m3" id="m3" dojoType="dijit.form.FilteringSelect">'
+                    +         '   <option value="IIP">IIP</option>'
+                    +     ' </select>'
+                    + '</table>'
+                    + '<table id=a10extern style:display>'
+                    +     ' <tr><td valign="top"><strong>The type of enzyme flanking chunks: </strong></td><td>'
+                    +     ' <select name="en10" id="en10" dojoType="dijit.form.FilteringSelect">'
+                    +         '   <option value="IIB">IIB</option>'
+                    +     ' </select>'
+                    +     ' <tr><td valign="top"><strong>The temperature of enzyme used in chunks digestion : </strong></td><td><input type="text" required="true" name="et10" id="et10" placeholder="37" dojoType="dijit.form.NumberTextBox" missingMessage="The temperature of enzyme used in chunks digestion℃" value=37/></td></tr>'
+                    + '</table>'
+        return content;
+      }
+    });
+  });

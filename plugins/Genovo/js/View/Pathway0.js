@@ -37,7 +37,7 @@
   return declare( InfoDialog, {
 
       title: "Pathway",
-      width: 1000,
+      width: 1400,
       height: 300,
       tooltip: null,
       nodes: null,
@@ -181,11 +181,6 @@
                             }
                         })
 
-                        /*for (var i in that.nodes) {
-                          callmsg += that.nodes[i].geneName + "\t" + 
-                                      (that.nodes[i].type === "circle"? "+" : "-") + "\n";
-                        }*/
-                        //console.log("creating Genome\n" + callmsg);
                       }
                     )
                 });
@@ -210,10 +205,13 @@
                     do {
                       //
                       msg += source.geneName + " " +
-                              (source.type === "circle"? "+" : "-") + "\n";
+                              (source.type === "circle"? "+" : "-");
                       source = nextlist[source.id] == null? 
                                       null : nextlist[source.id].next[0];
                       source = that.findNodeById(source)
+                      if (source != null) {
+                        msg += ","
+                      }
                     } while (source != null)
                    
                   }
@@ -291,7 +289,8 @@
                   source: source, 
                   target: that.findNodeById(nameID[n[u]]),
                   left: false,
-                  right: true
+                  right: true,
+                  postive: true
                 });
               }
             }
@@ -405,8 +404,20 @@
             that.idpool+=10;
             that.nodes = nodes;
             var links = that.links || [
-                {source: nodes[0], target: nodes[1], left: false, right: true },
-                {source: nodes[1], target: nodes[2], left: false, right: true }
+                {
+                  source: nodes[0], 
+                  target: nodes[1],
+                  left: false, 
+                  right: true,
+                  postive: true
+                },
+                {
+                  source: nodes[1], 
+                  target: nodes[2], 
+                  left: false, 
+                  right: true,
+                  postive: true
+                }
             ];
 
             that.links = links;
@@ -454,12 +465,12 @@
                 circle = svg.append('svg:g').selectAll('g');
 
             var splitline = svg.append('svg:line')
-                                .attr("x1", 0)
-                                .attr("x2", width)
-                                .attr("y1", height*0.6)
-                                .attr("y2", height*0.6)
-                                .attr("stroke-width", 14)
-                                .attr("stroke", "black");
+                                .attr("x1", width*0.5)
+                                .attr("x2", width*0.5)
+                                .attr("y1", 0)
+                                .attr("y2", height)
+                                .attr("stroke-width", 10)
+                                .attr("stroke", "blue");
             // mouse event vars
             var selected_node = null,
                 selected_link = null,
@@ -496,11 +507,11 @@
              //   .each(collide(.5)) 
                 .attr('transform', function(d) {
                   if (!d.created) {
-                    return 'translate(' + d.x + ',' + Math.min(d.y, 0.6*height-10) + ')';
+                    return 'translate(' + Math.min(d.x, width*0.5-10) + ',' + d.y + ')';
                   } else {
                     //console.log(d)
-                    var y = Math.min( Math.max(0.6*height+10, d.y), height );
-                    return 'translate(' + d.x + ',' + y + ')';
+                    var x = Math.min( Math.max(width*0.5+10, d.x), width );
+                    return 'translate(' + x + ',' + d.y + ')';
                   }
                 });
 
@@ -516,7 +527,8 @@
               path = path.data(links);
 
               // update existing links
-              path.classed('selected', function(d) { return d === selected_link; })
+              path.classed('selected', function(d) { return d.postive != true;//d === selected_link; 
+                                                                })
                 .style('marker-start', function(d) { return d.left ? 'url(#start-arrow)' : ''; })
                 .style('marker-end', function(d) { return d.right ? 'url(#end-arrow)' : ''; });
 
@@ -524,12 +536,12 @@
               // add new links
               path.enter().append('svg:path')
                 .attr('class', 'link')
-                .classed('selected', function(d) { return d === selected_link; })
+                .classed('selected', function(d) { return d.postive != true;d === selected_link; })
                 .style('marker-start', function(d) { return d.left ? 'url(#start-arrow)' : ''; })
                 .style('marker-end', function(d) { return d.right ? 'url(#end-arrow)' : ''; })
                 .on('mousedown', function(d) {
                   if(d3.event.ctrlKey) return;
-
+                  d.postive = !d.postive;
                   // select link
                   mousedown_link = d;
                   if(mousedown_link === selected_link) selected_link = null;
@@ -589,29 +601,6 @@
                 .on('mousedown', function(d) {
                   if(d3.event.ctrlKey) return;
        
-                //  console.log(d3.event);
-/*
-                  if (d3.event.which == 3) {
-                    if (that.nodemenu == null) {
-                      that._makeDropDownNodeMenu();
-                    }
-                    console.log(this);
-                    var thatnode = this;
-                    popup.open( {
-                        x: thatnode.getBoundingClientRect().left+10,
-                        y: thatnode.getBoundingClientRect().top,
-                        popup: that.nodemenu,
-                        onExecute: function() {
-                          popup.close(that.nodemenu);
-                        },
-                        onCancel: function() {
-                          popup.close(that.nodemenu);
-                        },
-                        
-                      } );
-
-                    return false;
-                  }*/
                   if (d3.event.which != 1) return;
                   if (d3.event.shiftKey ) {
 
@@ -626,11 +615,12 @@
                   if ( mousedown_node === selected_node && !d.created) {
                     
                     //if (have.length < 2) {
-              
+                    var ylen = Math.min(d.y, height-d.y);
+
                     var cnode = { id : that.idpool++, 
                                     reflexive : false,
-                                    x : d.x,
-                                    y : height*0.6+d.y*0.4*Math.random()+10,
+                                    x : width*0.5+d.x*Math.random(),
+                                    y : d.y + (Math.random()-0.5)*ylen,
                                     color : d.color,
                                     geneName: d.geneName,
                                     created : true,
@@ -862,40 +852,7 @@
                 that.tooltip.showTooltip(content,d3.event)
                 
             }
-/*
-            // app starts here
-            function collide(alpha) {
-              var quadtree = d3.geom.quadtree(that.nodes);
-              return function(d) {
-                var r = //d.size + 
-                        20+10,
-                    nx1 = d.x - r,
-                    nx2 = d.x + r,
-                    ny1 = d.y - r,
-                    ny2 = d.y + r;
-                quadtree.visit(function(quad, x1, y1, x2, y2) {
-                  if (quad.point && (quad.point !== d)) {
-                    var x = d.x - quad.point.x,
-                        y = d.y - quad.point.y,
-                        l = Math.sqrt(x * x + y * y),
-                        r = //d.radius + 
-                          20+quad.point.radius + (d.color !== quad.point.color);
-                    if (l < r) {
-                      l = (l - r) / l * alpha;
-                      d.x -= x *= l;
-                      d.y -= y *= l;
-                      quad.point.x += x;
-                      quad.point.y += y;
-                    }
-                  }
-                  return x1 > nx2
-                      || x2 < nx1
-                      || y1 > ny2
-                      || y2 < ny1;
-                });
-              };
-            }
-*/
+
             svg//.on('mousedown', mousedown)
               .on('mousemove', mousemove)
               .on('mouseup', mouseup);
@@ -932,25 +889,7 @@
       show: function() {
             var that = this;
             this.build();
-              //$("body").addClass("user_select_none");
-             /*
-              window.onresize = function() {
-                appContainer.layout();
-                };*/
-           //     this._makeMenu();
-        this.inherited( arguments );
-        /*
-        on(that, "hide", function() {
-            d3.select("#svgPane > svg").remove();
-            console.log("remove");
-        })
-  */
-
-/*
-        aspect.after( that, 'hide', dojo.hitch( that, function() {
-                               setTimeout( function() { d3.select("svgPane").remove(); }, 500 );
-                        }));
-*/  
+            this.inherited( arguments );
       },
 
       _makeDefaultContent: function() {

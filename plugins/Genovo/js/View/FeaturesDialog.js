@@ -92,7 +92,7 @@
                                 var msg = [];
                                 for (var a in todelete) {
                                   if (a && todelete[a]) {
-                                      msg.push(that.backupmsg[a].Name);
+                                      msg.push(that.data.items[a].feature[0]);
                                   }
                                 };
                                 dojo.xhrGet({
@@ -135,11 +135,12 @@
                       that.backupmsg = msg;
           						that.data.items = [];
           						for (var i = 0; i < msg.length; i++) {
-                          that.data.items.push( {
-                            "features": msg[i].Name,
-                            "start": msg[i].Start,
-                            "end":  msg[i].End
-                          });
+                          if (msg[i].Name || msg[i].Load_id)
+                            that.data.items.push( {
+                              "feature": msg[i].Name || msg[i].Load_id,
+                              "start": msg[i].Start,
+                              "end":  msg[i].End
+                            });
                       }
           						var newStore = new ItemFileReadStore({ data: that.data});
           						that.featuresGrid.setStore(newStore);
@@ -157,7 +158,7 @@
          	var layout = [
             { type: "dojox.grid._CheckBoxSelector" },
           [
-         		{'name': 'features Name', 'field': 'features', 'width': "auto"},
+         		{'name': 'feature Name', 'field': 'feature', 'width': "auto"},
          		{'name': 'start', 'field': 'start', 'width': "auto"},
          		{'name': 'end', 'field':'end', 'width': "auto"}
          	]]

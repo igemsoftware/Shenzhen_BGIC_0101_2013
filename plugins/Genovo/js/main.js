@@ -12,6 +12,8 @@ define(
 				'./View/UploadDialog',
 				'./View/FeaturesDialog',
 				'./View/whole2megaWindow',
+				'./View/mega2chunk2miniWindow',
+				'./View/globalREmarkupWindow',
 				'dojo/domReady!'
 			],
 		function(
@@ -26,7 +28,9 @@ define(
 			HistoryWindow,
 			UploadDialog,
 			FeaturesDialog,
-			whole2megaWindow
+			whole2megaWindow,
+			mega2chunk2miniWindow,
+			globalREmarkupWindow
 			) {
 return declare( JBrowsePlugin, 
 {
@@ -189,29 +193,21 @@ return declare( JBrowsePlugin,
 		pSubMenu.addChild(new dijitMenuItem({
 			label: "globalREmarkup",
 			onClick: function() {
-				dojo.xhrGet({
-					url: "server/REST/index.php/Segmentation/globalREmarkup",
-					content: {
-						baseUrl: browser.config.baseUrl
-					},
-					load: function( d ) {
-						console.log(d);
-					}
-				});
+				if (!that.globalREmarkup) {
+					that.globalREmarkup = globalREmarkupWindow({browser:browser});
+				}
+				that.globalREmarkup.show();
+				
 			}
 		}))
 		pSubMenu.addChild(new dijitMenuItem({
 			label: "mega2chunk2mini",
 			onClick: function() {
-				dojo.xhrGet({
-					url: "server/REST/index.php/Segmentation/mega2chunk2mini",
-					content: {
-						baseUrl: browser.config.baseUrl
-					},
-					load: function( d ) {
-						console.log(d);
-					}
-				});
+				if (!that.mega2chunk2mini) {
+					that.mega2chunk2mini = mega2chunk2miniWindow({browser:browser});
+				}
+				that.mega2chunk2mini.show();
+				
 			}
 		}))
 
