@@ -1,6 +1,6 @@
 {
 	"Saccharomyce": {
-		"paramter": "Saccharomyces_cerevisiae", 
+		"paramter": "saccharomyces_cerevisiae_chr", 
 		"pathway": ["Glycolysis"],
 	},
 	"1111": {
@@ -8,7 +8,7 @@
 		"pathway": ["asd"],	
 	},
 	"adasd": {
-		"adsad": "aaa",
+		"paramter": "aaa",
 		"pathway": ["hello"],	
 	}
 }

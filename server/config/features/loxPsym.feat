@@ -1,0 +1,4 @@
+name = site_specific_recombination_target_region
+type = loxPsym
+source = BIO
+sequence = ATAACTTCGTATAATGTACATTATACGAAGTTAT

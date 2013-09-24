@@ -38,7 +38,7 @@ define( [
             'JBrowse/View/LocationChoiceDialog',
             'JBrowse/View/Dialog/SetHighlight',
             'JBrowse/View/Dialog/QuickHelp',
-            'JBrowse/View/Dialog/Pathway',
+            //'JBrowse/View/Dialog/Pathway',
             'dijit/focus',
             'lazyload', // for dynamic CSS loading
             'dojo/domReady!'
@@ -81,7 +81,7 @@ define( [
             LocationChoiceDialog,
             SetHighlightDialog,
             HelpDialog,
-            PathwayWindow,
+           // PathwayWindow,
             dijitFocus,
             LazyLoad
         ) {
@@ -566,12 +566,7 @@ initView: function() {
                                             onClick: dojo.hitch( this, 'openFileDialog' )
                                         })
                                   );
-            this.addGlobalMenuItem( 'file', new dijitMenuItem( 
-                {
-                    label: 'Add chromosome', 
-                    iconClass: 'dijitIconFolderOpen',
-                    onClick: dojo.hitch( this, 'openChromosome' )
-                }));
+            
 
             this.addGlobalMenuItem( 'file', new dijitMenuItem(
                 {
@@ -891,14 +886,6 @@ getTrackTypes: function() {
 },
 
 
-openChromosome: function() {
-    new UploadDialog({ browser: this })
-        .show({
-            openCallback: dojo.hitch( this, function( results ) {
-
-            })
-        });
-},
 
 openFileDialog: function() {
     new FileDialog({ browser: this })

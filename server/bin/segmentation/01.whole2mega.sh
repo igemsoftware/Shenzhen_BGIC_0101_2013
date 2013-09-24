@@ -1,0 +1,1 @@
+perl 01.whole2mega.pl -gff ../sce_chrI.gff -fa ../sce_chr01.fa -ol 1000 -ck 30000 -m1 ../../notadoctor-biostudio-36bc6ad1c918/config/markers/LEU2.gff -m2 ../../notadoctor-biostudio-36bc6ad1c918/config/markers/URA3.gff -m3 ../../notadoctor-biostudio-36bc6ad1c918/config/markers/HIS3.gff -m4 ../../notadoctor-biostudio-36bc6ad1c918/config/markers/TRP1.gff -ot 01.whole2mega 

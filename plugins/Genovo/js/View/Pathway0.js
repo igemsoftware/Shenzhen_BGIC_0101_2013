@@ -12,6 +12,8 @@
               "dojo/aspect",
               'dojo/on',
               "dojo/dom",
+              "dijit/popup",
+              'dojo/query!css2',
               './d3.v3',
               './jquery-1.7.2',
               './Tooltip'
@@ -29,7 +31,8 @@
               Menu,
               aspect,
               on,
-              dom
+              dom,
+              popup
           ) {
   return declare( InfoDialog, {
 
@@ -40,6 +43,13 @@
       nodes: null,
       links: null,
       hasInstance: null,
+      modify: false,
+      nodemenu: null,
+      restart: null,
+      //force: null,
+      idpool: null,
+      species: null,
+      pathway: null,
 
       constructor: function(args) {
           this.width = window.screen.width*0.8;
@@ -58,7 +68,7 @@
 
       },
 
-   _makeMenu: function() {
+      _makeMenu: function() {
                 var that = this;
                 var menu = new DropDownMenu({ style: "display: none"});
                 
@@ -66,7 +76,7 @@
                   url: "server/tools/toolsManager.php?nav=1",
                   handleAs: "json",
                   load: function(msg) {
-                    console.log(msg);
+                  //  console.log(msg);
                     for (var species in msg) {
                       var subMenu = new Menu();
                       for (var pathway in msg[species].pathway ) {
@@ -95,19 +105,122 @@
 
                 dom.byId("dropMenuContainer").appendChild(selectButton.domNode);
                 
+                var randomStrong = 10;
+                var goodLuckButton = new Button({
+                    label: "Good Luck",
+                    stype: "right: 5em",
+                    onClick: function() {
+                      var randomlinks = that.links.filter( function(d) {
+                          return !d.source.created && !d.target.created;
+                      })
+                      var randomnodes = that.nodes.filter( function(d) {
+                          return d.created;
+                      })
+                      for (var i = 0; i < randomStrong; ++i) {
+                        var idx1 = Math.floor(Math.random()*randomnodes.length);
+                        var idx2 = Math.floor(Math.random()*randomnodes.length);
+                        if (idx1 == idx2)
+                          continue;
+                        var tmp = randomnodes[idx1];
+                        randomnodes[idx1] = randomnodes[idx2];
+                        randomnodes[idx2] = tmp;
+                      }
+
+                      for (var i = 0; i < randomnodes.length-1; ++i) {
+                        var link = that.links.filter( function(l) {
+                            return (l.source === randomnodes[i]&&l.target === randomnodes[i+1])
+                                || (l.target === randomnodes[i]&&l.source === randomnodes[i+1]);
+                        } )[0];
+                        if (link == null) {
+                          that.links.push({
+                            source: randomnodes[i],
+                            target: randomnodes[i+1],
+                            left: false,
+                            right: true
+                          });
+                        } else {
+                          link.source = randomnodes[i];
+                          link.target = randomnodes[i+1];
+                        }
+                      }
+               
+                      that.restart();
+                      //that.force.stop();
+                      ///that.force.start();
+                    }
+                });
 
                 var createButton = new Button({
                     label: "Create Genome",
                     style: "right: 5em",
                     onClick: dojo.hitch( that, function () {
-                        var outputNodes = nodes.filter( function( n ){
+                        var outputNodes = that.nodes.filter( function( n ){
                           return (n.created);
                         })
 
-                        console.log("creating Genome\n" + JSON.stringify(outputNodes));
+                        var outputList = that.links.filter( function( n ) {
+                          return (n.target.created && n.source.created);
+                        })
+                        if (outputList.length == 0 || outputNodes.length == 0) {
+                          return;
+                        }
+                        var geneorder = getGeneList(outputNodes, outputList);
+                      
+                        dojo.xhrGet({
+                            url: "server/REST/index.php/decouple/",
+                            handleAs: "text",
+                            content: {
+                              "species": that.species,
+                              "pathway": that.pathway,
+                              "geneorder"   : geneorder
+                            },
+                            load: function(d) {
+                              console.log(d);
+// TODO 
+// jump to created genome 
+                            }
+                        })
+
+                        /*for (var i in that.nodes) {
+                          callmsg += that.nodes[i].geneName + "\t" + 
+                                      (that.nodes[i].type === "circle"? "+" : "-") + "\n";
+                        }*/
+                        //console.log("creating Genome\n" + callmsg);
                       }
                     )
                 });
+
+                function getGeneList(nodes, links) {
+                  var msg = "";
+                  var target = {};
+                  var nextlist = {};
+                  for (var i in links) {
+                    var link = links[i];
+                    if ( null == nextlist[link.source.id] ) {
+                      nextlist[link.source.id] = {gene: link.source, next: []};
+                    }
+                    nextlist[link.source.id].next.push(link.target.id);
+                    target[link.source.id] = true;
+                  }
+                  for (var i in links) {
+                    delete target[links[i].target.id];
+                  }
+                  for (var id in target) {
+                    var source = that.findNodeById(id);
+                    do {
+                      //
+                      msg += source.geneName + " " +
+                              (source.type === "circle"? "+" : "-") + "\n";
+                      source = nextlist[source.id] == null? 
+                                      null : nextlist[source.id].next[0];
+                      source = that.findNodeById(source)
+                    } while (source != null)
+                   
+                  }
+                  console.log(msg);
+                  return msg;
+                }
+                dom.byId("dropMenuContainer").appendChild(goodLuckButton.domNode);
                 dom.byId("dropMenuContainer").appendChild(createButton.domNode);
 
               },
@@ -115,11 +228,106 @@
 
 
     },
+
+    hashCode: function(str){
+      var hash = 0;
+      if (str.length == 0) return hash;
+      for (i = 0; i < str.length; i++) {
+          char = str.charCodeAt(i);
+          hash = ((hash<<5)-hash)+char;
+          hash = hash & hash; // Convert to 32bit integer
+      }
+      return hash;
+    },
+
+
+    loadPathwayData: function(argv, callback) {
+      var that = argv.that;
+      return function() { 
+        dojo.xhrGet({
+          url: "server/tools/toolsManager.php",
+          handleAs: "json",
+          content: {
+            'species':argv.species,
+            'pathway':argv.pathway
+          },
+          load: function(msg) {
+                          //this.catalog.clearItems();
+                       //   console.log(msg);
+            
+            that.species = argv.species;
+            that.pathway = argv.pathway;
+
+          //  that.nodes = [];
+          //  that.links = [];
+      
+            for (var i = that.nodes.length-1; i>=0; i--) {
+                if (!that.nodes[i].created) {
+                  that.removeNode(that.nodes[i]);
+                }
+            }
+
+            var nodes = msg.nodes;
+            var links = msg.links;
+            var nameID = {};
+
+            for (var n in nodes) {
+              var node = {
+                id: that.idpool, 
+                reflexive: false,
+                x: that.width/2+(Math.random()-1)*that.width/2, 
+                y: that.height*0.6*Math.random(),
+                geneName: nodes[n],
+                type: "circle"
+              };
+              that.nodes.push(node);
+              nameID[node.geneName] = that.idpool++;
+            }
+            for (var v in links) {
+              var n = links[v];
+              for (var u in n) {
+                var source = that.findNodeById(nameID[v]);
+                that.links.push( {
+                  source: source, 
+                  target: that.findNodeById(nameID[n[u]]),
+                  left: false,
+                  right: true
+                });
+              }
+            }
+            callback();
+          }
+        });
+      }
+    },
+
+    removeNode: function( node ) {
+      this.nodes.splice(this.nodes.indexOf(node), 1);
+      this.spliceLinksForNode(node);
+    },
+
+    findNodeById: function( id ) {
+      for (var v in this.nodes) {
+        if (this.nodes[v]['id'] == id) {
+          return this.nodes[v];
+        }
+      }
+    },
+
     _makeSubMenu: function( argv ) {
               var that = argv.that;
+            //  that.species = argv.species;
+            //  that.pathway = argv.pathway;
               return new MenuItem( {
                   label: argv.pathway,
-                  onClick: dojo.hitch(that, function() {
+                  onClick: that.loadPathwayData(argv, function() {
+                        //d3.select('svg').remove();
+                        //that.buildsvg();
+                        that.restart();
+                       
+                  })
+/*
+                   dojo.hitch(that, function() {
                     dojo.xhrGet({
                       url: "server/tools/toolsManager.php",
                       handleAs: "json",
@@ -129,22 +337,37 @@
                         },
                       load: function(msg) {
                         //this.catalog.clearItems();
-                        console.log(msg);
-                        /*
-                        
-                        that.catalog.selectAll();
-                        that.catalog.deleteSelectedNodes();
-                        for (var geneid in msg) {
-                          that.catalog.insertNodes(false, [{data: msg[geneid], type: ["gene"]}]);
-                        }
-                        that.catalog.forInItems(function(item, id, map){
-                          domClass.add(id, item.type[0]);
-                        });*/
-                        //this.catalog.insertNodes(false, {})})
+                     //   console.log(msg);
+                        that.nodes = [];
+            						that.links = [];
+            						var hash = {};
+            						var nodes = msg.nodes;
+            						var links = msg.links;
+            						for (var n in nodes) {
+            							that.nodes.push({id:parseInt(n), reflexive: false,
+            									x: that.width/2+(Math.random()-1)*that.width/2, 
+                              y: that.height*0.6*Math.random(),
+            									geneName: nodes[n],
+                              type: "circle"
+                            });
+            							hash[nodes[n]] = n;
+            						}
+            						for (var v in links) {
+            							var n = links[v];
+            							for (var u in n) {
+            								that.links.push({source: that.nodes[ hash[ v ] ], 
+            										 target: that.nodes[ hash[ n[u] ] ],
+            										 left: false,
+            										 right: true});
+            							}
+            						}
+            						d3.select('svg').remove();
+            						that.buildsvg();
                       }
                     });
                     return true;
                   })
+  */
                 });
 
       },
@@ -155,29 +378,43 @@
             var that = this;
             var svg = d3.select('#svgPane')
                         .append('svg')
+                        .attr("id", 'pathwaySVG')
                         .attr("width", "100%")
-                        .attr("height", "100%");
+                        .attr("height", "99%");
             var width = this.width;
                 height =  this.height,
                 colors = d3.scale.category10();
-            var lastNodeId = 2;
-            nodes = [
-                {id: 0, reflexive: false, x: width/2-50, y: height*0.4},
-                {id: 1, reflexive: true , x: width/2, y: height*0.4},
-                {id: 2, reflexive: false, x: width/2+50, y:height*0.4}
+
+            var nodes = that.nodes || [
+                {id: 0, reflexive: false, 
+                      x: width/2+(Math.random()-1)*width/2, 
+                      y: height*0.6*Math.random(),
+                      type: "square" 
+                    },
+                {id: 1, reflexive: true , 
+                      x: width/2+(Math.random()-1)*width/2, 
+                      y: height*0.6*Math.random(),
+                      type: "circle"
+                    },
+                {id: 2, reflexive: false, 
+                      x: width/2+(Math.random()-1)*width/2, 
+                      y: height*0.6*Math.random(),
+                      type: "square"
+                    }
             ];
-    
-            links = [
+            that.idpool+=10;
+            that.nodes = nodes;
+            var links = that.links || [
                 {source: nodes[0], target: nodes[1], left: false, right: true },
                 {source: nodes[1], target: nodes[2], left: false, right: true }
             ];
 
-
+            that.links = links;
 
             // init D3 force layout
-            var force = d3.layout.force()
-                .nodes(nodes)
-                .links(links)
+            var force = that.force = d3.layout.force()
+                .nodes(that.nodes)
+                .links(that.links)
                 .size([width, height])
                 .linkDistance(50)
                 .charge(0)
@@ -239,6 +476,7 @@
             // update force layout (called automatically each iteration)
             function tick() {
               // draw directed edges with proper padding from node centers
+     
               path.attr('d', function(d) {
                 var deltaX = d.target.x - d.source.x,
                     deltaY = d.target.y - d.source.y,
@@ -254,25 +492,27 @@
                 return 'M' + sourceX + ',' + sourceY + 'L' + targetX + ',' + targetY;
               });
 
+              circle
+             //   .each(collide(.5)) 
+                .attr('transform', function(d) {
+                  if (!d.created) {
+                    return 'translate(' + d.x + ',' + Math.min(d.y, 0.6*height-10) + ')';
+                  } else {
+                    //console.log(d)
+                    var y = Math.min( Math.max(0.6*height+10, d.y), height );
+                    return 'translate(' + d.x + ',' + y + ')';
+                  }
+                });
 
-
-              circle.attr('transform', function(d) {
-              
-                if (d.id < 1000) {
-                  return 'translate(' + d.x + ',' + Math.min(d.y, 0.6*height-10) + ')';
-                } else {
-                  //console.log(d)
-                  var y = Math.min( Math.max(0.6*height, d.y), height );
-                  return 'translate(' + d.x + ',' + y + ')';
-                }
-              });
             }
-
-             
-
             // update graph (called when needed)
-            function restart() {
+            var restart = that.restart = function() {
               // path (link) group
+
+              nodes = that.nodes;
+              links = that.links;
+              //path = svg.selectAll("path").data(links);
+              
               path = path.data(links);
 
               // update existing links
@@ -301,23 +541,37 @@
               // remove old links
               path.exit().remove();
 
-
               // circle (node) group
               // NB: the function arg is crucial here! nodes are known by id, not by index!
+              //circle = svg.selectAll('g').data(nodes);
               circle = circle.data(nodes, function(d) { return d.id; });
 
               // update existing nodes (reflexive & selected visual states)
-              circle.selectAll('circle')
-                .style('fill', function(d) { return (d === selected_node) ? d3.rgb(colors(d.id)).brighter().toString() : colors(d.id); })
-                .classed('reflexive', function(d) { return d.reflexive; });
+              circle.selectAll('path')
+                .style('fill', function(d) { return (d === selected_node) ? 
+                        d3.rgb(colors(d.id)).brighter().toString() : colors(d.id); })
+                .classed('reflexive', function(d) { return d.reflexive; })
+                .attr('d', d3.svg.symbol().type( 
+                      function(d) { //console.log(d.type); 
+                        return d.type;
+                      }).size(400)
+                );
 
               // add new nodes
               var g = circle.enter().append('svg:g');
 
-              g.append('svg:circle')
-                .attr('class', 'node')
-                .attr('r', 12)
-                .style('fill', function(d) { return d.color?d.color : d.color=colors(d.id);
+              g.append('svg:path')
+                .attr('class', 'pathwaynode')
+                //.attr('r', 12)
+                //.attr('size', 25)
+                .attr('d', d3.svg.symbol().type( 
+                      function(d) { //console.log(d.type); 
+                        return d.type;
+                      }).size(400)
+                )
+                .style('fill', function(d) { 
+                               // console.log( d.color + " or " + colors(d.id) );
+                                return d.color?d.color : d.color=colors(d.id);
                                         //return (d === selected_node) ? d3.rgb(d.color).brighter().toString() : d.color; 
                                       })
                 .style('stroke', function(d) { return d3.rgb(colors(d.id)).darker().toString(); })
@@ -334,29 +588,65 @@
                 })
                 .on('mousedown', function(d) {
                   if(d3.event.ctrlKey) return;
+       
+                //  console.log(d3.event);
+/*
+                  if (d3.event.which == 3) {
+                    if (that.nodemenu == null) {
+                      that._makeDropDownNodeMenu();
+                    }
+                    console.log(this);
+                    var thatnode = this;
+                    popup.open( {
+                        x: thatnode.getBoundingClientRect().left+10,
+                        y: thatnode.getBoundingClientRect().top,
+                        popup: that.nodemenu,
+                        onExecute: function() {
+                          popup.close(that.nodemenu);
+                        },
+                        onCancel: function() {
+                          popup.close(that.nodemenu);
+                        },
+                        
+                      } );
 
-                  if ( mousedown_node === selected_node && d.id < 1000) {
-                    var have = nodes.filter( function (n) {
-                      return (n.id%1000 === d.id)
-                    })
+                    return false;
+                  }*/
+                  if (d3.event.which != 1) return;
+                  if (d3.event.shiftKey ) {
+
+                    d.type = d.type === "square" ?  "circle" : "square";
+                    restart();
+                  }
+                  //console.log(d3.event);
+               //   d.type = d.type === "square" ?  "circle" : "square";
+                  // select node
+                  mousedown_node = d;
+
+                  if ( mousedown_node === selected_node && !d.created) {
+                    
                     //if (have.length < 2) {
               
-                      var cnode = { id : d.id+1000*have.length, 
+                    var cnode = { id : that.idpool++, 
                                     reflexive : false,
                                     x : d.x,
                                     y : height*0.6+d.y*0.4*Math.random()+10,
                                     color : d.color,
-                                    created : true
+                                    geneName: d.geneName,
+                                    created : true,
+                                    type: d.type
                                   }
 
                       //console.log(cnode.y);
-                      nodes.push(cnode);
+                    nodes.push(cnode);
+                     // restart();
                     //}
                   }
-                  // select node
-                  mousedown_node = d;
-                  if(mousedown_node === selected_node) selected_node = null;
-                  else selected_node = mousedown_node;
+
+
+                  //if(mousedown_node === selected_node) selected_node = null;
+                  //else 
+                  selected_node = mousedown_node;
                   selected_link = null;
 
                   // reposition drag line
@@ -364,8 +654,6 @@
                     .style('marker-end', 'url(#end-arrow)')
                     .classed('hidden', false)
                     .attr('d', 'M' + mousedown_node.x + ',' + mousedown_node.y + 'L' + mousedown_node.x + ',' + mousedown_node.y);
-
-
 
                   restart();
                 })
@@ -377,10 +665,10 @@
                     .classed('hidden', true)
                     .style('marker-end', '');
 
-
-
                   // check for drag-to-self
                   mouseup_node = d;
+
+
                   if(mouseup_node === mousedown_node) { resetMouseVars(); return; }
 
                   // unenlarge target node
@@ -392,6 +680,9 @@
                  // if(mousedown_node.id < mouseup_node.id) {
                     source = mousedown_node;
                     target = mouseup_node;
+                    if ( !source.created || !target.created) {
+                        resetMouseVars(); return;
+                    }
                     direction = 'right';
                   /*
                   } else {
@@ -403,7 +694,7 @@
                   var link;
                   link = links.filter(function(l) {
                     return (l.source === source && l.target === target) || 
-                            (l.target === source && l.target === source);
+                            (l.target === source && l.source === target);
                   })[0];
 
                   if(link) {
@@ -426,8 +717,8 @@
               g.append('svg:text')
                   .attr('x', 0)
                   .attr('y', 4)
-                  .attr('class', 'id')
-                  .text(function(d) { return d.id; });
+                  .attr('class', 'pathwaytext')
+                  .text(function(d) { return d.geneName; });
 
               // remove old nodes
               circle.exit().remove();
@@ -436,7 +727,7 @@
               force.start();
 
              
-              d3.selectAll(".node").on("mouseover", showDetails)
+              d3.selectAll(".pathwaynode").on("mouseover", showDetails)
                 .on("mouseout", hideDetails);
 
             }
@@ -484,14 +775,7 @@
               resetMouseVars();
             }
 
-            function spliceLinksForNode(node) {
-              var toSplice = links.filter(function(l) {
-                return (l.source === node || l.target === node);
-              });
-              toSplice.map(function(l) {
-                links.splice(links.indexOf(l), 1);
-              });
-            }
+            
 
             // only respond once per keydown
             var lastKeyDown = -1;
@@ -514,7 +798,7 @@
                 case 46: // delete
                   if(selected_node) {
                     nodes.splice(nodes.indexOf(selected_node), 1);
-                    spliceLinksForNode(selected_node);
+                    that.spliceLinksForNode(selected_node);
                   } else if(selected_link) {
                     links.splice(links.indexOf(selected_link), 1);
                   }
@@ -574,14 +858,44 @@
               //console.log("asdasda");
                 content = '<p class="main">' + d.id + '</span></p>'
                 content += '<hr class="tooltip-hr">'
-                content += '<p class="main">' + "geneName" + '</span></p>'
+                content += '<p class="main">' + d.geneName + '</span></p>'
                 that.tooltip.showTooltip(content,d3.event)
                 
             }
-
+/*
             // app starts here
-
-
+            function collide(alpha) {
+              var quadtree = d3.geom.quadtree(that.nodes);
+              return function(d) {
+                var r = //d.size + 
+                        20+10,
+                    nx1 = d.x - r,
+                    nx2 = d.x + r,
+                    ny1 = d.y - r,
+                    ny2 = d.y + r;
+                quadtree.visit(function(quad, x1, y1, x2, y2) {
+                  if (quad.point && (quad.point !== d)) {
+                    var x = d.x - quad.point.x,
+                        y = d.y - quad.point.y,
+                        l = Math.sqrt(x * x + y * y),
+                        r = //d.radius + 
+                          20+quad.point.radius + (d.color !== quad.point.color);
+                    if (l < r) {
+                      l = (l - r) / l * alpha;
+                      d.x -= x *= l;
+                      d.y -= y *= l;
+                      quad.point.x += x;
+                      quad.point.y += y;
+                    }
+                  }
+                  return x1 > nx2
+                      || x2 < nx1
+                      || y1 > ny2
+                      || y2 < ny1;
+                });
+              };
+            }
+*/
             svg//.on('mousedown', mousedown)
               .on('mousemove', mousemove)
               .on('mouseup', mouseup);
@@ -592,11 +906,26 @@
 
       },
 
+      spliceLinksForNode: function(node) {
+              var that = this;
+              var toSplice = this.links.filter(function(l) {
+                return (l.source === node || l.target === node);
+              });
+              toSplice.map(function(l) {
+                that.links.splice(that.links.indexOf(l), 1);
+              });
+      },
+
+      _makeDropDownNodeMenu: function() {
+     
+      },
+
       build: function() {
         if (!this.hasInstance) {
               this.buildsvg();
               this._makeMenu();
               this.hasInstance = true;
+              this._makeDropDownNodeMenu();
         }
       },
 
@@ -625,21 +954,21 @@
       },
 
       _makeDefaultContent: function() {
+          this.idpool = 1;
           var appContainer = this.appContainer = new BorderContainer({
                 style: "height: " + this.height + "px; width: " + this.width + "px;"
               });
 
-
               var menuBar = new ContentPane({
                   id: "menuBar",
                   region: "top",
-                  style: "height:2em",
+                  style: "height:2.5em",
                   content: dojo.create("div", {id: "dropMenuContainer"})
               });
 
               var svg = new ContentPane({
                   id: "svgPane",
-                  region: "center"
+                  region: "center",
                   //style: "height:" + this.height + "%, width: " + this.width + "%"
                  // content: dojo.create("div", {id: "svg_", style: "height: 100%, width: 100%"}),
               });

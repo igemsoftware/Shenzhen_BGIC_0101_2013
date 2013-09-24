@@ -6370,3 +6370,909 @@ Array
         )
 
 )
+Array
+(
+    [uploadedfiles] => Array
+        (
+            [name] => Array
+                (
+                    [0] => neochr.final.fa
+                    [1] => neochr.final.gff
+                )
+
+            [type] => Array
+                (
+                    [0] => application/octet-stream
+                    [1] => application/octet-stream
+                )
+
+            [tmp_name] => Array
+                (
+                    [0] => /tmp/phpounf6l
+                    [1] => /tmp/phpHsCe2Z
+                )
+
+            [error] => Array
+                (
+                    [0] => 0
+                    [1] => 0
+                )
+
+            [size] => Array
+                (
+                    [0] => 136987
+                    [1] => 20026
+                )
+
+        )
+
+)
+2Array
+(
+    [index] => 0
+    [name] => neochr.final.fa
+    [size] => 136987
+    [type] => 
+)
+Array
+(
+    [uploadedfiles] => Array
+        (
+            [name] => Array
+                (
+                    [0] => neochr.final.fa
+                    [1] => neochr.final.gff
+                )
+
+            [type] => Array
+                (
+                    [0] => application/octet-stream
+                    [1] => application/octet-stream
+                )
+
+            [tmp_name] => Array
+                (
+                    [0] => /tmp/php3FE2wf
+                    [1] => /tmp/phpgXxGA6
+                )
+
+            [error] => Array
+                (
+                    [0] => 0
+                    [1] => 0
+                )
+
+            [size] => Array
+                (
+                    [0] => 136987
+                    [1] => 20026
+                )
+
+        )
+
+)
+2Array
+(
+    [msg] => undefined
+)
+4Array
+(
+    [0] => 
+    [1] => working on refseq NeoChr
+    [2] => working on track CDS
+)
+4Array
+(
+    [0] => 
+    [1] => working on refseq NeoChr
+    [2] => working on track CDS
+)
+5{"plugins":[{"location":"plugins/Genovo","name":"Genovo"}],"datasets":{"volvox":{"url":"?data=sample_data/json/volvox","name":"Volvox Example"},"modencode":{"url":"?data=sample_data/json/modencode","name":"MODEncode Example"},"yeast":{"url":"?data=sample_data/json/yeast","name":"Yeast Example"},"neochr":{"url":"?data=data/neochr/","name":"neochr"}}}5{"plugins":[{"location":"plugins/Genovo","name":"Genovo"}],"datasets":{"volvox":{"url":"?data=sample_data/json/volvox","name":"Volvox Example"},"modencode":{"url":"?data=sample_data/json/modencode","name":"MODEncode Example"},"yeast":{"url":"?data=sample_data/json/yeast","name":"Yeast Example"},"neochr":{"url":"?data=data/neochr/","name":"neochr"}}}5.5  neochr5.5  neochr60607Array
+(
+    [plugins] => Array
+        (
+            [0] => Array
+                (
+                    [location] => plugins/Genovo
+                    [name] => Genovo
+                )
+
+        )
+
+    [datasets] => Array
+        (
+            [volvox] => Array
+                (
+                    [url] => ?data=sample_data/json/volvox
+                    [name] => Volvox Example
+                )
+
+            [modencode] => Array
+                (
+                    [url] => ?data=sample_data/json/modencode
+                    [name] => MODEncode Example
+                )
+
+            [yeast] => Array
+                (
+                    [url] => ?data=sample_data/json/yeast
+                    [name] => Yeast Example
+                )
+
+            [neochr] => Array
+                (
+                    [url] => ?data=data/neochr/
+                    [name] => neochr
+                )
+
+        )
+
+)
+7Array
+(
+    [plugins] => Array
+        (
+            [0] => Array
+                (
+                    [location] => plugins/Genovo
+                    [name] => Genovo
+                )
+
+        )
+
+    [datasets] => Array
+        (
+            [volvox] => Array
+                (
+                    [url] => ?data=sample_data/json/volvox
+                    [name] => Volvox Example
+                )
+
+            [modencode] => Array
+                (
+                    [url] => ?data=sample_data/json/modencode
+                    [name] => MODEncode Example
+                )
+
+            [yeast] => Array
+                (
+                    [url] => ?data=sample_data/json/yeast
+                    [name] => Yeast Example
+                )
+
+            [neochr] => Array
+                (
+                    [url] => ?data=data/neochr/
+                    [name] => neochr
+                )
+
+        )
+
+)
+Array
+(
+    [uploadedfiles] => Array
+        (
+            [name] => Array
+                (
+                    [0] => neochr.final.fa
+                    [1] => neochr.final.gff
+                )
+
+            [type] => Array
+                (
+                    [0] => application/octet-stream
+                    [1] => application/octet-stream
+                )
+
+            [tmp_name] => Array
+                (
+                    [0] => /tmp/phpc0CBYt
+                    [1] => /tmp/phpA9HKDN
+                )
+
+            [error] => Array
+                (
+                    [0] => 0
+                    [1] => 0
+                )
+
+            [size] => Array
+                (
+                    [0] => 136987
+                    [1] => 20026
+                )
+
+        )
+
+)
+2Array
+(
+    [index] => 0
+    [name] => neochr.final.fa
+    [size] => 136987
+    [type] => 
+)
+Array
+(
+    [uploadedfiles] => Array
+        (
+            [name] => Array
+                (
+                    [0] => neochr.final.fa
+                    [1] => neochr.final.gff
+                )
+
+            [type] => Array
+                (
+                    [0] => application/octet-stream
+                    [1] => application/octet-stream
+                )
+
+            [tmp_name] => Array
+                (
+                    [0] => /tmp/php6zJkUx
+                    [1] => /tmp/phpEOCvTT
+                )
+
+            [error] => Array
+                (
+                    [0] => 0
+                    [1] => 0
+                )
+
+            [size] => Array
+                (
+                    [0] => 136987
+                    [1] => 20026
+                )
+
+        )
+
+)
+2Array
+(
+    [msg] => undefined
+)
+4Array
+(
+    [0] => 
+    [1] => working on refseq NeoChr
+    [2] => working on track CDS
+)
+4Array
+(
+    [0] => 
+    [1] => working on refseq NeoChr
+    [2] => working on track CDS
+)
+5{"plugins":[{"location":"plugins/Genovo","name":"Genovo"}],"datasets":{"volvox":{"url":"?data=sample_data/json/volvox","name":"Volvox Example"},"modencode":{"url":"?data=sample_data/json/modencode","name":"MODEncode Example"},"yeast":{"url":"?data=sample_data/json/yeast","name":"Yeast Example"},"neochr":{"url":"?data=data/neochr/","name":"neochr"}}}5{"plugins":[{"location":"plugins/Genovo","name":"Genovo"}],"datasets":{"volvox":{"url":"?data=sample_data/json/volvox","name":"Volvox Example"},"modencode":{"url":"?data=sample_data/json/modencode","name":"MODEncode Example"},"yeast":{"url":"?data=sample_data/json/yeast","name":"Yeast Example"},"neochr":{"url":"?data=data/neochr/","name":"neochr"}}}5.5  neochr5.5  neochr60607Array
+(
+    [plugins] => Array
+        (
+            [0] => Array
+                (
+                    [location] => plugins/Genovo
+                    [name] => Genovo
+                )
+
+        )
+
+    [datasets] => Array
+        (
+            [volvox] => Array
+                (
+                    [url] => ?data=sample_data/json/volvox
+                    [name] => Volvox Example
+                )
+
+            [modencode] => Array
+                (
+                    [url] => ?data=sample_data/json/modencode
+                    [name] => MODEncode Example
+                )
+
+            [yeast] => Array
+                (
+                    [url] => ?data=sample_data/json/yeast
+                    [name] => Yeast Example
+                )
+
+            [neochr] => Array
+                (
+                    [url] => ?data=data/neochr/
+                    [name] => neochr
+                )
+
+        )
+
+)
+7Array
+(
+    [plugins] => Array
+        (
+            [0] => Array
+                (
+                    [location] => plugins/Genovo
+                    [name] => Genovo
+                )
+
+        )
+
+    [datasets] => Array
+        (
+            [volvox] => Array
+                (
+                    [url] => ?data=sample_data/json/volvox
+                    [name] => Volvox Example
+                )
+
+            [modencode] => Array
+                (
+                    [url] => ?data=sample_data/json/modencode
+                    [name] => MODEncode Example
+                )
+
+            [yeast] => Array
+                (
+                    [url] => ?data=sample_data/json/yeast
+                    [name] => Yeast Example
+                )
+
+            [neochr] => Array
+                (
+                    [url] => ?data=data/neochr/
+                    [name] => neochr
+                )
+
+        )
+
+)
+Array
+(
+    [uploadedfiles] => Array
+        (
+            [name] => Array
+                (
+                    [0] => neochr.final.fa
+                    [1] => neochr.final.gff
+                )
+
+            [type] => Array
+                (
+                    [0] => application/octet-stream
+                    [1] => application/octet-stream
+                )
+
+            [tmp_name] => Array
+                (
+                    [0] => /tmp/phpSMNkvr
+                    [1] => /tmp/phpoOB5ml
+                )
+
+            [error] => Array
+                (
+                    [0] => 0
+                    [1] => 0
+                )
+
+            [size] => Array
+                (
+                    [0] => 136987
+                    [1] => 20026
+                )
+
+        )
+
+)
+2Array
+(
+    [index] => 0
+    [name] => neochr.final.fa
+    [size] => 136987
+    [type] => 
+)
+4Array
+(
+    [0] => 
+    [1] => working on refseq NeoChr
+    [2] => working on track gene
+)
+5{"plugins":[{"location":"plugins/Genovo","name":"Genovo"}],"datasets":{"volvox":{"url":"?data=sample_data/json/volvox","name":"Volvox Example"},"modencode":{"url":"?data=sample_data/json/modencode","name":"MODEncode Example"},"yeast":{"url":"?data=sample_data/json/yeast","name":"Yeast Example"},"neochr":{"url":"?data=data/neochr/","name":"neochr"}}}5.5  neochr607Array
+(
+    [plugins] => Array
+        (
+            [0] => Array
+                (
+                    [location] => plugins/Genovo
+                    [name] => Genovo
+                )
+
+        )
+
+    [datasets] => Array
+        (
+            [volvox] => Array
+                (
+                    [url] => ?data=sample_data/json/volvox
+                    [name] => Volvox Example
+                )
+
+            [modencode] => Array
+                (
+                    [url] => ?data=sample_data/json/modencode
+                    [name] => MODEncode Example
+                )
+
+            [yeast] => Array
+                (
+                    [url] => ?data=sample_data/json/yeast
+                    [name] => Yeast Example
+                )
+
+            [neochr] => Array
+                (
+                    [url] => ?data=data/neochr/
+                    [name] => neochr
+                )
+
+        )
+
+)
+Array
+(
+    [uploadedfiles] => Array
+        (
+            [name] => Array
+                (
+                    [0] => neochr.final.fa
+                    [1] => neochr.final.gff
+                )
+
+            [type] => Array
+                (
+                    [0] => application/octet-stream
+                    [1] => application/octet-stream
+                )
+
+            [tmp_name] => Array
+                (
+                    [0] => /tmp/phpoCdDAA
+                    [1] => /tmp/phpkzJkOP
+                )
+
+            [error] => Array
+                (
+                    [0] => 0
+                    [1] => 0
+                )
+
+            [size] => Array
+                (
+                    [0] => 136987
+                    [1] => 20026
+                )
+
+        )
+
+)
+2Array
+(
+    [msg] => undefined
+)
+4Array
+(
+    [0] => 
+    [1] => working on refseq NeoChr
+    [2] => working on track gene
+)
+5{"plugins":[{"location":"plugins/Genovo","name":"Genovo"}],"datasets":{"volvox":{"url":"?data=sample_data/json/volvox","name":"Volvox Example"},"modencode":{"url":"?data=sample_data/json/modencode","name":"MODEncode Example"},"yeast":{"url":"?data=sample_data/json/yeast","name":"Yeast Example"},"neochr":{"url":"?data=data/neochr/","name":"neochr"}}}5.5  neochr607Array
+(
+    [plugins] => Array
+        (
+            [0] => Array
+                (
+                    [location] => plugins/Genovo
+                    [name] => Genovo
+                )
+
+        )
+
+    [datasets] => Array
+        (
+            [volvox] => Array
+                (
+                    [url] => ?data=sample_data/json/volvox
+                    [name] => Volvox Example
+                )
+
+            [modencode] => Array
+                (
+                    [url] => ?data=sample_data/json/modencode
+                    [name] => MODEncode Example
+                )
+
+            [yeast] => Array
+                (
+                    [url] => ?data=sample_data/json/yeast
+                    [name] => Yeast Example
+                )
+
+            [neochr] => Array
+                (
+                    [url] => ?data=data/neochr/
+                    [name] => neochr
+                )
+
+        )
+
+)
+Array
+(
+    [uploadedfiles] => Array
+        (
+            [name] => Array
+                (
+                    [0] => volvox.fa
+                    [1] => volvox.gff3
+                )
+
+            [type] => Array
+                (
+                    [0] => application/octet-stream
+                    [1] => application/octet-stream
+                )
+
+            [tmp_name] => Array
+                (
+                    [0] => /tmp/phpJa3tNO
+                    [1] => /tmp/phpzzDu6A
+                )
+
+            [error] => Array
+                (
+                    [0] => 0
+                    [1] => 0
+                )
+
+            [size] => Array
+                (
+                    [0] => 56987
+                    [1] => 13584
+                )
+
+        )
+
+)
+2Array
+(
+    [index] => 0
+    [name] => volvox.fa
+    [size] => 56987
+    [type] => 
+)
+Array
+(
+    [uploadedfiles] => Array
+        (
+            [name] => Array
+                (
+                    [0] => volvox.fa
+                    [1] => volvox.gff3
+                )
+
+            [type] => Array
+                (
+                    [0] => application/octet-stream
+                    [1] => application/octet-stream
+                )
+
+            [tmp_name] => Array
+                (
+                    [0] => /tmp/php6V3zDi
+                    [1] => /tmp/phpVRfhl6
+                )
+
+            [error] => Array
+                (
+                    [0] => 0
+                    [1] => 0
+                )
+
+            [size] => Array
+                (
+                    [0] => 56987
+                    [1] => 13584
+                )
+
+        )
+
+)
+2Array
+(
+    [msg] => undefined
+)
+4Array
+(
+    [0] => Can't open sequence index file server/upload/directory.index: Permission denied at /home/luxuia/www/Genovo/jbrowse/bin/../src/perl5/../../extlib/lib/perl5/Bio/DB/Fasta.pm line 527, <GEN1> line 380.
+    [1] => 
+    [2] => working on refseq ctgA
+    [3] => working on track gene
+    [4] => 
+    [5] => working on refseq ctgB
+    [6] => working on track gene
+    [7] => malformed JSON string, neither array, object, number, string or atom, at character offset 0 (before "(end of string)") at bin/add-json.pl line 22.
+)
+4Array
+(
+    [0] => Can't open sequence index file server/upload/directory.index: Permission denied at /home/luxuia/www/Genovo/jbrowse/bin/../src/perl5/../../extlib/lib/perl5/Bio/DB/Fasta.pm line 527, <GEN1> line 380.
+    [1] => 
+    [2] => working on refseq ctgA
+    [3] => working on track gene
+    [4] => 
+    [5] => working on refseq ctgB
+    [6] => working on track gene
+)
+5{"plugins":[{"location":"plugins/Genovo","name":"Genovo"}],"datasets":{"volvox":{"url":"?data=sample_data/json/volvox","name":"Volvox Example"},"modencode":{"url":"?data=sample_data/json/modencode","name":"MODEncode Example"},"yeast":{"url":"?data=sample_data/json/yeast","name":"Yeast Example"},"neochr":{"url":"?data=data/neochr/","name":"neochr"}}}5{"plugins":[{"location":"plugins/Genovo","name":"Genovo"}],"datasets":{"volvox":{"url":"?data=sample_data/json/volvox","name":"Volvox Example"},"modencode":{"url":"?data=sample_data/json/modencode","name":"MODEncode Example"},"yeast":{"url":"?data=sample_data/json/yeast","name":"Yeast Example"},"neochr":{"url":"?data=data/neochr/","name":"neochr"}}}5.5  volvox5.5  volvox60607Array
+(
+    [plugins] => Array
+        (
+            [0] => Array
+                (
+                    [location] => plugins/Genovo
+                    [name] => Genovo
+                )
+
+        )
+
+    [datasets] => Array
+        (
+            [volvox] => Array
+                (
+                    [url] => ?data=data/volvox/
+                    [name] => volvox
+                )
+
+            [modencode] => Array
+                (
+                    [url] => ?data=sample_data/json/modencode
+                    [name] => MODEncode Example
+                )
+
+            [yeast] => Array
+                (
+                    [url] => ?data=sample_data/json/yeast
+                    [name] => Yeast Example
+                )
+
+            [neochr] => Array
+                (
+                    [url] => ?data=data/neochr/
+                    [name] => neochr
+                )
+
+        )
+
+)
+7Array
+(
+    [plugins] => Array
+        (
+            [0] => Array
+                (
+                    [location] => plugins/Genovo
+                    [name] => Genovo
+                )
+
+        )
+
+    [datasets] => Array
+        (
+            [volvox] => Array
+                (
+                    [url] => ?data=data/volvox/
+                    [name] => volvox
+                )
+
+            [modencode] => Array
+                (
+                    [url] => ?data=sample_data/json/modencode
+                    [name] => MODEncode Example
+                )
+
+            [yeast] => Array
+                (
+                    [url] => ?data=sample_data/json/yeast
+                    [name] => Yeast Example
+                )
+
+            [neochr] => Array
+                (
+                    [url] => ?data=data/neochr/
+                    [name] => neochr
+                )
+
+        )
+
+)
+Array
+(
+    [uploadedfiles] => Array
+        (
+            [name] => Array
+                (
+                    [0] => neochr.final.fa
+                    [1] => neochr.final.gff
+                )
+
+            [type] => Array
+                (
+                    [0] => application/octet-stream
+                    [1] => application/octet-stream
+                )
+
+            [tmp_name] => Array
+                (
+                    [0] => /tmp/phpcjl8XT
+                    [1] => /tmp/phpmo3Suo
+                )
+
+            [error] => Array
+                (
+                    [0] => 0
+                    [1] => 0
+                )
+
+            [size] => Array
+                (
+                    [0] => 136987
+                    [1] => 20063
+                )
+
+        )
+
+)
+2Array
+(
+    [index] => 0
+    [name] => neochr.final.fa
+    [size] => 136987
+    [type] => 
+)
+Array
+(
+    [uploadedfiles] => Array
+        (
+            [name] => Array
+                (
+                    [0] => neochr.final.fa
+                    [1] => neochr.final.gff
+                )
+
+            [type] => Array
+                (
+                    [0] => application/octet-stream
+                    [1] => application/octet-stream
+                )
+
+            [tmp_name] => Array
+                (
+                    [0] => /tmp/phpGVv3mr
+                    [1] => /tmp/phpWxgJQY
+                )
+
+            [error] => Array
+                (
+                    [0] => 0
+                    [1] => 0
+                )
+
+            [size] => Array
+                (
+                    [0] => 136987
+                    [1] => 20063
+                )
+
+        )
+
+)
+2Array
+(
+    [msg] => undefined
+)
+4Array
+(
+    [0] => Can't open sequence index file server/upload/directory.index: Permission denied at /home/luxuia/www/Genovo/jbrowse/bin/../src/perl5/../../extlib/lib/perl5/Bio/DB/Fasta.pm line 527, <GEN1> line 380.
+    [1] => 
+    [2] => working on refseq NeoChr
+    [3] => working on track gene
+)
+5{"plugins":[{"location":"plugins/Genovo","name":"Genovo"}],"datasets":{"volvox":{"url":"?data=data/volvox/","name":"volvox"},"modencode":{"url":"?data=sample_data/json/modencode","name":"MODEncode Example"},"yeast":{"url":"?data=sample_data/json/yeast","name":"Yeast Example"},"neochr":{"url":"?data=data/neochr/","name":"neochr"}}}5.5  neochr4Array
+(
+    [0] => Can't open sequence index file server/upload/directory.index: Permission denied at /home/luxuia/www/Genovo/jbrowse/bin/../src/perl5/../../extlib/lib/perl5/Bio/DB/Fasta.pm line 527, <GEN1> line 380.
+    [1] => 
+    [2] => working on refseq NeoChr
+    [3] => working on track gene
+)
+5{"plugins":[{"location":"plugins/Genovo","name":"Genovo"}],"datasets":{"volvox":{"url":"?data=data/volvox/","name":"volvox"},"modencode":{"url":"?data=sample_data/json/modencode","name":"MODEncode Example"},"yeast":{"url":"?data=sample_data/json/yeast","name":"Yeast Example"},"neochr":{"url":"?data=data/neochr/","name":"neochr"}}}5.5  neochr60607Array
+(
+    [plugins] => Array
+        (
+            [0] => Array
+                (
+                    [location] => plugins/Genovo
+                    [name] => Genovo
+                )
+
+        )
+
+    [datasets] => Array
+        (
+            [volvox] => Array
+                (
+                    [url] => ?data=data/volvox/
+                    [name] => volvox
+                )
+
+            [modencode] => Array
+                (
+                    [url] => ?data=sample_data/json/modencode
+                    [name] => MODEncode Example
+                )
+
+            [yeast] => Array
+                (
+                    [url] => ?data=sample_data/json/yeast
+                    [name] => Yeast Example
+                )
+
+            [neochr] => Array
+                (
+                    [url] => ?data=data/neochr/
+                    [name] => neochr
+                )
+
+        )
+
+)
+7Array
+(
+    [plugins] => Array
+        (
+            [0] => Array
+                (
+                    [location] => plugins/Genovo
+                    [name] => Genovo
+                )
+
+        )
+
+    [datasets] => Array
+        (
+            [volvox] => Array
+                (
+                    [url] => ?data=data/volvox/
+                    [name] => volvox
+                )
+
+            [modencode] => Array
+                (
+                    [url] => ?data=sample_data/json/modencode
+                    [name] => MODEncode Example
+                )
+
+            [yeast] => Array
+                (
+                    [url] => ?data=sample_data/json/yeast
+                    [name] => Yeast Example
+                )
+
+            [neochr] => Array
+                (
+                    [url] => ?data=data/neochr/
+                    [name] => neochr
+                )
+
+        )
+
+)

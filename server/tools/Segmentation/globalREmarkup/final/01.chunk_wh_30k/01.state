@@ -1,0 +1,55 @@
+#############  PARAMETERS  #############
+GFF = ../sce_chrI.gff
+FA = ../sce_chr01.fa
+OL = 1000 bp
+CK = 30000 bp
+M1 = ../../notadoctor-biostudio-36bc6ad1c918/config/markers/LEU2.gff
+M2 = ../../notadoctor-biostudio-36bc6ad1c918/config/markers/URA3.gff
+M3 = ../../notadoctor-biostudio-36bc6ad1c918/config/markers/HIS3.gff
+M4 = ../../notadoctor-biostudio-36bc6ad1c918/config/markers/TRP1.gff
+OT = 01.chunk_wh_30k/sce_chrI.chunk30k
+########################################
+
+megachunk_ID	location_of_contained_sequence
+01.chunk_wh_30k/sce_chrI.chunk30k-3	1-33342
+left_telomere	1	0
+LEU2	1	0
+Part of chromosome	1	33343
+
+01.chunk_wh_30k/sce_chrI.chunk30k-2	32343-65682
+left_telomere	1	0
+LEU2	1	0
+Part of chromosome	1	32340
+
+01.chunk_wh_30k/sce_chrI.chunk30k-1	64683-98022
+left_telomere	1	0
+LEU2	1	0
+Part of chromosome	1	32340
+
+01.chunk_wh_30k/sce_chrI.chunk30k0	97023-127023
+left_telomere	1	0
+HIS3	1	0
+Part of chromosome	1	30001
+TRP1	30002	30001
+right_telomere	30002	30001
+
+01.chunk_wh_30k/sce_chrI.chunk30k1	126024-152822
+Part of chromosome	1	26799
+LEU2	26800	26799
+right_telomere	26800	26799
+
+01.chunk_wh_30k/sce_chrI.chunk30k2	151823-178621
+Part of chromosome	1	26799
+LEU2	26800	26799
+right_telomere	26800	26799
+
+01.chunk_wh_30k/sce_chrI.chunk30k3	177622-204420
+Part of chromosome	1	26799
+LEU2	26800	26799
+right_telomere	26800	26799
+
+01.chunk_wh_30k/sce_chrI.chunk30k4	203421-230221
+Part of chromosome	1	26801
+LEU2	26802	26801
+right_telomere	26802	26801
+

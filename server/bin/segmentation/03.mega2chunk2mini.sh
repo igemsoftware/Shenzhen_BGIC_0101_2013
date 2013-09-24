@@ -1,0 +1,1 @@
+perl 03.mega2chunk2mini.pl -re ../standard_and_IIB -sg 01.whole2mega/sce_chr01_0.mega -ps 02.globalREmarkup/sce_chr01_0.parse -ot 03.mega2chunk2mini

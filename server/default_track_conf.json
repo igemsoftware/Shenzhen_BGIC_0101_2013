@@ -1,0 +1,27 @@
+         {
+   "tracks" : [
+      {
+         "feature" : [
+            "gene"
+         ],
+         "urlTemplate" : "http://www.ncbi.nlm.nih.gov/gquery/?term={name}-{start}-{end}",
+         "phase" : 1,
+         "track" : "gene",
+         "trackType": "JBrowse/View/Track/CanvasFeatures",
+         "type": "CanvasFeatures",
+         "category" : "Genes",
+         "class" : "feature5",
+         "key" : "Predicted genes"
+      }
+   ],
+   "TRACK DEFAULTS" : {
+      "autocomplete" : "all",
+      "class" : "feature"
+   },
+   "db_args" : {
+      "-adaptor" : "memory",
+      "-dir" : "server/upload"
+   },
+   "description" : "Uploaded file",
+   "db_adaptor" : "Bio::DB::SeqFeature::Store"
+}
