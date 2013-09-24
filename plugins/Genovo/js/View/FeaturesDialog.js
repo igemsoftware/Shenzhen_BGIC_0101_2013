@@ -84,21 +84,26 @@
                   						size: 25,
                               onclick: function() {
                                 var highlight = that.browser.getHighlight();
+                                if (highlight === null) {
+                                  alert("Please Select Region use Highlight Tools");
+                                  return;
+                                }
                                 var todelete = that.featuresGrid.selection.selected;
                                 var msg = [];
                                 for (var a in todelete) {
                                   if (a && todelete[a]) {
-                                      msg.push(that.backupmsg[a]);
+                                      msg.push(that.backupmsg[a].Name);
                                   }
                                 };
                                 dojo.xhrGet({
-                                  url: "server/REST/index.php/DeleteFeatures",
+                                  url: "server/REST/index.php/features/delete",
                                   content: {
                                     features: msg.join(","),
+                                    baseUrl: that.browser.config.baseUrl,
                                     start: highlight.Start,
                                     end: highlight.End,
                                     refseq: highlight.ref,
-                                    dataset: that.browser.config.dataset
+                                    dataset: that.browser.config.dataset_id
                                   },
                                   handleAs: "text",
                                   load: function(d) {
@@ -116,9 +121,10 @@
                 var highlight = that.browser.getHighlight();
 
           			dojo.xhrGet({
-          				url: 'server/REST/index.php/features/'
-                            +that.browser.config.dataset_id,
+          				url: 'server/REST/index.php/features/SearchByLocation',
                   content: {
+                    dataset: that.browser.config.dataset_id,
+                    baseUrl: that.browser.config.baseUrl,
                     refseq:highlight.ref,
                     start: highlight.start,
                     end: highlight.end

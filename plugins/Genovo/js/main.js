@@ -10,6 +10,8 @@ define(
 				'./View/GetPrice',
 				'./View/HistoryWindow',
 				'./View/UploadDialog',
+				'./View/FeaturesDialog',
+				'./View/whole2megaWindow',
 				'dojo/domReady!'
 			],
 		function(
@@ -19,19 +21,23 @@ define(
 			PopupMenuItem,
 			JBrowsePlugin, 
 			PathwayWindow,
-			OptimizationWindow,
+			CodenOptimizeWindow,
 			GetPriceWindow,
 			HistoryWindow,
-			UploadDialog
+			UploadDialog,
+			FeaturesDialog,
+			whole2megaWindow
 			) {
 return declare( JBrowsePlugin, 
 {
 	pathwayWindow : null,
-	optimizationWindow: null,
+	codenOptimizeWindow: null,
 	getPriceWindow: null,
 	browser: null,
 	historyWindow: null,
 	uploadDialig: null,
+	featuresDialog: null,
+	whole2mega: null,
 
 	constructor: function( args ) {
 		var that = this;
@@ -92,7 +98,24 @@ return declare( JBrowsePlugin,
 		modify.addChild(new dijitMenuItem({
 			label: "Delete gene or features",
 			onClick: function() {
-				alert("delete");
+				if (!that.featuresDialog) {
+					that.featuresDialog = new FeaturesDialog({
+								browser:browser,
+								title: "Delete Features"/*,
+								callback: function() {
+									dojo.xhrGet({
+										url: "server/REST/index.php/Delete",
+										content: {
+
+										},
+										load: function() {
+
+										}
+									});
+								}*/
+							});
+				}
+				that.featuresDialog.show();
 			}
 		}));
 
@@ -106,20 +129,27 @@ return declare( JBrowsePlugin,
 			{
 				label: "Coden Optimize",
 				onClick: function() {
+					if (!that.codenOptimizeWindow) {
+						that.codenOptimizeWindow = new CodenOptimizeWindow({
+							browser: browser
+						})
+					} 
+					that.codenOptimizeWindow.show();/*
 						dojo.xhrGet({
-						url: "server/REST/index.php/CodenOptimize",
-						content: {
-							baseUrl: browser.config.baseUrl,
-							dataset: browser.config.dataset_id,
-							step: {
-								1: true,
-								2: true
+							url: "server/REST/index.php/CodenOptimize",
+							content: {
+								baseUrl: browser.config.baseUrl,
+								dataset: browser.config.dataset_id,
+								step: {
+									1: true,
+									2: true
+								}
+							},
+							load: function( d ) {
+								console.log(d);
 							}
-						},
-						load: function( d ) {
-							console.log(d);
-						}
-					});
+						});
+		*/
 					/*
 					if (!that.optimizationWindow) {
 						that.optimizationWindow = new OptimizationWindow( {browser: browser} );
@@ -146,15 +176,12 @@ return declare( JBrowsePlugin,
 		pSubMenu.addChild(new dijitMenuItem({
 			label: "whole2mega",
 			onClick: function() {
-				dojo.xhrGet({
-					url: "server/REST/index.php/Segmentation/whole2mega",
-					content: {
-						baseUrl: browser.config.baseUrl
-					},
-					load: function( d ) {
-						console.log(d);
-					}
-				});
+				if (!that.whole2mega) {
+					that.whole2mega = whole2megaWindow({browser:browser});
+				}
+				that.whole2mega.show();
+				/*
+				*/
 				//alert("Segmentation 30K");
 			}
 		}));

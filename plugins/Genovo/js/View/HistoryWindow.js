@@ -38,6 +38,7 @@
       title: "Edit History",
      // width: 1000,
      // height: 300,
+      updateButton: null,
       historyGrid : null,
       data :null, 
 
@@ -58,16 +59,17 @@
 
       show: function() {
             var that = this;
+            that.updateButton.click();
               //$("body").addClass("user_select_none");
              /*
               window.onresize = function() {
                 appContainer.layout();
                 };*/
            //     this._makeMenu();
-        	this.inherited( arguments );
-        	on(that, "hide", function() {
-          //  this.historyGrid.destroyRecursive(true);
-        	})
+          	this.inherited( arguments );
+          	on(that, "hide", function() {
+            //  this.historyGrid.destroyRecursive(true);
+          	})
         	
       },
 
@@ -83,12 +85,11 @@
                   						value: 'SspI',
                   						size: 25,
                   					});
-          var inputbutton = dojo.create('button', {
+          var updateButton = that.updateButton = dojo.create('button', {
           		id: 'updateHistory',
           		type: 'button',
           		innerText: 'Update History',
           		onclick: function () {
-          			var enzymes = inputvalue.value;
           			dojo.xhrGet({
           				url: 'server/REST/index.php/stats/version/'
                         +that.browser.config.dataset_id,
@@ -109,7 +110,7 @@
           			})
           		}
           });
-          inputbutton.innerText = 'update History Now';
+          updateButton.innerText = 'update History Now';
           this.data = {
           	identifier: "hashcode",
           	items:[]
@@ -163,7 +164,7 @@
                   region: "top",
                   content: [
           //        	inputvalue,
-                  	inputbutton,
+                  	updateButton,
                   ]
                   //style: "height:" + this.height + "%, width: " + this.width + "%"
                  // content: dojo.create("div", {id: "svg_", style: "height: 100%, width: 100%"}),
