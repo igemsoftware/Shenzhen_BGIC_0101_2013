@@ -8,6 +8,7 @@
 *TODO.txt
 Makefile
 /sample_data/json
+/data
 /src/wig2png/config.log
 /src/wig2png/config.status
 /src/wig2png/src/config.h
