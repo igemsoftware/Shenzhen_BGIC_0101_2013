@@ -13,8 +13,7 @@
               'dojo/on',
               'dojo/dom',
               'dojox/grid/DataGrid',
-              'dojo/data/ItemFileReadStore',
-              './jquery-1.7.2',
+              'dojo/data/ItemFileReadStore'
           ],
           function(
               declare,
@@ -89,6 +88,8 @@
           		type: 'button',
           		innerText: 'Get Price of enzymes',
           		onclick: function () {
+                var progress = dijit.byId("globalProgress").set("label", "Geting price From Internt...");
+                progress.set("indeterminate", true);
           			var enzymes = inputvalue.value;
           			dojo.xhrGet({
           				url: 'server/tools/toolsManager.php?GetPrice=1&enzyme='+enzymes,
@@ -108,6 +109,8 @@
           						}
           						var newStore = new ItemFileReadStore({ data: that.data});
           						that.priceGrid.setStore(newStore);
+                      progress = dijit.byId("globalProgress").set("label", "DANG.DANG. price GOT...");
+                      progress.set("indeterminate", false);
           				}
           			})
           		}

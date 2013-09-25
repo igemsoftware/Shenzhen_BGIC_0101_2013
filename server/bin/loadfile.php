@@ -4,8 +4,8 @@
 			mkdir($outdir);
 			///echo $tmpfile;
 			//return;
-		    copy($tmpfile.$output.".fa", $outdir.$output.".fa");
-		    copy($tmpfile.$output.".gff", $outdir.$output.".gff");
+		    rename($tmpfile.$output.".fa", $outdir.$output.".fa");
+		    rename($tmpfile.$output.".gff", $outdir.$output.".gff");
 		    $err = Array(); 
 		    exec("perl bin/prepare-refseqs.pl --fasta $outdir{$output}.fa --out $outdir 2>&1", $err); 
 		    //error_log("1".print_r($err, true), 3, 'server/debug.log');
@@ -37,7 +37,7 @@
 
 		    chdir($outdir);
 		    
-		   
+		   //	exec("rm server/tmp_data/* -r");
 		    
 		    exec("git init", $err);
  			exec('sleep 10');	

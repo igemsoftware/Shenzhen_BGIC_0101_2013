@@ -14,8 +14,7 @@
               'dojo/dom',
               'dojox/grid/DataGrid',
               'dojo/data/ItemFileReadStore',
-              'dojox/grid/_CheckBoxSelector',
-              './jquery-1.7.2'
+              'dojox/grid/_CheckBoxSelector'
           ],
           function(
               declare,
@@ -83,11 +82,14 @@
                   						value: 'Delete Them',
                   						size: 25,
                               onclick: function() {
-                                var highlight = that.browser.getHighlight();
                                 if (highlight === null) {
                                   alert("Please Select Region use Highlight Tools");
                                   return;
                                 }
+                                var progress = dijit.byId("globalProgress").set("label", "I'm trying deleteing them...");
+                                progress.set("indeterminate", true);
+                                var highlight = that.browser.getHighlight();
+                                
                                 var todelete = that.featuresGrid.selection.selected;
                                 var msg = [];
                                 for (var a in todelete) {
@@ -109,7 +111,9 @@
                                   load: function(d) {
                                     console.log(d);
                                   }
-                                })
+                                });
+                                progress = dijit.byId("globalProgress").set("label", "HAHA, YES, They deleted...");
+                                progress.set("indeterminate", false);
                               }
                   					});
           deleteButton.innerText = "Delete Them";
@@ -118,8 +122,14 @@
           		type: 'button',
           		innerText: 'Update History',
           		onclick: function () {
+                if (highlight == null) {
+                  alert("Please Select Region use Highlight Tools");
+                  return;
+                }
+                var progress = dijit.byId("globalProgress").set("label", "I'm working hard to get features");
+                progress.set("indeterminate", true);
                 var highlight = that.browser.getHighlight();
-
+                
           			dojo.xhrGet({
           				url: 'server/REST/index.php/features/SearchByLocation',
                   content: {
@@ -144,6 +154,8 @@
                       }
           						var newStore = new ItemFileReadStore({ data: that.data});
           						that.featuresGrid.setStore(newStore);
+                      progress = dijit.byId("globalProgress").set("label", "show you..");
+                      progress.set("indeterminate", false);
           				}
           			})
           		}

@@ -19,16 +19,19 @@ class Resource_Segmentation_whole2mega extends Resource
 			exec("ls {$dataUrl}*.fa", $fa);
 			$fa = $fa[0];
 			$ol = isset($data['ol'])? $data['ol']:1000;
+			$ck = isset($data['ck']) ? $data['ck']:30000;
 			//chdir("../server");
 			$output = "01.whole2mega";
-			$cmd = "perl server/bin/segmentation/01.whole2mega.pl \
-						--gff $gff\
-						--fa  $fa\
-						-ol $ol\
-						-ck 30000\
-						-m1 server/config/marker/LEU2.gff\
-						-m2 server/config/marker/URA3.gff\
-						-ot {$dataUrl}{$output} 2>&1";
+			$cmd = "perl server/bin/segmentation/01.whole2mega.pl"
+						." --gff $gff"
+						." --fa  $fa"
+						." -ol $ol"
+						." -ck $ck"
+						." -m1 server/config/marker/LEU2.gff"
+						." -m2 server/config/marker/URA3.gff"
+						." -m3 server/config/marker/HIS3.gff"
+						." -m4 server/config/marker/TRP1.gff"
+						." -ot {$dataUrl}{$output} 2>&1";
 
 			exec($cmd, $result);
 			$this->_data = $result;

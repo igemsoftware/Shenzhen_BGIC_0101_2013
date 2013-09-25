@@ -13,8 +13,7 @@
               'dojo/on',
               'dojo/dom',
               'dojox/grid/DataGrid',
-              'dojo/data/ItemFileReadStore',
-              './jquery-1.7.2',
+              'dojo/data/ItemFileReadStore'
           ],
           function(
               declare,

@@ -15,7 +15,7 @@
               'dijit/form/FilteringSelect',
               'dijit/form/NumberTextBox',
               'dojox/validate',
-              './jquery-1.7.2'
+              './jquery-1.9.1'
           ],
           function(
               declare,
@@ -83,6 +83,22 @@
       show: function() {
           var that = this;
         //  dijit.byId("")
+          dojo.connect( dijit.byId("a2"), "onChange", function(d) {
+             if (d == "Gibson") {
+              dojo.query("#a2extern").style("display", "inline");
+             } else {
+              dojo.query("#a2extern").style("display", "none");
+             }
+          })
+          
+          dojo.connect( dijit.byId("a10"), "onChange", function(d) {
+             if (d == "Goldengate") {
+              dojo.query("#a10extern").style("display", "inline");
+             } else {
+              dojo.query("#a10extern").style("display", "none");
+             }
+          })
+
         	this.inherited( arguments );
         	on(that, "hide", function() {
           //  this.priceGrid.destroyRecursive(true);
@@ -92,7 +108,7 @@
 
       _makeDefaultContent: function() {
       	var that = this;
-        var content = '<table cellpadding="0" cellspacing="2">'
+        var content = '<table cellpadding="0" cellspacing="2" style="display:inline">'
                     +     ' <tr><td valign="top"><strong>restriction enzyme sites list: </strong></td><td>'  
                     +     ' <select name="re1" id="re1" dojoType="dijit.form.FilteringSelect">'
                     +     '     <option value="Standard_and_IIB">Standard_and_IIB</option>'
@@ -109,12 +125,11 @@
                     +     '     <option value="Goldengate">Goldengate</option>'
                     +     '     <option value="Gibson">Gibson</option>'
                     +     ' </select>'
-                    +     ' <tr><td valign="top"><strong>The maximum length of minichunks : </strong></td><td><input type="text" required="true" name="ckmax2" id="ckmax2" placeholder="2200" dojoType="dijit.form.NumberTextBox" missingMessage="The maximum length of minichunks(bp)" value=2200/></td></tr>'
-                    +     ' <tr><td valign="top"><strong>The minimum length of minichunks :  </strong></td><td><input type="text" required="true" name="ckmin2" id="ckmin2" placeholder="1800" dojoType="dijit.form.NumberTextBox" missingMessage="The minimum length of minichunks (bp)" value=1800/></td></tr>'
-                    +     ' <tr><td valign="top"><strong>The number of minichunks in a chunk :  </strong></td><td><input type="text" required="true" name="cknum" id="cknum" placeholder="5" dojoType="dijit.form.NumberTextBox" missingMessage="The number of minichunks in a chunk" value=5/></td></tr>'
-                    +     ' <tr><td valign="top"><strong>The first marker for selection alternately: </strong></td><td>'
-                    + '</table>'
-                    + '<table id=a2extern style:display>'
+                    +     ' <tr><td valign="top"><strong>The maximum length of minichunks : </strong></td><td><input type="text" required="true" name="ckmax2" id="ckmax2" placeholder="2200" dojoType="dijit.form.NumberTextBox" missingMessage="The maximum length of minichunks(bp)" value="2200"/></td></tr>'
+                    +     ' <tr><td valign="top"><strong>The minimum length of minichunks :  </strong></td><td><input type="text" required="true" name="ckmin2" id="ckmin2" placeholder="1800" dojoType="dijit.form.NumberTextBox" missingMessage="The minimum length of minichunks (bp)" value="1800"/></td></tr>'
+                    +     ' <tr><td valign="top"><strong>The number of minichunks in a chunk :  </strong></td><td><input type="text" required="true" name="cknum" id="cknum" placeholder="5" dojoType="dijit.form.NumberTextBox" missingMessage="The number of minichunks in a chunk" value="5"/></td></tr>'
+               //     + '</table>'
+                    + '<tbody id="a2extern" cellpadding="0" cellspacing="2" style="display:inline">'
                     +     ' <tr><td valign="top"><strong>The length of overlap(bp) : </strong></td><td><input type="text" required="true" name="ol2" id="ol2" placeholder="40" dojoType="dijit.form.NumberTextBox" missingMessage="The length of overlap(bp)" value="40"/></td></tr>'
                     +     ' <tr><td valign="top"><strong>maximum melting temperature(℃) : </strong></td><td><input type="text" required="true" name="tmax2" id="tmax2" placeholder="60" dojoType="dijit.form.NumberTextBox" missingMessage="The maximum melting temperature of the overlap of minichunks" value="60"/></td></tr>'
                     +     ' <tr><td valign="top"><strong>minimum melting temperature(℃) : </strong></td><td><input type="text" required="true" name="tmin2" id="tmin2" placeholder="56" dojoType="dijit.form.NumberTextBox" missingMessage="The minimum melting temperature of the overlap of minichunks" value="56"/></td></tr>'
@@ -130,14 +145,14 @@
                     +     ' <select name="m3" id="m3" dojoType="dijit.form.FilteringSelect">'
                     +         '   <option value="IIP">IIP</option>'
                     +     ' </select>'
-                    + '</table>'
-                    + '<table id=a10extern style:display>'
+                    + '</tbody>'
+                    + '<tbody id="a10extern" cellpadding="0" cellspacing="2" style="display:inline">'
                     +     ' <tr><td valign="top"><strong>The type of enzyme flanking chunks: </strong></td><td>'
                     +     ' <select name="en10" id="en10" dojoType="dijit.form.FilteringSelect">'
                     +         '   <option value="IIB">IIB</option>'
                     +     ' </select>'
-                    +     ' <tr><td valign="top"><strong>The temperature of enzyme used in chunks digestion : </strong></td><td><input type="text" required="true" name="et10" id="et10" placeholder="37" dojoType="dijit.form.NumberTextBox" missingMessage="The temperature of enzyme used in chunks digestion℃" value=37/></td></tr>'
-                    + '</table>'
+                    +     ' <tr><td valign="top"><strong>The temperature of enzyme used in chunks digestion : </strong></td><td><input type="text" required="true" name="et10" id="et10" placeholder="37" dojoType="dijit.form.NumberTextBox" missingMessage="The temperature of enzyme used in chunks digestion℃" value="37"/></td></tr>'
+                    + '</tbody>'
         return content;
       }
     });

@@ -33,21 +33,21 @@ class Resource_CodenOptimize extends Resource
 			} else if ( isset( $data['step']['2']) ) {
 				$step = "2467";
 			}	
-			$cmd = "perl server/bin/sequence_modificationV1.pl \
-							$fa -step $step -genegff $gff \
-							-genelist server/config/Optimize/gene_list \
-							-codonoptimize server/config/Optimize/yeast.CodonPriority.txt \
-							-enzymelib server/config/Optimize/common_enzyme.list\
-							-optizeallgene \
-							-outfasta server/tmp_data/{$dataset}_{$step}.fa\
-							-outgff server/tmp_data/{$dataset}_{$step}.gff";
+			$cmd = "perl server/bin/sequence_modificationV1.pl"
+						." $fa -step $step -genegff $gff"
+						." -genelist server/config/Optimize/gene_list"
+						." -codonoptimize server/config/Optimize/yeast.CodonPriority.txt"
+						." -enzymelib server/config/Optimize/common_enzyme.list"
+						." -optizeallgene"
+						." -outfasta server/tmp_data/{$dataset}_{$step}.fa"
+						." -outgff server/tmp_data/{$dataset}_{$step}.gff";
 			
 			//$this->_data = $cmd;
 			exec($cmd, $result, $code);
 		
-			exec("php server/bin/loadfile.php \
-						{$dataset}_{$step} data/{$dataset}_{$step}/ \
-						server/tmp_data/ server/default_track_conf.json 2>&1", $result);
+			exec("php server/bin/loadfile.php"
+						." {$dataset}_{$step} data/{$dataset}_{$step}/"
+						." server/tmp_data/ server/default_track_conf.json 2>&1", $result);
 			$this->_data = $result;
 
 		} else {

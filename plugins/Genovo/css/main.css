@@ -171,3 +171,8 @@ line.link {
 .user_select_none {
   -moz-user-select:none;-webkit-user-select: none;
 }
+
+
+
+#draggenes { list-style-type: none; margin: 0; padding: 0;}
+#draggenes li { float:left; margin: 0; padding: 0.4em; padding-left: 0.1em; font-size: 1.4em; height: 18px; }

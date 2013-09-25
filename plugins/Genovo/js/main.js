@@ -14,6 +14,7 @@ define(
 				'./View/whole2megaWindow',
 				'./View/mega2chunk2miniWindow',
 				'./View/globalREmarkupWindow',
+				'dijit/ProgressBar',
 				'dojo/domReady!'
 			],
 		function(
@@ -30,7 +31,8 @@ define(
 			FeaturesDialog,
 			whole2megaWindow,
 			mega2chunk2miniWindow,
-			globalREmarkupWindow
+			globalREmarkupWindow,
+			ProgressBar
 			) {
 return declare( JBrowsePlugin, 
 {
@@ -74,9 +76,13 @@ return declare( JBrowsePlugin,
 				onClick: function() {
 					//new PathwayWindow( {browser: browser } ).show();
 					if (!that.pathwayWindow) {
-						that.pathwayWindow = new PathwayWindow( {browser: browser } );
+						that.pathwayWindow = new PathwayWindow( {
+									browser: browser,
+									genovo: that
+								} );
 					}
 					that.pathwayWindow.show();
+					//that.getPriceWindow.show();
 				}
 			}
 		));
@@ -85,6 +91,8 @@ return declare( JBrowsePlugin,
 		modify.addChild(new dijitMenuItem({
 			label: "Add loxp",
 			onClick: function() {
+				var progress = dijit.byId("globalProgress").set("label", "We are adding loxp for you.");
+       			progress.set("indeterminate", true);
 				dojo.xhrGet({
 					url:"server/REST/index.php/modify/Add",
 					content: {
@@ -94,6 +102,8 @@ return declare( JBrowsePlugin,
 					handlAs: "test",
 					load: function( d ) {
 						console.log(d);
+						var progress = dijit.byId("globalProgress").set("label", "Loxp success...");
+        				progress.set("indeterminate", true);
 					}
 				})
 			}
@@ -105,7 +115,8 @@ return declare( JBrowsePlugin,
 				if (!that.featuresDialog) {
 					that.featuresDialog = new FeaturesDialog({
 								browser:browser,
-								title: "Delete Features"/*,
+								title: "Delete Features",
+								genovo: that/*,
 								callback: function() {
 									dojo.xhrGet({
 										url: "server/REST/index.php/Delete",
@@ -135,7 +146,8 @@ return declare( JBrowsePlugin,
 				onClick: function() {
 					if (!that.codenOptimizeWindow) {
 						that.codenOptimizeWindow = new CodenOptimizeWindow({
-							browser: browser
+							browser: browser,
+							genovo: that
 						})
 					} 
 					that.codenOptimizeWindow.show();/*
@@ -167,7 +179,11 @@ return declare( JBrowsePlugin,
 				label: "fetch enzymes' Price",
 				onClick: function() {
 					if (!that.getPriceWindow) {
-						that.getPriceWindow = new GetPriceWindow( {browser: browser});
+						that.getPriceWindow = new GetPriceWindow( 
+									{
+										browser: browser,
+										genovo: that
+									});
 					}
 					that.getPriceWindow.show();
 				}
@@ -181,7 +197,11 @@ return declare( JBrowsePlugin,
 			label: "whole2mega",
 			onClick: function() {
 				if (!that.whole2mega) {
-					that.whole2mega = whole2megaWindow({browser:browser});
+					that.whole2mega = whole2megaWindow(
+						{
+							browser:browser,
+							genovo: that
+						});
 				}
 				that.whole2mega.show();
 				/*
@@ -194,7 +214,11 @@ return declare( JBrowsePlugin,
 			label: "globalREmarkup",
 			onClick: function() {
 				if (!that.globalREmarkup) {
-					that.globalREmarkup = globalREmarkupWindow({browser:browser});
+					that.globalREmarkup = globalREmarkupWindow(
+						{
+							browser:browser,
+							genovo: that
+						});
 				}
 				that.globalREmarkup.show();
 				
@@ -204,7 +228,11 @@ return declare( JBrowsePlugin,
 			label: "mega2chunk2mini",
 			onClick: function() {
 				if (!that.mega2chunk2mini) {
-					that.mega2chunk2mini = mega2chunk2miniWindow({browser:browser});
+					that.mega2chunk2mini = mega2chunk2miniWindow(
+						{
+							browser:browser,
+							genovo: that
+						});
 				}
 				that.mega2chunk2mini.show();
 				
@@ -224,7 +252,11 @@ return declare( JBrowsePlugin,
                     iconClass: 'dijitIconFolderOpen',
                     onClick: function() {
                     	if (!that.uploadDialig) {
-                    		that.uploadDialig = new UploadDialog( { browser: browser });
+                    		that.uploadDialig = new UploadDialog( 
+                    			{ 
+                    				browser: browser, 
+                    				genovo: that
+                    			});
                     	}
                     	that.uploadDialig.show( {
 	            			openCallback: function( results ) {}
@@ -246,7 +278,10 @@ return declare( JBrowsePlugin,
 				onClick: function() {
 					if (!that.historyWindow) {
 						//alert("TODO POP HIST");
-						that.historyWindow = new HistoryWindow({browser: browser});
+						that.historyWindow = new HistoryWindow({
+							browser: browser,
+							genovo: that
+						});
 					}
 					that.historyWindow.show( );
 				}
@@ -257,6 +292,20 @@ return declare( JBrowsePlugin,
 			text: 'History'
 		}, browser.menuBar);
 
+		var progress = new ProgressBar({
+			style: "width: 300px",
+			id: "globalProgress",
+			indeterminate:false,
+			label: "Welcome to Genovo"
+		});
+		dojo.addClass(progress.domNode, "menu");
+		browser.menuBar.appendChild(progress.domNode);
+
+		/*
+		var i = 0;
+		setInterval(function() {
+			progress.set("value", i++ %100);
+		}, 100);*/
 	}
 
 })

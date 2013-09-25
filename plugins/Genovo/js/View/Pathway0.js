@@ -1,3 +1,4 @@
+  define.amd.jQuery = true;
   define( [
               'dojo/_base/declare',
               'JBrowse/View/InfoDialog',
@@ -13,9 +14,10 @@
               'dojo/on',
               "dojo/dom",
               "dijit/popup",
+              "dojo/dnd/Source",
               'dojo/query!css2',
+              'dojo/domReady!',
               './d3.v3',
-              './jquery-1.7.2',
               './Tooltip'
           ],
           function(
@@ -32,7 +34,9 @@
               aspect,
               on,
               dom,
-              popup
+              popups,
+              Source
+             // $
           ) {
   return declare( InfoDialog, {
 
@@ -50,6 +54,7 @@
       idpool: null,
       species: null,
       pathway: null,
+      dragSource: null,
 
       constructor: function(args) {
           this.width = window.screen.width*0.8;
@@ -154,6 +159,7 @@
                     label: "Create Genome",
                     style: "right: 5em",
                     onClick: dojo.hitch( that, function () {
+                      /*
                         var outputNodes = that.nodes.filter( function( n ){
                           return (n.created);
                         })
@@ -165,7 +171,20 @@
                           return;
                         }
                         var geneorder = getGeneList(outputNodes, outputList);
-                      
+                      */
+                        var geneorder = [];
+                        var domlist = dojo.query("#draggenes li");
+                        for (var i = 0; i < domlist.length; ++i) {
+                          var pos = '+';
+                          var c = domlist[i].getAttribute('class').indexOf("circle");
+                          if (c == -1) {
+                            pos = '-';
+                          }
+                          geneorder.push(domlist[i].innerHTML+ " " + pos)
+                        }
+                        geneorder = geneorder.join(',');
+                        var progress = dijit.byId("globalProgress").set("label", "Working on Decouple...");
+                        progress.set("indeterminate", true);
                         dojo.xhrGet({
                             url: "server/REST/index.php/decouple/",
                             handleAs: "text",
@@ -176,6 +195,9 @@
                             },
                             load: function(d) {
                               console.log(d);
+                              progress.set("label", "Decouple Success. :)");
+                              progress.set("indeterminate", false);
+
 // TODO 
 // jump to created genome 
                             }
@@ -241,7 +263,11 @@
 
     loadPathwayData: function(argv, callback) {
       var that = argv.that;
+      
+
       return function() { 
+        var progress = dijit.byId("globalProgress").set("label", "building graph ...");
+        progress.set("indeterminate", true);
         dojo.xhrGet({
           url: "server/tools/toolsManager.php",
           handleAs: "json",
@@ -295,14 +321,27 @@
               }
             }
             callback();
+            progress = dijit.byId("globalProgress").set("label", "Success build Graph...");
+            progress.set("indeterminate", false);
           }
         });
       }
     },
 
+    removeDraggene: function( node ) {
+        var nodelist = dojo.query("#draggenes li");
+        for (var i = 0; i < nodelist.length; ++i) {
+          if (nodelist[i].getAttribute("pid") == node.id) {
+            dojo.query("#draggenes")[0].removeChild(nodelist[i]);
+            return;
+          }
+        }
+    },
+
     removeNode: function( node ) {
       this.nodes.splice(this.nodes.indexOf(node), 1);
       this.spliceLinksForNode(node);
+      this.removeDraggene(node);
     },
 
     findNodeById: function( id ) {
@@ -629,6 +668,8 @@
 
                       //console.log(cnode.y);
                     nodes.push(cnode);
+                    //dojo.create("li", { innerHTML: d.geneName, class: d.type+ " "+"dojoDndItem", name: cnode.id }, dojo.byId("draggenes"));
+                    that.dragSource.insertNodes(false, [ { text: d.geneName, pid: cnode.id}]);
                      // restart();
                     //}
                   }
@@ -789,6 +830,7 @@
                   if(selected_node) {
                     nodes.splice(nodes.indexOf(selected_node), 1);
                     that.spliceLinksForNode(selected_node);
+                    that.removeDraggene(selected_node);
                   } else if(selected_link) {
                     links.splice(links.indexOf(selected_link), 1);
                   }
@@ -883,6 +925,19 @@
               this._makeMenu();
               this.hasInstance = true;
               this._makeDropDownNodeMenu();
+              this.dragSource = new Source("draggenes", 
+                { 
+                  creator: function( item, hint ) {
+                              var myLi = dojo.create( 'li', { pid : item.pid, innerHTML: item.text });
+
+                              if (hint == 'avatar') {
+                                // create your avatar if you want
+                                  myLi.innerHTML = "Moving " + item.text + "...";
+                              }
+                              return {node: myLi, data: item};
+                          }
+              });
+              //new dojo.dnd.Source("draggenes");
         }
       },
 
@@ -895,6 +950,8 @@
       _makeDefaultContent: function() {
           this.idpool = 1;
           var appContainer = this.appContainer = new BorderContainer({
+                gutters: true,
+                liveSplitters: true,
                 style: "height: " + this.height + "px; width: " + this.width + "px;"
               });
 
@@ -907,14 +964,24 @@
 
               var svg = new ContentPane({
                   id: "svgPane",
-                  region: "center",
+                  region: "center"
                   //style: "height:" + this.height + "%, width: " + this.width + "%"
                  // content: dojo.create("div", {id: "svg_", style: "height: 100%, width: 100%"}),
               });
-
+              var dragBar = new ContentPane({
+                id: "dragBar",
+                region: "bottom",
+                splitter: true,
+                style: "overflow-x:auto;overflow-y:hidden",
+                content: dojo.create("ul", {
+                      id: "draggenes", 
+                      style: "height: 2.5em;width: 100"
+                    }),
+              })
 
               appContainer.addChild(menuBar);
               appContainer.addChild(svg);
+              appContainer.addChild(dragBar);
 
               document.onselectstart=function(){return false}
               //Firefox、Chrome、Safaria

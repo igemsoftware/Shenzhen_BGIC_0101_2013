@@ -29,6 +29,7 @@ if ($help || !$species ||!$gene_order ||!$geneset_dir ||!$neo_chr_gff ||!$neo_ch
 	exit;
 }
 
+#print $gene_order,"\n";exit;
 my (%sequence,%AnnoInfo,@GeneOrder);
 my (%Order,%frag,%aa_table,%syn_aa_base);
 my %complement_base = (
@@ -78,7 +79,7 @@ $fa_file="$geneset_dir/$species.fa";
 
 if($list_format eq 'string')
 {
-	@tmp = split /\\n/,$gene_order;
+	@tmp = split /,/,$gene_order;
 	foreach my $tmp(@tmp)
 	{
 		@Ord = split /\s+/,$tmp;
@@ -86,7 +87,7 @@ if($list_format eq 'string')
 		push @GeneOrder,$Ord[0];
 	}
 }
-if($list_format eq 'file')
+elsif($list_format eq 'file')
 {
 	open ORDER, "$gene_order" or die("fail open $gene_order\n");
 	while(<ORDER>)

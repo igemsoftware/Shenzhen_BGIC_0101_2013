@@ -13,11 +13,13 @@ class Resource_decouple extends Resource
 		if (isset($data['species']) && isset($data['geneorder'])) {
 			$data = $this->get_data();
 			$TopDir = "../../";
-			$genesetDir = $TopDir."server/config/geneset/";
-			$binDir = $TopDir."server/bin/";
-			$tmpdataDir = $TopDir."server/tmp_data/";
+			chdir($TopDir);
+			$genesetDir = "server/config/geneset/";
+			$binDir = "server/bin/";
+			$tmpdataDir = "server/tmp_data/";
 			$species = $data['species'];
 			$geneorder = $data['geneorder'];
+			//$geneorder = rtrim($geneorder, '\n');
 			$upstream_extend = isset($data['upstream_extend'])?
 										$data['upstream_extend']:600;
 			$downstream_extend = isset($data['downstream_extend'])?
@@ -25,21 +27,22 @@ class Resource_decouple extends Resource
 			$output = isset($data['output'])?$data['output']:"NeoChr".date('l');
 			$output = $output;
 
-			exec("perl {$binDir}02.GeneDecouple.1.pl \
-						--species $species\
-						--list_format string --gene_order=\"{$geneorder}\"\
-						--geneset_dir $genesetDir\
-						--upstream_extend $upstream_extend\
-						--downstream_extend $downstream_extend\
-						--neo_chr_gff {$tmpdataDir}{$output}.gff\
-						--neo_chr_fa  {$tmpdataDir}{$output}.fa 2>&1", 
-							$result, $code);
+			$cmd ="perl server/bin/02.GeneDecouple.1.pl".
+						" --species $species".
+						' --list_format string'.
+						" --gene_order='$geneorder'".
+						" --geneset_dir $genesetDir".
+						" --upstream_extend $upstream_extend".
+						" --downstream_extend $downstream_extend".
+						" --neo_chr_gff {$tmpdataDir}{$output}.gff".
+						" --neo_chr_fa  {$tmpdataDir}{$output}.fa 2>&1";
+			exec($cmd, $result, $code);
 
-			$this->_data = array_merge( $result, array("ok"=>true) );
-
+			//$this->_data = array_merge( $result, array("ok"=>true) );
+			//$this->_data = $geneorder;
+		    //return;
 
 			$outdir = 'data/'.$output.'/';
-		    chdir($TopDir);
 		    //return;
 		    exec("php server/bin/loadfile.php \
 		    				$output $outdir \

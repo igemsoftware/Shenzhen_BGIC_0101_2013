@@ -15,7 +15,7 @@
               'dijit/form/FilteringSelect',
               'dijit/form/NumberTextBox',
               'dojox/validate',
-              './jquery-1.7.2'
+              './jquery-1.9.1'
           ],
           function(
               declare,
