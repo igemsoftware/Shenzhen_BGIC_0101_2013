@@ -1,0 +1,13 @@
+{
+	"nodes": [
+		"YAL001C",
+		"YAL002W",
+		"YAL003W",
+		"YAL004W"
+	],
+	"links": {
+		"YAL001C": ["YAL002W"],
+		"YAL003W": ["YAL001C"],
+		"YAL004W": ["YAL001C"]
+	}
+}

@@ -55,6 +55,9 @@
       species: null,
       pathway: null,
       dragSource: null,
+      geneIdHash: null,
+      geneRelation: null,
+      LinkedTable: null,
 
       constructor: function(args) {
           this.width = window.screen.width*0.8;
@@ -62,15 +65,12 @@
           this.browser = args.browser;
           this.tooltip = Tooltip("vis-toolTip", 230);
 
-
-
           this.defaultContent = this._makeDefaultContent();
 
           if( ! args.content && ! args.href ) {
               // make a div containing our help text
               this.content = this.defaultContent;
           }
-
       },
 
       _makeMenu: function() {
@@ -78,7 +78,7 @@
                 var menu = new DropDownMenu({ style: "display: none"});
                 
                 dojo.xhrGet({
-                  url: "server/tools/toolsManager.php?nav=1",
+                  url: "server/toolsManager.php?nav=1",
                   handleAs: "json",
                   load: function(msg) {
                   //  console.log(msg);
@@ -115,6 +115,7 @@
                     label: "Good Luck",
                     stype: "right: 5em",
                     onClick: function() {
+                      /*
                       var randomlinks = that.links.filter( function(d) {
                           return !d.source.created && !d.target.created;
                       })
@@ -150,6 +151,38 @@
                       }
                
                       that.restart();
+                      */
+                      //var arr = that.dragSource.getAllNodes();
+
+
+                      that.dragSource.selectAll();
+                      that.dragSource.deleteSelectedNodes();
+        
+
+                      var arr = [];
+                      for (var i in that.nodes) {
+                        if (that.nodes[i].created)
+                          arr.push({
+                            geneName:that.nodes[i].geneName,
+                            id: that.nodes[i].id,
+                            type:that.nodes[i].type
+                          });
+                      }
+                      for (var i = 0; i < arr.length; ++i) {
+                        var u = Math.floor(Math.random()*arr.length);
+                        var v = Math.floor(Math.random()*arr.length);
+                        var tmp = arr[u];
+                        arr[u] = arr[v];
+                        arr[v] = tmp;
+                      }
+                      for (var i = 0; i < arr.length; ++i) {
+                          that.dragSource.insertNodes(false, 
+                              [{
+                                 text: arr[i].geneName, 
+                                 pid: arr[i].id, 
+                                 class: arr[i].type
+                              }]);
+                      }
                       //that.force.stop();
                       ///that.force.start();
                     }
@@ -159,19 +192,7 @@
                     label: "Create Genome",
                     style: "right: 5em",
                     onClick: dojo.hitch( that, function () {
-                      /*
-                        var outputNodes = that.nodes.filter( function( n ){
-                          return (n.created);
-                        })
 
-                        var outputList = that.links.filter( function( n ) {
-                          return (n.target.created && n.source.created);
-                        })
-                        if (outputList.length == 0 || outputNodes.length == 0) {
-                          return;
-                        }
-                        var geneorder = getGeneList(outputNodes, outputList);
-                      */
                         var geneorder = [];
                         var domlist = dojo.query("#draggenes li");
                         for (var i = 0; i < domlist.length; ++i) {
@@ -215,41 +236,6 @@
                     }
                 });
 
-/*
-                function getGeneList(nodes, links) {
-                  var msg = "";
-                  var target = {};
-                  var nextlist = {};
-                  for (var i in links) {
-                    var link = links[i];
-                    if ( null == nextlist[link.source.id] ) {
-                      nextlist[link.source.id] = {gene: link.source, next: []};
-                    }
-                    nextlist[link.source.id].next.push(link.target.id);
-                    target[link.source.id] = true;
-                  }
-                  for (var i in links) {
-                    delete target[links[i].target.id];
-                  }
-                  for (var id in target) {
-                    var source = that.findNodeById(id);
-                    do {
-                      //
-                      msg += source.geneName + " " +
-                              (source.type === "circle"? "+" : "-");
-                      source = nextlist[source.id] == null? 
-                                      null : nextlist[source.id].next[0];
-                      source = that.findNodeById(source)
-                      if (source != null) {
-                        msg += ","
-                      }
-                    } while (source != null)
-                   
-                  }
-                  console.log(msg);
-                  return msg;
-                }
-                */
                 dom.byId("dropMenuContainer").appendChild(goodLuckButton.domNode);
                 dom.byId("dropMenuContainer").appendChild(createButton.domNode);
                 dom.byId("dropMenuContainer").appendChild(cleanAllButton.domNode);
@@ -274,18 +260,17 @@
     loadPathwayData: function(argv, callback) {
       var that = argv.that;
       
-
       return function() { 
         var progress = dijit.byId("globalProgress").set("label", "building graph ...");
         progress.set("indeterminate", true);
         dojo.xhrGet({
-          url: "server/tools/toolsManager.php",
+          url: "server/toolsManager.php",
           handleAs: "json",
           content: {
             'species':argv.species,
             'pathway':argv.pathway
           },
-          load: function(msg) {
+          load: function( v ) {
                           //this.catalog.clearItems();
                        //   console.log(msg);
             
@@ -301,34 +286,88 @@
                 }
             }
 
-            var nodes = msg.nodes;
-            var links = msg.links;
-            var nameID = {};
+            that.geneIdHash = {};
+            var genes = v["genes"]["genes"]["gene"];
+            for (var id in genes) {
+              if (genes[id].type === 'gene') {
+
+                that.geneIdHash[id] = genes[id].name;
+              }
+            }
+            var nodes = [];
+            var links = [];
+            that.LinkedTable = {};
+            var relation = v["relation"]["relations"];
+            for (var i in relation) {
+              if (relation[i].entry2.type === "gene"
+                && relation[i].entry1.type === "gene") {
+                var name1 = relation[i].entry1.name,
+                    name2 = relation[i].entry2.name;
+                nodes.push({
+                  name: name1
+                });
+                nodes.push({
+                  name: name2
+                });
+  
+                links.push({
+                  name1:name1,
+                  name2:name2,
+                  active: relation[i].subtype == "activation"
+                });
+                if (that.LinkedTable[name1] === undefined) {
+                    that.LinkedTable[name1] = {};
+                    that.LinkedTable[name1][name2] = { 
+                            active:relation[i].subtype == "activation",
+                            pos : true
+                          };
+                } else {
+                    that.LinkedTable[name1][name2] = {
+                            active:relation[i].subtype == "activation",
+                            pos: true
+                          };
+                }
+                if (that.LinkedTable[name2] === undefined) {
+                    that.LinkedTable[name2] = {};
+                    that.LinkedTable[name2][name1] = {
+                            active:relation[i].subtype == "activation",
+                            pos: false
+                          };
+                } else {
+                    that.LinkedTable[name2][name1] = {
+                            active:relation[i].subtype == "activation",
+                            pos: false
+                          };
+                }
+              }
+            }
+            //var nodes = msg.nodes;
+            //var links = msg.links;
+        //    var nameID = {};
 
             for (var n in nodes) {
               var node = {
-                id: that.idpool, 
-                reflexive: false,
-                x: that.width/2+(Math.random()-1)*that.width/2, 
-                y: that.height*0.6*Math.random(),
-                geneName: nodes[n],
-                type: "circle"
+                  id: that.idpool++, 
+                  reflexive: false,
+                  x: that.width/2+(Math.random()-1)*that.width/2, 
+                  y: that.height*0.6*Math.random(),
+                  geneName: nodes[n].name,
+                  type: "circle"
               };
               that.nodes.push(node);
-              nameID[node.geneName] = that.idpool++;
+             // nameID[node.geneName] = that.idpool++;
             }
             for (var v in links) {
               var n = links[v];
-              for (var u in n) {
-                var source = that.findNodeById(nameID[v]);
+              //for (var u in n) {
                 that.links.push( {
-                  source: source, 
-                  target: that.findNodeById(nameID[n[u]]),
+                  source: that.findNodeByName(n.name1), 
+                  target: that.findNodeByName(n.name2),
                   left: false,
                   right: true,
-                  postive: true
+                  active: n.active
                 });
-              }
+              //}
             }
             callback();
             progress = dijit.byId("globalProgress").set("label", "Success build Graph...");
@@ -354,9 +393,17 @@
       this.removeDraggene(node);
     },
 
+    findNodeByName: function( name ) {
+      for (var v in this.nodes) {
+        if (this.nodes[v].geneName == name) {
+          return this.nodes[v];
+        }
+      }
+    },
+
     findNodeById: function( id ) {
       for (var v in this.nodes) {
-        if (this.nodes[v]['id'] == id) {
+        if (this.nodes[v].id == id) {
           return this.nodes[v];
         }
       }
@@ -374,53 +421,49 @@
                         that.restart();
                        
                   })
-/*
-                   dojo.hitch(that, function() {
-                    dojo.xhrGet({
-                      url: "server/tools/toolsManager.php",
-                      handleAs: "json",
-                        content: {
-                            'species':argv.species,
-                            'pathway':argv.pathway
-                        },
-                      load: function(msg) {
-                        //this.catalog.clearItems();
-                     //   console.log(msg);
-                        that.nodes = [];
-            						that.links = [];
-            						var hash = {};
-            						var nodes = msg.nodes;
-            						var links = msg.links;
-            						for (var n in nodes) {
-            							that.nodes.push({id:parseInt(n), reflexive: false,
-            									x: that.width/2+(Math.random()-1)*that.width/2, 
-                              y: that.height*0.6*Math.random(),
-            									geneName: nodes[n],
-                              type: "circle"
-                            });
-            							hash[nodes[n]] = n;
-            						}
-            						for (var v in links) {
-            							var n = links[v];
-            							for (var u in n) {
-            								that.links.push({source: that.nodes[ hash[ v ] ], 
-            										 target: that.nodes[ hash[ n[u] ] ],
-            										 left: false,
-            										 right: true});
-            							}
-            						}
-            						d3.select('svg').remove();
-            						that.buildsvg();
-                      }
-                    });
-                    return true;
-                  })
-  */
                 });
 
       },
+      addLink: function( id1, id2, active ) {
+                this.links.push( {
+                    source: this.findNodeById(id1), 
+                    target: this.findNodeById(id2),
+                    left: false,
+                    right: true,
+                    active: active
+                });
+      },
 
-      
+      checkLinked: function( node ) {
+          for (var i in this.nodes) {
+            if (!this.nodes[i].created)
+            if (node.geneName != this.nodes[i].geneName) {
+             // for (var j in this.LinkedTable[node.geneName]) {
+                var link = this.LinkedTable[node.geneName][this.nodes[i].geneName];
+                if ( link != null)
+                    for (var j in this.nodes) {
+                      if (this.nodes[j].created && 
+                            this.nodes[j].geneName == this.nodes[i].geneName) {
+                        if (link.pos) {
+                
+                            this.addLink( 
+                                      node.id, 
+                                      this.nodes[j].id, 
+                                      link.active);
+                            } else {
+                                this.addLink(
+                                      this.nodes[j].id, 
+                                      node.id, 
+                                      link.active);
+                            }
+                      }
+                    } 
+                    
+                }
+              //}
+          }
+          this.restart();
+      },
 
       buildsvg: function() {
             var that = this;
@@ -437,17 +480,20 @@
                 {id: 0, reflexive: false, 
                       x: width/2+(Math.random()-1)*width/2, 
                       y: height*0.6*Math.random(),
-                      type: "square" 
+                      type: "square",
+                      geneName: "A"
                     },
                 {id: 1, reflexive: true , 
                       x: width/2+(Math.random()-1)*width/2, 
                       y: height*0.6*Math.random(),
-                      type: "circle"
+                      type: "circle",
+                      geneName: "B"
                     },
                 {id: 2, reflexive: false, 
                       x: width/2+(Math.random()-1)*width/2, 
                       y: height*0.6*Math.random(),
-                      type: "square"
+                      type: "square",
+                      geneName: "C"
                     }
             ];
             that.idpool+=10;
@@ -458,14 +504,15 @@
                   target: nodes[1],
                   left: false, 
                   right: true,
-                  postive: true
+                  active: true
+
                 },
                 {
                   source: nodes[1], 
                   target: nodes[2], 
                   left: false, 
                   right: true,
-                  postive: true
+                  active: true
                 }
             ];
 
@@ -576,7 +623,7 @@
               path = path.data(links);
 
               // update existing links
-              path.classed('selected', function(d) { return d.postive != true;//d === selected_link; 
+              path.classed('selected', function(d) { return d.active != true;//d === selected_link; 
                                                                 })
                 .style('marker-start', function(d) { return d.left ? 'url(#start-arrow)' : ''; })
                 .style('marker-end', function(d) { return d.right ? 'url(#end-arrow)' : ''; });
@@ -585,12 +632,12 @@
               // add new links
               path.enter().append('svg:path')
                 .attr('class', 'link')
-                .classed('selected', function(d) { return d.postive != true;d === selected_link; })
+                .classed('selected', function(d) { return d.active != true;d === selected_link; })
                 .style('marker-start', function(d) { return d.left ? 'url(#start-arrow)' : ''; })
                 .style('marker-end', function(d) { return d.right ? 'url(#end-arrow)' : ''; })
                 .on('mousedown', function(d) {
                   if(d3.event.ctrlKey) return;
-                  d.postive = !d.postive;
+                  d.active = !d.active;
                   // select link
                   mousedown_link = d;
                   if(mousedown_link === selected_link) selected_link = null;
@@ -678,6 +725,7 @@
 
                       //console.log(cnode.y);
                     nodes.push(cnode);
+                    that.checkLinked(cnode);
                     //dojo.create("li", { innerHTML: d.geneName, class: d.type+ " "+"dojoDndItem", name: cnode.id }, dojo.byId("draggenes"));
                     that.dragSource.insertNodes(false, [ { text: d.geneName, pid: cnode.id, class: cnode.type}]);
                      // restart();
@@ -772,26 +820,7 @@
                 .on("mouseout", hideDetails);
 
             }
-            /*
-            function mousedown() {
-              // prevent I-bar on drag
-              //d3.event.preventDefault();
-              
-              // because :active only works in WebKit?
-              svg.classed('active', true);
-
-              if(d3.event.ctrlKey || mousedown_node || mousedown_link) return;
-
-              // insert new node at point
-              var point = d3.mouse(this),
-                  node = {id: ++lastNodeId, reflexive: false};
-              node.x = point[0];
-              node.y = point[1];
-              nodes.push(node);
-
-              restart();
-            }
-            */
+           
             function mousemove() {
               if(!mousedown_node) return;
 
@@ -828,6 +857,7 @@
               lastKeyDown = d3.event.keyCode;
 
               // ctrl
+
               if(d3.event.keyCode === 17) {
                 circle.call(force.drag);
                 svg.classed('ctrl', true);

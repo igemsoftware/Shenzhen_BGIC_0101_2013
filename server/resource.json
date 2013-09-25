@@ -1,6 +1,6 @@
 {
 	"Saccharomyce": {
 		"paramter": "saccharomyces_cerevisiae_chr", 
-		"pathway": ["sce04111"],
+		"pathway": ["sce04111"]
 	}
 }

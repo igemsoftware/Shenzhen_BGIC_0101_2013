@@ -27,7 +27,7 @@ class Resource_decouple extends Resource
 			$output = isset($data['output'])?$data['output']:"NeoChr".date('l');
 			$output = $output;
 
-			$cmd ="perl server/bin/02.GeneDecouple.1.pl".
+			$cmd ="perl server/bin/02.GeneDecouple.pl".
 						" --species $species".
 						' --list_format string'.
 						" --gene_order='$geneorder'".
