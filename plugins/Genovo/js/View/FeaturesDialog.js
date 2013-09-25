@@ -82,13 +82,14 @@
                   						value: 'Delete Them',
                   						size: 25,
                               onclick: function() {
+                                var highlight = that.browser.getHighlight();
                                 if (highlight === null) {
                                   alert("Please Select Region use Highlight Tools");
                                   return;
                                 }
                                 var progress = dijit.byId("globalProgress").set("label", "I'm trying deleteing them...");
                                 progress.set("indeterminate", true);
-                                var highlight = that.browser.getHighlight();
+                               
                                 
                                 var todelete = that.featuresGrid.selection.selected;
                                 var msg = [];
@@ -122,13 +123,15 @@
           		type: 'button',
           		innerText: 'Update History',
           		onclick: function () {
+                var highlight = that.browser.getHighlight();
                 if (highlight == null) {
                   alert("Please Select Region use Highlight Tools");
                   return;
                 }
-                var progress = dijit.byId("globalProgress").set("label", "I'm working hard to get features");
+                var progress = dijit.byId("globalProgress").set("label", 
+                                            "I'm working hard to get features");
                 progress.set("indeterminate", true);
-                var highlight = that.browser.getHighlight();
+               
                 
           			dojo.xhrGet({
           				url: 'server/REST/index.php/features/SearchByLocation',
@@ -198,10 +201,6 @@
 
               appContainer.addChild(featuresBar);
               appContainer.addChild(contentBox);
-
-           //   document.onselectstart=function(){return false}
-              //Firefox、Chrome、Safaria
-           //   d3.select('body').classed('user_select_none', true);
 
               return appContainer.domNode;
       }

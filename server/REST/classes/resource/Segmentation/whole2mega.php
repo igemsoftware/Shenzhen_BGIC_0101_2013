@@ -18,6 +18,7 @@ class Resource_Segmentation_whole2mega extends Resource
 			$gff = $gff[0];
 			exec("ls {$dataUrl}*.fa", $fa);
 			$fa = $fa[0];
+
 			$ol = isset($data['ol'])? $data['ol']:1000;
 			$ck = isset($data['ck']) ? $data['ck']:30000;
 			//chdir("../server");
@@ -27,14 +28,19 @@ class Resource_Segmentation_whole2mega extends Resource
 						." --fa  $fa"
 						." -ol $ol"
 						." -ck $ck"
-						." -m1 server/config/marker/LEU2.gff"
-						." -m2 server/config/marker/URA3.gff"
-						." -m3 server/config/marker/HIS3.gff"
-						." -m4 server/config/marker/TRP1.gff"
+						." -m1 server/config/markers/LEU2.gff"
+						." -m2 server/config/markers/URA3.gff"
+						." -m3 server/config/markers/HIS3.gff"
+						." -m4 server/config/markers/TRP1.gff"
 						." -ot {$dataUrl}{$output} 2>&1";
-
+			$this->_data  = $cmd;
+			//return;
 			exec($cmd, $result);
+
 			$this->_data = $result;
+			chdir($dataUrl);
+			exec("git add .");
+			exec('git commit -m "01.whole2mega created"');
 			//TODO Move $output/sce_chr01_0.mega 
 
 		} else {

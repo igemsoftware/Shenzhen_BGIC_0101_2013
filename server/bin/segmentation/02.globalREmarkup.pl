@@ -37,11 +37,13 @@
 =cut
 #-------------------------------help-info-end--------------------------------#
 #============================================================================#
-#use warnings;
+use warnings;
 use strict;
 use Getopt::Long;
 use File::Basename;
 use Cwd;
+use JSON;
+use Data::Dumper;
 
 my($Need_help,$fa,$re,$codontable,$out);
 GetOptions(
@@ -114,13 +116,11 @@ while(<RE>){
 		if($info[1]=~/\((\d+)\/(\d+)\)(\w+)\((\d+)\/(\d+)\)/){#this enzyme is IIB type
 			#print $info[0],"\t",$3,"\tIIB\n";
 			$IIB_match{$info[0]}=$3;
-			$re{$info[0]}=$3;
 			$IIB_cutsite{$info[0]}=$1."-".$2."-".$3."-".$4;
 		}
 		elsif($info[1]=~/(\w+)\((.+)\/(.+)\)/){#this enzyme is IIA type
 			#print $info[0],"\t",$1,"\tIIA\n";
 			$IIA_match{$info[0]}=$1;
-			$re{$info[0]}=$1;
 			$IIA_cutsite{$info[0]}=$2."-".$3;
 		}
 		else{# the others are IIP type
@@ -130,7 +130,6 @@ while(<RE>){
 		$match1=$1,$match2=$2;
 		if(length $match1<= length $match2){# this IIP is for T5exo
 			$IIP_T5_match{$info[0]}=$match1.$match2;
-			$re{$info[0]}=$match1.$match2;
 			#print $info[0],"\t",$match1.$match2,"\tIIPT5\n";
 			if(length $match1==0){
 			  $IIP_T5_remained{$info[0]}="N";
@@ -141,7 +140,6 @@ while(<RE>){
 		}
 		if(length $match1>= length $match2){#this IIP is for T3exo
 			$IIP_T3_match{$info[0]}=$match1.$match2;
-			$re{$info[0]}=$match1.$match2;
 			#print $info[0],"\t",$match1.$match2,"\tIIPT3\n";
 			if(length $match2==0){
 			  $IIP_T3_remained{$info[0]}="N";
@@ -187,44 +185,126 @@ sub mix2simple{
   $mix=~s/N/\(A|T|G|C\)/g;
   return $mix;
 }
+my (%state,$count);
 
-foreach(keys %re){
-  $simple=&mix2simple($re{$_});
-  $relength=length $re{$_};
+foreach(keys %IIP_T5_match){
+	$count=1;
+  $simple=&mix2simple($IIP_T5_match{$_});
+  $relength=length $IIP_T5_match{$_};
   #print $_,"\t",$re{$_},"\t",$simple,"\t",$relength,"\n";
   for($i=0;$i<length $sequence;$i++){
 	  $segmentation=substr($sequence,$i,$relength);
 	  if($segmentation=~/$simple/i){
-		  print MK $_,"\t",$i+1,"\t",$i+$relength,"\t",$re{$_},"\t",$segmentation,"\n";
+		  print MK $_,"\t",$i+1,"\t",$i+$relength,"\t",$IIP_T5_match{$_},"\t",$segmentation,"\n";
+	    $state{pre}{IIP_type_enzyme}{T5}{$_}{Enzyme_site}{$IIP_T5_match{$_}}{"NO.".$count}={
+	    	Start=>($i+1),
+	    	End=>($i+$relength),
+	    	Matched_site=>$segmentation
+	    };
+	    $count++;
+	  }
+  }
+}
+
+foreach(keys %IIP_T3_match){
+	$count=1;
+  $simple=&mix2simple($IIP_T3_match{$_});
+  $relength=length $IIP_T3_match{$_};
+  #print $_,"\t",$re{$_},"\t",$simple,"\t",$relength,"\n";
+  for($i=0;$i<length $sequence;$i++){
+	  $segmentation=substr($sequence,$i,$relength);
+	  if($segmentation=~/$simple/i){
+		  print MK $_,"\t",$i+1,"\t",$i+$relength,"\t",$IIP_T3_match{$_},"\t",$segmentation,"\n";
+	    $state{pre}{IIP_type_enzyme}{T3}{$_}{Enzyme_site}{$IIP_T3_match{$_}}{"NO.".$count}={
+	    	Start=>($i+1),
+	    	End=>($i+$relength),
+	    	Matched_site=>$segmentation
+	    };
+	    $count++;
 	  }
   }
 }
 
 foreach(keys %IIA_match){
+	$count=1;
   $simple=&mix2simple($IIA_match{$_});
-  $simple=~tr/ATCG()/TAGC)(/;
-  $simple=reverse $simple;
-  $relength=length $IIA_match{$_};
+  $relength=length $IIA_match{$_};  
   for($i=0;$i<length $sequence;$i++){
 	  $segmentation=substr($sequence,$i,$relength);
 	  if(((length $segmentation) ==(length $IIA_match{$_})) && ($segmentation=~/($simple)/i)){
-		  print MK $_,"\t",$i+1,"\t",$i+$relength,"\t",$re{$_},"\t",$segmentation,"\n";
+		  print MK $_,"\t",$i+1,"\t",$i+$relength,"\t",$IIA_match{$_},"\t",$segmentation,"\n";
+	    $state{pre}{IIA_type_enzyme}{$_}{Enzyme_site}{$IIA_match{$_}}{"NO.".$count}={
+	    	Start=>($i+1),
+	    	End=>($i+$relength),
+	    	Matched_site=>$segmentation
+	    };
+	    $count++;
 	  }
-  }
-}
-
-foreach(keys %IIB_match){
-  $simple=&mix2simple($IIB_match{$_});
+  }  
+  
   $simple=~tr/ATCG()/TAGC)(/;
   $simple=reverse $simple;
-  $relength=length $IIB_match{$_};
+  for($i=0;$i<length $sequence;$i++){
+	  $segmentation=substr($sequence,$i,$relength);
+	  if(((length $segmentation) ==(length $IIA_match{$_})) && ($segmentation=~/($simple)/i)){
+		  print MK $_,"\t",$i+1,"\t",$i+$relength,"\t",$IIA_match{$_},"\t",$segmentation,"\n";
+	    $state{pre}{IIA_type_enzyme}{$_}{Enzyme_site}{$IIA_match{$_}}{"NO.".$count}={
+	    	Start=>($i+1),
+	    	End=>($i+$relength),
+	    	Matched_site=>$segmentation
+	    };
+	    $count++;
+	  }
+  }  
+
+}
+
+my($isoform,$same);
+foreach(keys %IIB_match){
+	$count=1;
+	$isoform=$_;
+	$isoform=~tr/ATCGRYMKSWHDBV/TAGCYRKMWSDHVB/;
+	$isoform=reverse$isoform;
+	if($isoform eq $_){
+		$same="yes";
+	}
+	else{
+		$same="no";
+	}
+  $simple=&mix2simple($IIB_match{$_});
+  $relength=length $IIB_match{$_};  
   for($i=0;$i<length $sequence;$i++){
 	  $segmentation=substr($sequence,$i,$relength);
 	  if(((length $segmentation) ==(length $IIB_match{$_})) && ($segmentation=~/($simple)/i)){
-		  print MK $_,"\t",$i+1,"\t",$i+$relength,"\t",$re{$_},"\t",$segmentation,"\n";
+		  print MK $_,"\t",$i+1,"\t",$i+$relength,"\t",$IIB_match{$_},"\t",$segmentation,"\n";
+	    $state{pre}{IIB_type_enzyme}{$_}{Enzyme_site}{$IIB_match{$_}}{"NO.".$count}={
+	    	Start=>($i+1),
+	    	End=>($i+$relength),
+	    	Matched_site=>$segmentation
+	    };
+	    $count++;
 	  }
-  }
+  }  
+  if($same eq "yes"){
+    $simple=~tr/ATCG()/TAGC)(/;
+    $simple=reverse $simple;
+    for($i=0;$i<length $sequence;$i++){
+	    $segmentation=substr($sequence,$i,$relength);
+	    if(((length $segmentation) ==(length $IIB_match{$_})) && ($segmentation=~/($simple)/i)){
+	  	  print MK $_,"\t",$i+1,"\t",$i+$relength,"\t",$IIB_match{$_},"\t",$segmentation,"\n";
+	    $state{pre}{IIB_type_enzyme}{$_}{Enzyme_site}{$IIB_match{$_}}{"NO.".$count}={
+	    	Start=>($i+1),
+	    	End=>($i+$relength),
+	    	Matched_site=>$segmentation
+	    };
+	    $count++;
+	    }
+	  }
+  }  
 }
+
+#print Dumper $state{pre};
+print to_json($state{pre});	
 #2.find potent restriction enzyme site
 
 #sub nuleo2pro{

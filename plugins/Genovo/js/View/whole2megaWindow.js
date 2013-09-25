@@ -84,17 +84,7 @@
 
       show: function() {
             var that = this;
-              //$("body").addClass("user_select_none");
-             /*
-              window.onresize = function() {
-                appContainer.layout();
-                };*/
-           //     this._makeMenu();
         	this.inherited( arguments );
-        	on(that, "hide", function() {
-          //  this.priceGrid.destroyRecursive(true);
-        	})
-        	
       },
 
       _makeDefaultContent: function() {

@@ -18,17 +18,21 @@ class Resource_Segmentation_mega2chunk2mini extends Resource
 			$gff = $gff[0];
 			exec("ls {$dataUrl}*.fa", $fa);
 			$fa = $fa[0];
-			$ol = isset($data['ol']) ? $data['ol']:1000;
+			$re = isset($data['re']) ? $data['re']:"standard_and_IIB";
 			//chdir("../server");
-			$output = isset($data['ot'])? $data['ot']:"03.mega2chunk2mini";
-			$cmd = "perl server/bin/03.mega2chunk2mini.pl \
-						-re server/config/globalREmarkup/standard_and_IIB\
-						-sg 01.whole2mega/sce_chr01_0.mega\
-						-ps 02.globalREmarkup/sce_chr01_0.parse
-						-ot server/tmp_data/{$output}";
+			$sg = isset($data['sg'])? $data['sg']:"03.mega2chunk2mini";
+			$ps = isset($data['ps'])? $data['ps']:"03.mega2chunk2mini";
+			$cmd = "perl server/bin/segmentation/03.mega2chunk2mini.pl \
+						-re server/config/globalREmarkup/{$re} \
+						-sg {$sg} \
+						-ps {$ps} \
+						-ot {$dataUrl}03.mega2chunk2mini 2&>1";
 
 			exec($cmd, $result);
-
+			$this->_data = $cmd;
+			chdir($dataUrl);
+			exec("git add .");
+			exec('git commit -m "03.mega2chunk2mini created"');
 			//TODO Move $output/sce_chr01_0.mega 
 
 		} else {

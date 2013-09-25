@@ -1,8 +1,6 @@
 <?php
 
 return array(
-	'/example/(?<id>[0-9]+)' => 'example',
-	'/example/foo/(?<name>[a-zA-Z_0-9]+)' => 'example/foo',
 	'/stats/global' => 'stats/global',
 	'/features/SearchByLocation' => 'features/searchFeaturesByLocation',
 	'/stats/version/(?<dataset>\w+)' => 'stats/version',
@@ -12,6 +10,7 @@ return array(
 	'/Segmentation/globalREmarkup' => 'Segmentation/globalREmarkup',
 	'/Segmentation/mega2chunk2mini' => 'Segmentation/mega2chunk2mini',
 	'/Segmentation/whole2mega' => 'Segmentation/whole2mega',
+	'/Segmentation/info'	=> 	'Segmentation/info',
 	'/CodenOptimize'	=> 'CodenOptimize',
 	'/features/delete'	=> 'features/deleteFeatures'
 );

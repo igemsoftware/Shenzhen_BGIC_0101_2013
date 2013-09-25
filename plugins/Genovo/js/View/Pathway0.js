@@ -197,7 +197,6 @@
                               console.log(d);
                               progress.set("label", "Decouple Success. :)");
                               progress.set("indeterminate", false);
-
 // TODO 
 // jump to created genome 
                             }
@@ -206,7 +205,17 @@
                       }
                     )
                 });
+                var cleanAllButton = new Button({
+                    label: "Clean All",
+                    onClick: function() {
+                      for (var i = that.nodes.length-1; i >= 0; i--) {
+                        that.removeNode(that.nodes[i]);
+                      }
+                      that.restart();
+                    }
+                });
 
+/*
                 function getGeneList(nodes, links) {
                   var msg = "";
                   var target = {};
@@ -240,9 +249,10 @@
                   console.log(msg);
                   return msg;
                 }
+                */
                 dom.byId("dropMenuContainer").appendChild(goodLuckButton.domNode);
                 dom.byId("dropMenuContainer").appendChild(createButton.domNode);
-
+                dom.byId("dropMenuContainer").appendChild(cleanAllButton.domNode);
               },
     _makePopMenu: function() {
 

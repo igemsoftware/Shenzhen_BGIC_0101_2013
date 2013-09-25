@@ -50,7 +50,7 @@ return declare( ActionBarDialog,
         // also make ESCAPE or ENTER close the dialog box
         this._extraEvents.push(
             on( document.body, 'keydown', function( evt ) {
-                    if( [ dojo.keys.ESCAPE, dojo.keys.ENTER ].indexOf( evt.keyCode ) >= 0 )
+                    if( [ dojo.keys.ESCAPE ].indexOf( evt.keyCode ) >= 0 )
                         thisB.hideIfVisible();
                 })
         );

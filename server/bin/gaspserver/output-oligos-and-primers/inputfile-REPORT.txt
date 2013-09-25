@@ -1,0 +1,42 @@
+Report for input file /home/marblestone/gasp_marblestone/cleaned-up-scripts/gaspserver/input-seqs/inputfile.txt
+The build sequences in this file are divided onto plates and plate wells, each receiving their own primer sets.
+	
+
+Processed sequence m13_Seq1
+
+Success: Correctly designed oligos for m13_Seq1-BtsI 
+		First amplify this sequence using 'plate specific' primers skpp-1-F and skpp-1-R
+		Next amplify this sequence using 'position specific' primers skpp-201-F and skpp-201-R
+		Finally amplify this sequence using building block primers skpp-101-F and skpp-101-R
+	
+
+Processed sequence m13_Seq2
+
+Success: Correctly designed oligos for m13_Seq2-BtsI 
+		First amplify this sequence using 'plate specific' primers skpp-1-F and skpp-1-R
+		Next amplify this sequence using 'position specific' primers skpp-202-F and skpp-202-R
+		Finally amplify this sequence using building block primers skpp-102-F and skpp-102-R
+	
+
+Processed sequence m13_Seq3
+
+Success: Correctly designed oligos for m13_Seq3-BtsI 
+		First amplify this sequence using 'plate specific' primers skpp-1-F and skpp-1-R
+		Next amplify this sequence using 'position specific' primers skpp-203-F and skpp-203-R
+		Finally amplify this sequence using building block primers skpp-103-F and skpp-103-R
+	
+
+Processed sequence m13_Seq4
+
+Success: Correctly designed oligos for m13_Seq4-BtsI 
+		First amplify this sequence using 'plate specific' primers skpp-1-F and skpp-1-R
+		Next amplify this sequence using 'position specific' primers skpp-204-F and skpp-204-R
+		Finally amplify this sequence using building block primers skpp-104-F and skpp-104-R
+	
+
+Processed sequence m13_Seq5
+
+Success: Correctly designed oligos for m13_Seq5-BtsI 
+		First amplify this sequence using 'plate specific' primers skpp-1-F and skpp-1-R
+		Next amplify this sequence using 'position specific' primers skpp-205-F and skpp-205-R
+		Finally amplify this sequence using building block primers skpp-105-F and skpp-105-R

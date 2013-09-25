@@ -12,6 +12,7 @@
               "dojo/aspect",
               'dojo/on',
               'dojo/dom',
+              'dojo/store/Memory',
               'dijit/form/FilteringSelect',
               'dijit/form/NumberTextBox',
               'dojox/validate',
@@ -30,7 +31,8 @@
               Menu,
               aspect,
               on,
-              dom
+              dom,
+              Memory
           ) {
   return declare( InfoDialog, {
 
@@ -62,7 +64,10 @@
                     dojo.xhrGet({
                       url: "server/REST/index.php/Segmentation/mega2chunk2mini",
                       content: {
-                        baseUrl: that.browser.config.baseUrl
+                        baseUrl: that.browser.config.baseUrl,
+                        sg: dijit.byId('sg3').displayedValue,
+                        ps: dijit.byId('ps').displayedValue,
+                        re: dijit.byId('re1').value
                       },
                       load: function( d ) {
                         console.log(d);
@@ -83,6 +88,7 @@
       show: function() {
           var that = this;
         //  dijit.byId("")
+        console.log("asd");
           dojo.connect( dijit.byId("a2"), "onChange", function(d) {
              if (d == "Gibson") {
               dojo.query("#a2extern").style("display", "inline");
@@ -98,6 +104,53 @@
               dojo.query("#a10extern").style("display", "none");
              }
           })
+          console.log("asd");
+          dojo.xhrGet({
+            url: 'server/REST/index.php/Segmentation/info',
+            content: {
+              baseUrl: that.browser.config.baseUrl,
+            },
+            handleAs: "json",
+            load: function( json ) {
+                console.log("asd");
+                
+                if (json['mega'] != null) {
+                  var data = [];
+                  var sg3 = dijit.byId('sg3');
+                  var id = json['mega']['ID'];
+                  for ( var a in id ) {
+                      data.push( {
+                        name: a,
+                        value: a
+                      } );
+                  }
+                  data[0]['selected'] = true;
+                  var store = new Memory({
+                    data: data
+                  })
+                  sg3.store = store;
+                  sg3.startup();
+                };
+
+                if (json['markup']) {
+                  var data = [];
+                  var ps = dijit.byId('ps');
+                  for (var i in json['markup']) {
+                    data.push( {
+                      name: json['markup'][i],
+                      value: json['markup'][i]
+                    });
+                  }
+                  var store = new Memory({
+                    data: data
+                  });
+                  ps.store = store;
+                  ps.startup();
+                }
+            }
+          });
+
+
 
         	this.inherited( arguments );
         	on(that, "hide", function() {
@@ -109,6 +162,12 @@
       _makeDefaultContent: function() {
       	var that = this;
         var content = '<table cellpadding="0" cellspacing="2" style="display:inline">'
+                    +     ' <tr><td valign="top"><strong>The fasta file of the 30k segmentation(first step output): </strong></td><td>'  
+                    +     ' <select name="sg3" id="sg3" dojoType="dijit.form.FilteringSelect">'
+                    +     ' </select>'
+                    +     ' <tr><td valign="top"><strong>The markup file of the 30k segmentation(second step output): </strong></td><td>'  
+                    +     ' <select name="ps" id="ps" dojoType="dijit.form.FilteringSelect">'
+                    +     ' </select>'
                     +     ' <tr><td valign="top"><strong>restriction enzyme sites list: </strong></td><td>'  
                     +     ' <select name="re1" id="re1" dojoType="dijit.form.FilteringSelect">'
                     +     '     <option value="Standard_and_IIB">Standard_and_IIB</option>'
@@ -142,7 +201,7 @@
                     +         '   <option value="T5">T5</option>'
                     +     ' </select>'
                     +     ' <tr><td valign="top"><strong>The type of enzyme flanking minichunks: </strong></td><td>'
-                    +     ' <select name="m3" id="m3" dojoType="dijit.form.FilteringSelect">'
+                    +     ' <select name="en2" id="en2" dojoType="dijit.form.FilteringSelect">'
                     +         '   <option value="IIP">IIP</option>'
                     +     ' </select>'
                     + '</tbody>'

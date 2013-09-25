@@ -4,8 +4,8 @@
 			mkdir($outdir);
 			///echo $tmpfile;
 			//return;
-		    rename($tmpfile.$output.".fa", $outdir.$output.".fa");
-		    rename($tmpfile.$output.".gff", $outdir.$output.".gff");
+		    copy($tmpfile.$output.".fa", $outdir.$output.".fa");
+		    copy($tmpfile.$output.".gff", $outdir.$output.".gff");
 		    $err = Array(); 
 		    exec("perl bin/prepare-refseqs.pl --fasta $outdir{$output}.fa --out $outdir 2>&1", $err); 
 		    //error_log("1".print_r($err, true), 3, 'server/debug.log');
@@ -33,7 +33,7 @@
 		    //error_log("5".($out), 3, 'server/debug.log');
 		    fwrite($fout, $out );
 		    fclose($fout);
-
+		    exec("rm server/tmp_data/* -r");
 
 		    chdir($outdir);
 		    

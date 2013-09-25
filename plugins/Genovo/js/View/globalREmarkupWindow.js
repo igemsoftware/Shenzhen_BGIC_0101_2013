@@ -12,6 +12,7 @@
               "dojo/aspect",
               'dojo/on',
               'dojo/dom',
+              'dojo/store/Memory',
               'dijit/form/FilteringSelect',
               'dijit/form/NumberTextBox',
               'dojox/validate'
@@ -29,7 +30,8 @@
               Menu,
               aspect,
               on,
-              dom
+              dom,
+              Memory
           ) {
   return declare( InfoDialog, {
 
@@ -54,6 +56,7 @@
 
       _fillActionBar: function( actionBar ) {
             var that = this;
+
             new Button({
                 className: 'OK',
                 label: 'OK',
@@ -63,7 +66,8 @@
                       content: {
                         baseUrl: that.browser.config.baseUrl,
                         re: dijit.byId("re").value,
-                        ct: dijit.byId('ct').value
+                        ct: dijit.byId('ct').value,
+                        sg: dijit.byId('sg').displayedValue
                       },
                       load: function( d ) {
                         console.log(d);
@@ -83,22 +87,44 @@
 
       show: function() {
             var that = this;
-              //$("body").addClass("user_select_none");
-             /*
-              window.onresize = function() {
-                appContainer.layout();
-                };*/
-           //     this._makeMenu();
         	this.inherited( arguments );
-        	on(that, "hide", function() {
-          //  this.priceGrid.destroyRecursive(true);
-        	})
-        	
+        	dojo.xhrGet({
+            url: 'server/REST/index.php/Segmentation/info',
+            content: {
+              baseUrl: that.browser.config.baseUrl,
+            },
+            handleAs: "json",
+            load: function( json ) {
+              //  console.log("asd");
+                
+                if (json['mega'] != null) {
+                  var data = [];
+                  var sg = dijit.byId('sg');
+                  var id = json['mega']['ID'];
+                  for ( var a in id ) {
+                      data.push( {
+                        name: a,
+                        value: a
+                      } );
+                  }
+                  data[0]['selected'] = true;
+                  var store = new Memory({
+                    data: data
+                  })
+                  sg.store = store;
+                  sg.startup();
+                };
+            }
+          })
       },
 
       _makeDefaultContent: function() {
       	var that = this;
+        // TODO file select
         var content = '<table cellpadding="0" cellspacing="2">'
+                    +     ' <tr><td valign="top"><strong>The fasta file: </strong></td><td>'
+                    +     ' <select name="sg" id="sg" dojoType="dijit.form.FilteringSelect">'
+                    +     ' </select>'
                     +     ' <tr><td valign="top"><strong>restriction enzyme sites list: </strong></td><td>'
                     +     ' <select name="re" id="re" dojoType="dijit.form.FilteringSelect">'
                     +     '     <option value="Standard_and_IIB">Standard_and_IIB</option>'

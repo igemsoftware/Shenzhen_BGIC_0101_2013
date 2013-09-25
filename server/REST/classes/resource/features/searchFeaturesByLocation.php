@@ -31,23 +31,17 @@ class Resource_features_searchFeaturesByLocation extends Resource
 
 		$data = $this->get_data();
 		$TopDir = "../../";
-		$jbrowse = file_get_contents($TopDir."jbrowse_conf.json");
-		$jbrowse = json_decode($jbrowse, true);
-		
-		$dataset = $data['dataset'];
 		//return;
 
-		if (isset($jbrowse['datasets'][$dataset]) && isset($data['refseq'])) {
+		if (isset($data['baseUrl']) && isset($data['refseq'])) {
+			chmod("$TopDir");
 			$seqname = $data['refseq'];
-			$url = //$dataset ." in dataset" .
-							$jbrowse['datasets'][$dataset]['url'];
-			$url = preg_split("/=/", $url)[1];
-			$url = rtrim($url, '/')."/";
-			$trackList = json_decode(file_get_contents($TopDir.$url."trackList.json"), true)['tracks'][1];
-			
+			$url = $data['baseUrl'];
+			$trackList = json_decode(file_get_contents($url."trackList.json"), true)['tracks'][1];
+		
 			$template = str_replace( "{refseq}", $seqname, $trackList['urlTemplate']);
 		
-			$trackData = json_decode(file_get_contents($TopDir.$url.$template), true)['intervals'];
+			$trackData = json_decode(file_get_contents($url.$template), true)['intervals'];
 			$trackClass = $trackData['classes'];
 			$trackNCList = $trackData['nclist'];
 			$this->_data = $trackClass;

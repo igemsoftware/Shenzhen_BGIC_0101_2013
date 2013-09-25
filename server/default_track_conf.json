@@ -1,10 +1,9 @@
-         {
+{
    "tracks" : [
-      {
+	{
          "feature" : [
-            "gene"
+            "gene",
          ],
-         "urlTemplate" : "http://www.ncbi.nlm.nih.gov/gquery/?term={name}-{start}-{end}",
          "phase" : 1,
          "track" : "gene",
          "trackType": "JBrowse/View/Track/CanvasFeatures",
@@ -12,7 +11,34 @@
          "category" : "Genes",
          "class" : "feature5",
          "key" : "Predicted genes"
-      }
+      },
+      {
+         "feature" : [
+            "5UTR",
+	    "mRNA",
+	    "3UTR"
+         ],
+         "phase" : 1,
+         "track" : "part",
+         "trackType": "JBrowse/View/Track/CanvasFeatures",
+         "type": "CanvasFeatures",
+         "category" : "Part",
+         "class" : "feature5",
+         "key" : "Predicted genes's parts"
+      },
+	{
+         "track" : "Transcript",
+         "description" : 1,
+         "style": { "color": "#E32A3A" },
+         "key" : "CanvasFeatures - transcripts",
+         "trackType": "JBrowse/View/Track/CanvasFeatures",
+         "feature" : [
+            "mRNA"
+         ],
+         "category" : "Genes",
+         "subfeatures" : true,
+         "onClick": "function() { alert('This is an example of a user-provided JavaScript callback!'); };"
+      },
    ],
    "TRACK DEFAULTS" : {
       "autocomplete" : "all",
@@ -20,7 +46,7 @@
    },
    "db_args" : {
       "-adaptor" : "memory",
-      "-dir" : "server/upload"
+      "-dir" : "server/tmp_data"
    },
    "description" : "Uploaded file",
    "db_adaptor" : "Bio::DB::SeqFeature::Store"

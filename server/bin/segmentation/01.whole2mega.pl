@@ -42,12 +42,13 @@
 #-------------------------------help-info-end--------------------------------#
 #============================================================================#
 
-#use warnings;
+use warnings;
 use strict;
 use Getopt::Long;
 use File::Basename;
 use Cwd;
-
+use JSON;
+use Data::Dumper;
 
 my($Need_help,$gff,$fa,$ol30k,$chunk30k,$m1,$m2,$m3,$m4,$out);
 GetOptions(
@@ -79,8 +80,8 @@ open M2,'<',$m2;
 open M3,'<',$m3;
 open M4,'<',$m4;
 
-my $tl="../../notadoctor-biostudio-36bc6ad1c918/config/features/UTC_left.feat";
-my $tr="../../notadoctor-biostudio-36bc6ad1c918/config/features/UTC_right.feat";
+my $tl="server/config/features/UTC_left.feat";
+my $tr="server/config/features/UTC_right.feat";
 
 open TL,'<',$tl;
 open TR,'<',$tr;
@@ -151,7 +152,7 @@ my (@inf,%loc,$allseq);
 while(<GFF>){
 	chomp;
 	@inf=split/\s+/;
-	if($inf[2] eq "CEN"){
+	if($inf[2] eq "centromere"){
 		$loc{"CEN_L"}=$inf[3];
 	}
 	if($inf[2] eq "ARS"){
@@ -305,18 +306,17 @@ if(!(-e $out)){
 my @suffixlist = qw(.fa .fasta);
 my ($name,$path,$suffix) = fileparse($fa,@suffixlist);
 
+
 my $state="$out/$name.whole2mega.state";
 open ST,'>',$state;
 
-print ST "#############  PARAMETERS  #############\nGFF = $gff\nFA = $fa\nOL = $ol30k bp\nCK = $chunk30k bp\nM1 = $m1\nM2 = $m2\nM3 = $m3\nM4 = $m4\nOT = $out\n########################################\n\n";
-print ST "megachunk_ID\tlocation_of_contained_sequence\n";
-
-
+my @stateinfo;
 for($i=(-$chunk30k_L_num);$i<=$chunk30k_R_num;$i++){
 	$outdiv=$out."/$name"."_".$i.".mega";
 	open OUT,'>',$outdiv;
 	print ST $outdiv,"\t",$loc30k{$i},"\n";
 	print ST $loc30k_struc{$i},"\n";
+	push @stateinfo,$outdiv."\t".(split/-/,$loc30k{$i})[0]."\t".(split/-/,$loc30k{$i})[1]."\n".$loc30k_struc{$i};
 	print  OUT ">$outdiv\t",$loc30k{$i},"\n";
 	$start=0;
 	while($start <(length $loc30k_seq{$i})){
@@ -324,5 +324,33 @@ for($i=(-$chunk30k_L_num);$i<=$chunk30k_R_num;$i++){
 	  $start+=100;
 	}
 }
+
+#print @stateinfo;
+my(@statebk,%state,$tmp1,$tmp2,$tmp3,$tmp4,$tmp5,$tmp6);
+
+foreach(@stateinfo){
+	@statebk=split/\n/,$_;
+	$tmp1=(split/\t/,$statebk[0])[0];
+	$tmp2=(split/\t/,$statebk[0])[1];
+	$tmp3=(split/\t/,$statebk[0])[2];
+	$state{pre}{ID}{$tmp1}={
+		  Start_in_chromosome => $tmp2,
+		  End_in_chromosome => $tmp3
+	};
+  #print Dumper $state;
+	for($i=1;$i<scalar@statebk;$i++){
+		$tmp4=(split/\t/,$statebk[$i])[0];
+	  $tmp5=(split/\t/,$statebk[$i])[1];
+	  $tmp6=(split/\t/,$statebk[$i])[2];
+	  $state{pre}{ID}{$tmp1}{Feature}{$tmp4}={
+		    Start_in_Segment => $tmp5,
+		    End_in_Segment => $tmp6
+		}
+	}
+}
+#print Dumper $state{pre};
+my $json="$out/$name".".json";
+open JSON,'>',$json;
+print JSON to_json($state{pre});		
 
 print STDERR "---Program\t$0\tends  --> ".localtime()."\n";

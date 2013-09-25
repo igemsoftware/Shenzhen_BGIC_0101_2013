@@ -57,11 +57,13 @@
 #use warnings;
 use strict;
 use Cwd;
-use lib '/ifs1/ST/SYNBIO/USER/wangyun/Bin/lib';
-use RNA;
+use lib 'server/lib';
+#use RNA;
 use AnnealTemp qw /Tm/;
 use File::Basename;
 use Getopt::Long;
+use JSON;
+use Data::Dumper;
 
 my($Need_help,$mk,$re,$fa,$a2,$a10,$chunkmax,$chunkmin,$chunknum,$overlap,$tmmax,$tmmin,$minener,$exoenzy,$dislox,$retype2k,$enzytemp2k,$enzyprize2k,$retype10k,$enzytemp10k,$out);
 
@@ -226,6 +228,7 @@ $result2k=$result2k."*\t$win1\t$falength\t".($falength-$win1+1);
 my @result2k=split/\n/,$result2k;
 my $line;
 undef $result2k;
+
 for($i=1;$i<=scalar(@result2k);$i++){
   $line=$result2k[$i-1];
   @info=split/\s+/,$line;
@@ -250,8 +253,8 @@ open OUT10k,'>',$out10k;
 
 $process="10k";######################################
 #s10k is the start site for search 10k enzyme site
-  
-my($s10k,$e10k,@re10k,$re10k,$examp,@linesplit,$revtra,@en10k);
+
+my($s10k,$e10k,@re10k,$re10k,$examp,@linesplit,$revtra,@en10k,%state);
 for($i=1;$i<=scalar(@result2k);$i++){
   $line=$result2k[$i-1];
 	@info=split/\s+/,$line;
@@ -272,10 +275,28 @@ for($i=1;$i<=scalar(@result2k);$i++){
 	if($i==1){#SEQ+2k done
 		print SG ">",$line,"\n",substr($sequence,$info[2]-1,$info[3]-$info[2]+1-length($re2tail{$info[0]})),$re2site{$info[1]},"\n\n";
     push @en10k,"*";
+    $state{pre}{Adaptors}{"Minichunk_No.".$i}={
+    	Left=>"*",
+    	Start=>$info[2],
+    	End=>$info[3],
+    	Length=>$info[4]    
+	  };
+    $state{pre}{Adaptors}{"Minichunk_No.".$i}{Right}={
+    	"2k_adaptor"=>$info[1]
+    };
 	}
 	elsif($i==scalar(@result2k)){#2k+SEQ done
 		print SG ">",$line,"\n",$re2site{$info[0]},substr($sequence,$info[2]-1+length$re2tail{$info[0]},$info[3]-$info[2]+1-length$re2tail{$info[0]});
     push @en10k,"*";
+    $state{pre}{Adaptors}{"Minichunk_No.".$i}={
+    	Right=>"*",
+    	Start=>$info[2],
+    	End=>$info[3],
+    	Length=>$info[4]    
+	  };
+    $state{pre}{Adaptors}{"Minichunk_No.".$i}{Left}={
+    	"2k_adaptor"=>$info[0]
+    };
 	}
 	elsif(int($i%5)==1){#10k+SEQ+2k done
 		$examp=$re2site10k{$re10k};#10k
@@ -283,6 +304,17 @@ for($i=1;$i<=scalar(@result2k);$i++){
 	  @linesplit=split/\s+/,$line;
 		print SG ">",$re10k,"\t",$linesplit[1],"\t",$linesplit[2],"\t",$linesplit[3],"\t",$linesplit[4],"\t",$linesplit[5],"\n",$examp,substr($sequence,$info[2]-1+($overlap-$re2gap10k{$re10k}),$info[3]-$info[2]+1-length$re2tail{$info[0]}-($overlap-$re2gap10k{$re10k})),$re2site{$info[0]},"\n\n";
     push @en10k,$re10k;
+    $state{pre}{Adaptors}{"Minichunk_No.".$i}={
+    	Start=>$info[2],
+    	End=>$info[3],
+    	Length=>$info[4]    
+	  };
+    $state{pre}{Adaptors}{"Minichunk_No.".$i}{Left}={
+    	"10k_adaptor"=>$re10k
+    };
+    $state{pre}{Adaptors}{"Minichunk_No.".$i}{Right}={
+    	"2k_adaptor"=>$info[1]
+    };
 	}
 	elsif(int($i%5)==0){#2k+SEQ+10k done
 		$revtra=$re2site10k{$re10k};#10k
@@ -292,9 +324,31 @@ for($i=1;$i<=scalar(@result2k);$i++){
 	  @linesplit=split/\s+/,$line;
 		print SG ">",$linesplit[0],"\t",$re10k,"\t",$linesplit[2],"\t",$linesplit[3],"\t",$linesplit[4],"\n",$re2site{$info[0]},substr($sequence,$info[2]-1+length$re2tail{$info[0]},$info[3]-$info[2]+1-length$re2tail{$info[0]}),$revtra,"\n\n";
     push @en10k,$re10k;
+    $state{pre}{Adaptors}{"Minichunk_No.".$i}={
+    	Start=>$info[2],
+    	End=>$info[3],
+    	Length=>$info[4]    
+	  };
+    $state{pre}{Adaptors}{"Minichunk_No.".$i}{Left}={
+    	"2k_adaptor"=>$info[0]
+    };
+    $state{pre}{Adaptors}{"Minichunk_No.".$i}{Right}={
+    	"10k_adaptor"=>$re10k
+    };
 	}
 	else{#2k+SEQ+2k done
 		print SG ">",$line,"\n",$re2site{$info[0]},substr($sequence,$info[2]-1+length$re2tail{$info[0]},$info[3]-$info[2]+1-2*length$re2tail{$info[0]}),$re2site{$info[0]},$re2site{$info[0]},"\n\n";
+    $state{pre}{Adaptors}{"Minichunk_No.".$i}={
+    	Start=>$info[2],
+    	End=>$info[3],
+    	Length=>$info[4]    
+	  };
+    $state{pre}{Adaptors}{"Minichunk_No.".$i}{Left}={
+    	"2k_adaptor"=>$info[0]
+    };
+    $state{pre}{Adaptors}{"Minichunk_No.".$i}{Right}={
+    	"2k_adaptor"=>$info[1]
+    };
 	}
 }
 
@@ -379,6 +433,7 @@ sub printseq{
 	}
 	return $printseqout;
 }
-
+#print Dumper $state{pre};
+print to_json($state{pre});	
 
 print STDERR "---Program\t$0\tends  --> ".localtime()."\n";

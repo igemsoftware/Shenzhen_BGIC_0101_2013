@@ -1,0 +1,1 @@
+perl 03.mega2chunk2mini.pl -re ../standard_and_IIB -sg 01.whole2mega/sce_chr01_0.mega -ps 02.globalREmarkup/sce_chr01_0.parse -a2 gibson -a10 goldengate -ckmax2 2200 -ckmin2 1800 -cknum 5 -ol2 40 -tmax2 60 -tmin 56 -fe2 -3  -ex2 T5 -lo2 40 -en2 IIP -et2 37 -ep2 0.5 -en10 IIA&IIB -et10 37 -ot 03.mega2chunk2mini
