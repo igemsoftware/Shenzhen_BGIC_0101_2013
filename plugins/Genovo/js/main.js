@@ -15,6 +15,7 @@ define(
 				'./View/mega2chunk2miniWindow',
 				'./View/globalREmarkupWindow',
 				'dijit/ProgressBar',
+				'./View/chatroom',
 				'dojo/domReady!'
 			],
 		function(
@@ -32,7 +33,8 @@ define(
 			whole2megaWindow,
 			mega2chunk2miniWindow,
 			globalREmarkupWindow,
-			ProgressBar
+			ProgressBar,
+			chatroomWindow
 			) {
 return declare( JBrowsePlugin, 
 {
@@ -44,6 +46,7 @@ return declare( JBrowsePlugin,
 	uploadDialig: null,
 	featuresDialog: null,
 	whole2mega: null,
+	chatroom: null,
 
 	constructor: function( args ) {
 		var that = this;
@@ -103,7 +106,7 @@ return declare( JBrowsePlugin,
 					load: function( d ) {
 						console.log(d);
 						var progress = dijit.byId("globalProgress").set("label", "Loxp success...");
-        				progress.set("indeterminate", true);
+        				progress.set("indeterminate", false);
 					}
 				})
 			}
@@ -288,10 +291,27 @@ return declare( JBrowsePlugin,
 			}
 		));
 
+
+
 		browser.renderGlobalMenu( 'History', {
 			text: 'History'
 		}, browser.menuBar);
 
+		browser.addGlobalMenuItem( 'Socity', new dijitMenuItem(
+			{
+				label: "Chat room",
+				onClick: function() {
+					if (!that.chatroom) {
+						that.chatroom = new chatroomWindow({genovo:that});
+					}
+					that.chatroom.show();
+				}
+			}
+		));
+
+		browser.renderGlobalMenu( 'Socity', {
+			text: "Socity"
+		}, browser.menuBar);
 		var progress = new ProgressBar({
 			style: "width: 300px",
 			id: "globalProgress",
@@ -300,6 +320,7 @@ return declare( JBrowsePlugin,
 		});
 		dojo.addClass(progress.domNode, "menu");
 		browser.menuBar.appendChild(progress.domNode);
+
 
 		/*
 		var i = 0;

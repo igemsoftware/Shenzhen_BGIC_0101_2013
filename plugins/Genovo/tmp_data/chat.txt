@@ -1,0 +1,207 @@
+<span>Guest</span>Hello 
+<span>Guest</span>What's up 
+<span>Guest</span>akldj  
+<span>Guest</span>    
+<span>Guest</span>   
+<span>Guest</span>        
+<span>Kenrick</span>dwwd 
+<span>Guest</span>test 
+<span>Kenrick</span><a href="http://google.com" target="_blank">http://google.com</a> 
+<span>Guest</span><a href="http://css-tricks.com/examples/Chat/" target="_blank">http://css-tricks.com/examples/Chat/</a> 
+<span>Guest</span>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo. Quisque sit amet est et sapien ullamcorper pharetra. Vestibulum erat wisi, condimentum sed, commodo vitae, ornare sit amet, wisi. Aenean fermentum, elit eget tincidunt condimentum, eros ipsum rutrum orci, sagittis tempus lacus enim ac dui. Donec non enim in turpis pulvinar facilisis. Ut felis. Praesent dapibus, neque id cursus faucibus, tortor neque egestas augue, eu vulputate magna eros eu erat. Aliquam erat volutpat. Nam dui mi, tincidunt quis, accumsan porttitor, facilisis luctus, metus 
+<span>Guest</span>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo. Quisque sit amet est et sapien ullamcorper pharetra. Vestibulum erat wisi, condimentum sed, commodo vitae, ornare sit amet, wisi. Aenean fermentum, elit eget tincidunt condimentum, eros ipsum rutrum orci, sagittis tempus lacus enim ac dui. Donec non enim in turpis pulvinar facilisis. Ut felis. Praesent dapibus, neque id cursus faucibus, tortor neque egestas augue, eu vulputate magna eros eu erat. Aliquam erat volutpat. Nam dui mi, tincidunt quis, accumsan porttitor, facilisis luctus, metus&lt; 
+<span>Kenrick</span>ellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo. Quisque sit amet est et sapien ullamcorper pharetra. Vestibulum erat wisi, condimentum sed, commodo vitae, ornare sit amet, wisi. Aenean fermentum, elit eget tincidunt condimentum, eros ipsum rutrum orci, sagittis tempus lacus enim ac dui. Donec non enim in turpis pulvinar facilisis. Ut felis. Praesent dapibus, neque id cursus faucibus, tortor neque egestas augue, eu vulputate magna eros eu erat. Aliquam erat volutpat. Nam dui mi, tincidunt quis, accumsan porttitor, facilisis luctus, metus&lt; 
+<span>Kenrick</span>ellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo. Quisque sit amet est et sapien ullamcorper pharetra. Vestibulum erat wisi, condimentum sed, commodo vitae, ornare sit amet, wisi. Aenean fermentum, elit eget tincidunt condimentum, eros ipsum rutrum orci, sagittis tempus lacus enim ac dui. Donec non enim in turpis pulvinar facilisis. Ut felis. Praesent dapibus, neque id cursus faucibus, tortor neque egestas augue, eu vulputate magna eros eu erat. Aliquam erat volutpat. Nam dui mi, tincidunt quis, accumsan porttitor, facilisis luctus, metus
+<span>Kenrick</span><a href="http://kenrickbeckett.com" target="_blank">http://kenrickbeckett.com</a> 
+<span>Cant</span>mimimimi 
+<span>Cant</span>test! 
+<span>Chris Coyier</span>You are the best ever. 
+<span>William Elliot Whitmore</span>I know. 
+<span>Kenrick</span>its anyone out there? 
+<span>Kenrick</span>lol 
+<span>Coby</span>This is cool indeedy 
+<span>Coby</span>Liking it very much 
+<span>Coby</span>Way to go, Chris!! 
+<span>Kenrick</span>hello? 
+<span>Kenrick</span>u here coby 
+<span>Chris</span>lol? 
+<span>Kenrick</span>lol  
+<span>Kenrick</span>chris? 
+<span>Kenrick</span>u here 
+<span>RandomDude123</span>This is a fake conversation. 
+<span>RandomChick456</span>You always say that. 
+<span>RandomDude123</span>You aren't even real. 
+<span>RandomChick456</span>Neither are you. 
+<span>Kenrick</span>          
+<span>Tata</span><a href="http://css-tricks.com/examples/Chat/chat.txt" target="_blank">http://css-tricks.com/examples/Chat/chat.txt</a> 
+<span>Guest</span>hey 
+<span>Guest</span>testing removing a weird function 
+<span>Guest2</span>afdadfa 
+<span>Guest2</span>fdadf 
+<span>Kenrick</span>wat 
+<span>Kenrick</span>lol 
+<span>Kenrick</span>ok  
+<span>Kenrick</span>test all u want 
+<span>Guest</span>adfadf 
+<span>Guest</span>Hey Kenrick 
+<span>Kenrick</span>hello guest? 
+<span>Chris</span>er me =) 
+<span>Chris</span>There was two basically unused functions in the JS 
+<span>Kenrick</span>lol 
+<span>Kenrick</span>which r  
+<span>Chris</span>this.file = fileChat; 
+<span>Chris</span>this.trim = trimstr; 
+<span>Kenrick</span>and  
+<span>Kenrick</span>ye i knwo  
+<span>Kenrick</span>its for later  
+<span>Kenrick</span>because u can set a diffrent file to write to  
+<span>Chris</span>I'm writing parts of the tutorial so I just wanted to do a little cleaning up 
+<span>Kenrick</span>so u can have chat rooms 
+<span>Chris</span>I see 
+<span>Kenrick</span>diffrent file difffernt chat rooms 
+<span>Kenrick</span>u can take out the rims 
+<span>Kenrick</span>trim 
+<span>Kenrick</span>it was suppose limint text  
+<span>Kenrick</span>when the paste it in  
+<span>Kenrick</span>was working on a design for my site  
+<span>Chris</span>That's cool 
+<span>Kenrick</span>:( dont cool 
+<span>Kenrick</span>not cool* 
+<span>Kenrick</span>giving me a headacke 
+<span>Kenrick</span>i love desugning 
+<span>Kenrick</span>but im more of a developer 
+<span>Chris</span>I was thinking maybe monday to put this out 
+<span>Chris</span>unless you want to wait 
+<span>Kenrick</span>sooner the better 
+<span>Kenrick</span>people really want it  
+<span>Kenrick</span>have u see the chat log 
+<span>Kenrick</span>&quot;OMG chris this awesome cant wait to get it &quot;
+<span>Kenrick</span>lol 
+<span>Kenrick</span><a href="http://google.com" target="_blank">http://google.com</a> google.com 
+<span>Kenrick</span>i was worried that url flitering would not work  
+<span>Kenrick</span>i think styling and the anchor tags is appropriate 
+<span>Chris</span>nice 
+<span>Chris</span>definitely some more design stuff to toss in 
+<span>Chris</span>gotta run 
+<span>Kenrick</span>kk  
+<span>do</span>ANyboDy elS e hEre
+<span>Guest</span>test 
+<span>Guest</span>bonjour 
+<span>Maurice Papon</span>Meuh ! 
+<span>Maurice Papon</span>R&Atilde;&copy;ponds connard 
+<span>Maurice Papon</span>&Atilde;&copy;&Atilde;&copy;&Atilde;&copy;&Atilde;&copy;&Atilde;&copy; 
+<span>Maurice Papon</span>&Atilde;&copy;&amp;&Atilde;&nbsp;@&Atilde;&uml;&Atilde;&raquo;&Atilde;&reg;&Atilde;&para; 
+<span>Guest</span>test 
+<span>Guest</span>cool 
+<span>Guest</span>yo 
+<span>Guest</span>$('input').hide(); 
+<span>Guest</span>t 
+<span>Guest</span>t 
+<span>Guest</span>t 
+<span>Guest</span>t 
+<span>Guest</span>t 
+<span>Guest</span>t 
+<span>Guest</span>t 
+<span>Guest</span>t 
+<span>Guest</span>t 
+<span>Guest</span>t 
+<span>Guest</span>t 
+<span>Guest</span>t 
+<span>Guest</span>t 
+<span>Guest</span>t 
+<span>Guest</span>t 
+<span>Guest</span>t 
+<span>Guest</span>t 
+<span>Guest</span>t 
+<span>Guest</span>nlknklj 
+<span>Kenrick</span>$('input').hide();  
+<span>Kenrick</span>lol 
+<span>Guest</span> dad dv aqv advavadva 
+<span>Guest</span>this is cool 
+<span>Guest</span>but i have chat on my website now 
+<span>Guest</span>fuck 
+<span>Guest</span>uh oh no filter for bad language 
+<span>Kenrick</span><a href="http://css-tricks.com/examples/Chat/" target="_blank">http://css-tricks.com/examples/Chat/</a> 
+<span>Kenrick</span>'
+<span>Porn</span>boobies 
+<span>Guest</span>lol 
+<span>kenrick</span>hi 
+<span>Kenrick</span>hello world 
+<span>Kenrick</span>testing 
+<span>Kenrick</span>lol  i
+<span>Kenrick</span> i
+<span>Kenrick</span>i 
+<span>Kenrick</span>i 
+<span>Kenrick</span>i 
+<span>Kenrick</span>i 
+<span>Kenrick</span>i 
+<span>Kenrick</span>i 
+<span>Kenrick</span>i i
+<span>Kenrick</span> i
+<span>Kenrick</span> i
+<span>Kenrick</span>ok 
+<span>Kenrick</span>i knoe  
+<span>Kenrick</span>u care 
+<span>Guest</span>2 
+<span>Guest</span>Test 
+<span>Guest</span>Interesting. 
+<span>Guest</span>Anyone there? 
+<span>Guest</span>Hi 
+<span>Guest</span>Hello 
+<span>Guest</span>test 
+<span>Guest</span>Hello? 
+<span>Guest</span>Wow. 
+<span>Guest</span>interesting. 
+<span>Guest</span>Does this work? 
+<span>Guest</span>What? 
+<span>Guest</span>Who? 
+<span>Guest</span>When? 
+<span>Guest</span>Where? 
+<span>Guest</span>hullo 
+<span>Guest</span>Hey 
+<span>Guest</span>Anyone? 
+<span>Guest</span>tfgjhg 
+<span>Guest</span>bvjhg 
+<span>Guest</span>ljhlkjhkljh 
+<span>Kcotter</span>heloooo? 
+<span>Iain</span>Hello 
+<span>Iain</span>Ooooh, this is nice. 
+<span>Guest</span>boo 
+<span>Frank</span>test 
+<span>Guest</span>test 
+<span>Doc KasH</span>Pussy who dis 
+<span>Kenrick</span>wah gwan 
+<span>Doc KasH</span>looser your thing is slow 
+<span>Kenrick</span>because of the server 
+<span>Doc KasH</span>lame 
+<span>Kenrick</span>but i made 150 off this 
+<span>Doc KasH</span>Im gonna hack this bitch and crash it 
+<span>Kenrick</span>go ahead 
+<span>Kenrick</span>u fool lke 
+<span>Kenrick</span>how much u wantr for the BB 
+<span>Doc KasH</span>ok watch me  
+<span>Kenrick</span>? 
+<span>Kenrick</span>BB!!!!!!!!!!!!! 
+<span>Doc KasH</span>u dont got one 
+<span>Kenrick</span>how much!! 
+<span>Kenrick</span>?     
+<span>Kenrick</span>       
+<span>Kcotter</span>whats up 
+<span>Kcotter</span>google   
+<span>Guest</span>testing 
+<span>Guest</span>beings, the improvement of living standards has been a high priority. These new living standards are brought on by the development technology. From horses to cars, swords to guns and even feathers to pens, all types have improvement have been happening over the years.    
+<span>Guest</span><a href="http://net.tutsplus.com/tutorials/html-css-techniques/object-oriented-css-what-how-and-why/" target="_blank">http://net.tutsplus.com/tutorials/html-css-techniques/object-oriented-css-what-how-and-why/</a> 
+<span>Guest</span>hello 
+<span>Guest</span>hello 
+<span>PKC</span>hello world 
+<span>PKC</span>hello jQuery 
+<span>Guest</span>hello 
+<span>Guest</span>asdasd 
+<span>Guest</span>asdasd 
+<span>Guest</span>asdasda 
+<span>Guest</span>a 
+<span>Guest</span>a 
+<span>Guest</span>a 
+<span>Guest</span>a 
+<span>Guest</span>a 
+<span>asd</span>asd 

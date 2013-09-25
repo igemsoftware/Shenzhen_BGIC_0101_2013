@@ -33,13 +33,10 @@
           ) {
   return declare( InfoDialog, {
 
-      title: "Segmention",
-     // width: 1000,
-     // height: 300,
+      title: "Coden Optimization",
 
       constructor: function(args) {
-    //      this.width = window.screen.width*0.8;
-    //      this.height = window.screen.height*0.64;
+
           this.browser = args.browser;
 
 
@@ -59,7 +56,7 @@
                 label: 'OK',
                 onClick: function() {
                     dojo.xhrGet({
-                      url: "server/REST/index.php/Segmentation/globalREmarkup",
+                      url: "server/REST/index.php/CodenOptimize",
                       content: {
                         baseUrl: that.browser.config.baseUrl,
                         re: dijit.byId("re").value,

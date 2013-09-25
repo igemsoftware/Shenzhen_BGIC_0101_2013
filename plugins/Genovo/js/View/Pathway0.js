@@ -669,7 +669,7 @@
                       //console.log(cnode.y);
                     nodes.push(cnode);
                     //dojo.create("li", { innerHTML: d.geneName, class: d.type+ " "+"dojoDndItem", name: cnode.id }, dojo.byId("draggenes"));
-                    that.dragSource.insertNodes(false, [ { text: d.geneName, pid: cnode.id}]);
+                    that.dragSource.insertNodes(false, [ { text: d.geneName, pid: cnode.id, class: cnode.type}]);
                      // restart();
                     //}
                   }
@@ -928,7 +928,10 @@
               this.dragSource = new Source("draggenes", 
                 { 
                   creator: function( item, hint ) {
-                              var myLi = dojo.create( 'li', { pid : item.pid, innerHTML: item.text });
+                              var myLi = dojo.create( 'li', {
+                                  pid: item.pid, 
+                                  innerHTML: item.text, 
+                                  class: item.class});
 
                               if (hint == 'avatar') {
                                 // create your avatar if you want
