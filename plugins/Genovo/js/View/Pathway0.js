@@ -41,8 +41,8 @@
   return declare( InfoDialog, {
 
       title: "Pathway",
-      width: 1400,
-      height: 300,
+      width: null,
+      height: null,
       tooltip: null,
       nodes: null,
       links: null,
@@ -60,8 +60,10 @@
       LinkedTable: null,
 
       constructor: function(args) {
-          this.width = window.screen.width*0.8;
-          this.height = window.screen.height*0.64;
+          this.width = window.screen.width//*0.8
+                                            ;
+          this.height = window.screen.height//*0.64
+                                            ;
           this.browser = args.browser;
           this.tooltip = Tooltip("vis-toolTip", 230);
 
@@ -290,7 +292,6 @@
             var genes = v["genes"]["genes"]["gene"];
             for (var id in genes) {
               if (genes[id].type === 'gene') {
-
                 that.geneIdHash[id] = genes[id].name;
               }
             }
@@ -298,46 +299,77 @@
             var links = [];
             that.LinkedTable = {};
             var relation = v["relation"]["relations"];
+            var generateGenes = function( names ) {
+              var arr = names.split(/[: ]+/);
+              if (arr.length > 1) {
+                var result = [];
+                for (var i=1; i < arr.length; i+=2) {
+                  result.push(arr[i]);
+                }
+                return result;
+              } else {
+                return arr;
+              }
+            }
+
+            var in_array = function( name, arr) {
+              for (var i in arr) {
+                if (name == arr[i].name)
+                  return true;
+              }
+              return false;
+            }
             for (var i in relation) {
               if (relation[i].entry2.type === "gene"
                 && relation[i].entry1.type === "gene") {
-                var name1 = relation[i].entry1.name,
-                    name2 = relation[i].entry2.name;
-                nodes.push({
-                  name: name1
-                });
-                nodes.push({
-                  name: name2
-                });
-  
-                links.push({
-                  name1:name1,
-                  name2:name2,
-                  active: relation[i].subtype == "activation"
-                });
-                if (that.LinkedTable[name1] === undefined) {
-                    that.LinkedTable[name1] = {};
-                    that.LinkedTable[name1][name2] = { 
-                            active:relation[i].subtype == "activation",
-                            pos : true
-                          };
-                } else {
-                    that.LinkedTable[name1][name2] = {
-                            active:relation[i].subtype == "activation",
-                            pos: true
-                          };
-                }
-                if (that.LinkedTable[name2] === undefined) {
-                    that.LinkedTable[name2] = {};
-                    that.LinkedTable[name2][name1] = {
-                            active:relation[i].subtype == "activation",
-                            pos: false
-                          };
-                } else {
-                    that.LinkedTable[name2][name1] = {
-                            active:relation[i].subtype == "activation",
-                            pos: false
-                          };
+                var name1arr = generateGenes( relation[i].entry1.name ),
+                    name2arr = generateGenes( relation[i].entry2.name );
+                for (var i in name1arr) {
+                  for (var j in name2arr) {
+                    name1 = name1arr[i];
+                    name2 = name2arr[j];
+
+                    if (!in_array(name1, nodes)) {
+                      nodes.push({
+                        name: name1
+                      });
+                    }
+                    if (!in_array(name2, nodes)) { 
+                      nodes.push({
+                        name: name2
+                      });
+                    }
+      
+                    links.push({
+                      name1:name1,
+                      name2:name2,
+                      active: relation[i].subtype == "activation"
+                    });
+                    if (that.LinkedTable[name1] === undefined) {
+                        that.LinkedTable[name1] = {};
+                        that.LinkedTable[name1][name2] = { 
+                                active:relation[i].subtype == "activation",
+                                pos : true
+                              };
+                    } else {
+                        that.LinkedTable[name1][name2] = {
+                                active:relation[i].subtype == "activation",
+                                pos: true
+                              };
+                    }
+                    if (that.LinkedTable[name2] === undefined) {
+                        that.LinkedTable[name2] = {};
+                        that.LinkedTable[name2][name1] = {
+                                active:relation[i].subtype == "activation",
+                                pos: false
+                              };
+                    } else {
+                        that.LinkedTable[name2][name1] = {
+                                active:relation[i].subtype == "activation",
+                                pos: false
+                              };
+                    }
+                  }
                 }
               }
             }
@@ -991,6 +1023,7 @@
       },
 
       _makeDefaultContent: function() {
+          console.log(" "+ this.height + " " + this.width);
           this.idpool = 1;
           var appContainer = this.appContainer = new BorderContainer({
                 gutters: true,

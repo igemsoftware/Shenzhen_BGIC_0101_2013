@@ -200,17 +200,17 @@ sub ReadGff
 		@info[3,4] = @info[4,3] if($info[3] > $info[4]);
 		if($info[2] eq 'gene')
 		{
-			if($info[8]=~/Dubious/)
-			{
-				delete $Ord->{$gene_id};
-				print STDERR "$gene_id is dubious gene, discarded!\n";
-				next;
-			}else
-			{
+#			if($info[8]=~/Dubious/)
+#			{
+#				delete $Ord->{$gene_id};
+#				print STDERR "$gene_id is dubious gene, discarded!\n";
+#				next;
+#			}else
+#			{
 				$info[8] =~/display=([^;]+);?/;
 				my $function = $1;
 				$Info->{$info[0]}{$gene_id}{'function'} = $function;
-			}
+#			}
 		}
 		elsif($info[2] eq 'mRNA')
 		{
@@ -291,7 +291,7 @@ sub FindOverlap
 			{
 #### current gene has overlap with the init gene and both in the gene order list
 #### latter gene former gene 
-				if($current_gene_start <= $init_gene_end && ($current_gene_start - 600 > $init_gene_start))
+				if($current_gene_start <= $init_gene_end)# && ($current_gene_start - 600 > $init_gene_start))
 				{
 					push @Decouple,$current_gene;
 				}
@@ -334,7 +334,7 @@ sub Decouple
 	my $Decple=shift;
 	my $frag_p=shift;
 
-#	print Dumper($Decple);
+#	print Dumper($Decple);exit;
 #### list the combine of @Decouple array
 	my @combine=Combine($Decple);
 	for(my $i=0;$i<@combine;$i++)
@@ -684,8 +684,11 @@ sub Neo_Gff_Fasta
 			print NEOGFF "NeoChr\tGenovo\tgene\t$gene_start\t$gene_end\t.\t$gene_direct\t.\tID=$Gene;display=$gene_func;\n";
 #### output gene 3'-UTR info
 			print NEOGFF "NeoChr\tGenovo\t3UTR\t$gene_start\t$three_UTR_end\t.\t$gene_direct\t.\tParent=$Gene;\n";
+#### output gene mRNA info
+			print NEOGFF "NeoChr\tGenovo\tmRNA\t$mRNA_start\t$mRNA_end\t.\t$gene_direct\t.\tParent=$Gene;\n";
 #### output gene CDS info
-			for(my $i=0;$i<@{$fp->{'anno'}{'CDS'}};$i++)
+			my $element_num = scalar(@{$fp->{'anno'}{'CDS'}});
+			for(my $i=$element_num-1;$i>=0;$i--)
 			{
 				my $CDS_st=$accum_len + $gene_len - $fp->{'anno'}{'CDS'}[$i][1] + 1;
 				my $CDS_end=$accum_len + $gene_len - $fp->{'anno'}{'CDS'}[$i][0] + 1;
@@ -698,12 +701,10 @@ sub Neo_Gff_Fasta
 #			print "----$Gene\n";exit;
 				foreach my $site(@{$fp->{'anno'}{'change'}})
 				{
-					my $decoup_site=$accum_len + $gene_end - $site + 1;
+					my $decoup_site=$accum_len + $gene_len - $site + 1;
 					print NEOGFF "NeoChr\tGenovo\tdecouple\t$decoup_site\t$decoup_site\t.\t.\t.\tParent=$Gene;\n";
 				}
 			}
-#### output gene mRNA info
-			print NEOGFF "NeoChr\tGenovo\tmRNA\t$mRNA_start\t$mRNA_end\t.\t$gene_direct\t.\tParent=$Gene;\n";
 #### output gene 5'-UTR info
 			print NEOGFF "NeoChr\tGenovo\t5UTR\t$five_UTR_start\t$five_UTR_end\t.\t$gene_direct\t.\tParent=$Gene;\n";
 			$accum_len+=$fp->{'len'};
