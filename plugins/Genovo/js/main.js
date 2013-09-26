@@ -145,7 +145,7 @@ return declare( JBrowsePlugin,
 
 		browser.addGlobalMenuItem( 'Genovo_tools', new dijitMenuItem(
 			{
-				label: "Coden Optimize",
+				label: "NucleoMod",
 				onClick: function() {
 					if (!that.codenOptimizeWindow) {
 						that.codenOptimizeWindow = new CodenOptimizeWindow({
@@ -153,27 +153,7 @@ return declare( JBrowsePlugin,
 							genovo: that
 						})
 					} 
-					that.codenOptimizeWindow.show();/*
-						dojo.xhrGet({
-							url: "server/REST/index.php/CodenOptimize",
-							content: {
-								baseUrl: browser.config.baseUrl,
-								dataset: browser.config.dataset_id,
-								step: {
-									1: true,
-									2: true
-								}
-							},
-							load: function( d ) {
-								console.log(d);
-							}
-						});
-		*/
-					/*
-					if (!that.optimizationWindow) {
-						that.optimizationWindow = new OptimizationWindow( {browser: browser} );
-					}
-					that.optimizationWindow.show();*/
+					that.codenOptimizeWindow.show();
 				}
 			}
 			));

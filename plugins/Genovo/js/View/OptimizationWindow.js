@@ -17,7 +17,9 @@
               'dojox/grid/_CheckBoxSelector',
               'dijit/form/FilteringSelect',
               'dijit/form/NumberTextBox',
-              'dojox/validate'
+              'dojox/validate',
+              "dijit/form/Textarea",
+              "dijit/form/CheckBox"
           ],
           function(
               declare,
@@ -62,13 +64,46 @@
                 className: 'OK',
                 label: 'OK',
                 onClick: function() {
+                    var content = {
+                      baseUrl: that.browser.config.baseUrl,
+                      dataset: that.browser.config.dataset_id,
+                    };
+                    if (dijit.byId("checkCRISPR").checked) {
+                        content["crisprnum"] = dijit.byId("crisprnum").value;
+                        content["database"] = dijit.byId("database").value;
+                    }
+                    if (dijit.byId("checkoptimize").checked) {
+                        content["codonoptimize"] = dijit.byId("codonoptimize").value;
+                        content["optimizelist"] = dijit.byId("optimizelist").value;
+                        if (content["optimizelist"] == "optimizegenelist") {
+                            var selected = that.featuresGrid.selection.selected;
+                            var msg = [];
+                            for (var a in selected) {
+                              if (a && selected[a]) {
+                                  msg.push(that.data.items[a].feature[0]);
+                              }
+                            };
+                            if (msg.length == 0) {
+                              alert("You can highlight the genes,\n Then comeback to select what you want :)")
+                            }
+                            msg = msg.join(",");
+                            content["optimizelist"] = msg;
+                        }
+                    }
+
+                    if (dijit.byId("checkRepeat").checked) {
+                        content["repeatsmash"] = dijit.byId("repeatsmash").value;
+                    }
+                    if (dijit.byId("checkenzyme").checked) {
+                        content["addenzymelist"] = dijit.byId("addenzymelist").value;
+                        content["addenzymeconfig"] = dijit.byId("addenzymeconfig").value;
+                    }
+                    if (dijit.byId("checkBiobrick").checked) {
+                        content["biobrickstrand"] = dijit.byId("biobrickstrand").value;
+                    }
                     dojo.xhrGet({
-                      url: "server/REST/index.php/CodenOptimize",
-                      content: {
-                        baseUrl: that.browser.config.baseUrl,
-                        re: dijit.byId("re").value,
-                        ct: dijit.byId('ct').value
-                      },
+                      url: "server/REST/index.php/NucleoMod",
+                      content: content,
                       load: function( d ) {
                         console.log(d);
                       }
@@ -85,12 +120,11 @@
             }).placeAt( actionBar );
       },
 
-      show: function() {
+      fillGrid: function() {
                 var that = this;
-                this.inherited( arguments );
                 var highlight = that.browser.getHighlight();
                 if (highlight == null) {
-                  alert("Please Select Region use Highlight Tools");
+                //  alert("Please Select Region use Highlight Tools");
                   return;
                 }
                 var progress = dijit.byId("globalProgress").set("label", 
@@ -127,23 +161,128 @@
                 });
       },
 
+      setupEvent: function() {
+            var that = this;
+            dojo.connect(dijit.byId("optimizelist"), "onChange", function(d) {
+                if (d == "optimizeallgene") {
+                  dojo.query("#optimizeGridPane").style("display", "false");
+                } else {
+                  dojo.query("#optimizeGridPane").style("display", "true");
+                }
+            });
+            dojo.connect(dijit.byId("checkCRISPR"), "onChange", function(d) {
+              //  console.log(d);
+                if (d == true) {
+                  dojo.query("#CRISPR").style("visibility", "visible");
+                } else {
+                  dojo.query("#CRISPR").style("visibility", "hidden");
+                }
+            });
+            dojo.connect(dijit.byId("checkRepeat"), "onChange", function(d) {
+                if (d == false) {
+                  dojo.query("#repeat").style("visibility", "hidden");
+                } else {
+                  dojo.query("#repeat").style("visibility", "visible");
+                }
+            });
+            dojo.connect(dijit.byId("checkBiobrick"), "onChange", function(d) {
+                if (d == false) {
+                  dojo.query("#biobrick").style("visibility", "hidden");
+                } else {
+                  dojo.query("#biobrick").style("visibility", "visible");
+                }
+            });
+            dojo.connect(dijit.byId("checkenzyme"), "onChange", function(d) {
+                if (d == false) {
+                  dojo.query("#addenzyme").style("visibility", "hidden");
+                } else {
+                  dojo.query("#addenzyme").style("visibility", "visible");
+                }
+            });
+            dojo.connect(dijit.byId("checkoptimize"), "onChange", function(d) {
+                if (d == false) {
+                  dojo.query("#codonoptimizebody").style("visibility", "hidden");
+                } else {
+                  dojo.query("#codonoptimizebody").style("visibility", "visible");
+                }
+            });
+      },
+
+      show: function() {
+
+              var that = this;
+              this.inherited( arguments );
+              this.fillGrid();
+              this.setupEvent();
+      },
+
       _makeDefaultContent: function() {
         var that = this;
         var appContainer = this.appContainer = new BorderContainer({
                 style: "height: " + window.screen.height*0.66 + "px; width: " + window.screen.width*0.6 + "px;"
         });
 
-        var content = '<table cellpadding="0" cellspacing="2">'
-                    +     ' <tr><td valign="top"><strong>restriction enzyme sites list: </strong></td><td>'
-                    +     ' <select name="re" id="re" dojoType="dijit.form.FilteringSelect">'
-                    +     '     <option value="Standard_and_IIB">Standard_and_IIB</option>'
-                    +     '     <option value="Standard_and_IIA">Standard_and_IIA</option>'
-                    +     '     <option value="Standard_and_IIP">Standard_and_IIP</option>'
+        var content = '<table cellpadding="0" cellspacing="3">'
+                    // CRISPR
+                        +     '<tr><td valign="top"><input id="checkCRISPR" name="checkCRISPR" data-dojo-type="dijit/form/CheckBox" checked="true"/>'
+                        +     '<label for="checkCRISPR">CRISPR:</label></td></tr>'
+
+                    +   "<tbody id='CRISPR'>"
+                    +     ' <tr><td valign="top"><strong>Number of CRISPR site to design in a gene. : </strong></td><td><input type="text" required="true" name="crisprnum" id="crisprnum" placeholder="2" dojoType="dijit.form.NumberTextBox" missingMessage="Number of CRISPR site to design in a gene." value="2"/></td></tr>'
+                    +     ' <tr><td valign="top"><strong>Genome fasta file of selected species.: </strong></td><td>'
+                    +     ' <select name="database" id="database" dojoType="dijit.form.FilteringSelect">'
+                    +     '     <option value="saccharomyces_cerevisiae_chr.fa ">saccharomyces_cerevisiae_chr.fa</option>'
                     +     ' </select>'
-                    +     ' <tr><td valign="top"><strong>codon table file: </strong></td><td>'
-                    +     ' <select name="ct" id="ct" dojoType="dijit.form.FilteringSelect">'
-                    +         '   <option value="Standard.ct">Standard.ct</option>'
-                    +     ' </select>'
+                    +   "</tbody>"
+                    // repeat smash 
+                        +     '<tr><td valign="top"><input id="checkRepeat" name="checkRepeat" data-dojo-type="dijit/form/CheckBox" checked="true"/>'
+                        +     '<label for="checkRepeat">Repeat Smash: </label></td></tr>'    
+
+                    +   '<tbody id="repeat">'
+                          +     ' <tr><td valign="top"><strong>tandem Repeat bases longer than this value will be smash. : </strong></td><td><input type="text" required="true" name="repeatsmash" id="repeatsmash" placeholder="4" dojoType="dijit.form.NumberTextBox" missingMessage="tandem Repeat bases longer than this value will be smash" value="4"/></td></tr>'
+                    +   '</tbody>'
+                    
+                    // biobrick format
+                        +     '<tr><td valign="top"><input id="checkBiobrick" name="checkBiobrick" data-dojo-type="dijit/form/CheckBox" checked="true"/>'
+                        +     '<label for="checkBiobrick">Biobrick format :</label></td></tr>'    
+
+                    +   '<tbody id ="biobrick">'
+                        +     ' <tr><td valign="top"><strong>Use biobrickstrand to delete enzyme : </strong></td><td>'
+                        +     ' <select name="biobrickstrand" id="biobrickstrand" dojoType="dijit.form.FilteringSelect">'
+                        +         '   <option value="biobrickstrand">biobrickstrand</option>'
+                        +         '   <option value="common_enzyme.list">common_enzyme.list</option>'
+                        +     ' </select>'
+                    +   '</tbody>'
+                    /// add enzyme
+                        
+                        +     '<tr><td valign="top"><input id="checkenzyme" name="checkenzyme" data-dojo-type="dijit/form/CheckBox" checked="true"/>'
+                        +     '<label for="checkenzyme">Add enzyme :</label></td></tr>'    
+
+                    +   '<tbody id="addenzyme">'
+                        +     ' <tr><td valign="top"><strong>A file of enzyme structure to be add: </strong></td><td>'
+                        +     ' <select name="addenzymelist" id="addenzymelist" dojoType="dijit.form.FilteringSelect">'
+                        +         '   <option value="common_enzyme.list">common_enzyme.list</option>'
+                        +     ' </select>'
+                        +     ' <tr><td valign="top"><strong>A group of config for create enzyme: </strong></td><td>'
+                        +     ' <textarea id="addenzymeconfig" name="addenzymeconfig" data-dojo-type="dijit/form/Textarea">'
+                        +     ' </textarea>'
+                    +   '</tbody>'
+                    ///Codon Optimize
+                        
+                        +     '<tr><td valign="top"><input id="checkoptimize" name="checkoptimize" data-dojo-type="dijit/form/CheckBox" checked="true"/>'
+                        +     '<label for="checkoptimize">codon optimization :</label></td></tr>'    
+
+                    +   '<tbody id="codonoptimizebody">'
+                        +     ' <tr><td valign="top"><strong>A file of codon priority of selected species: </strong></td><td>'
+                        +     ' <select name="codonoptimize" id="codonoptimize" dojoType="dijit.form.FilteringSelect">'
+                        +         '   <option value="yeast.CodonPriority.txt">yeast.CodonPriority.txt</option>'
+                        +     ' </select>'
+                        +     ' <tr><td valign="top"><strong>Choose how many genes to Optimize: </strong></td><td>'
+                        +     ' <select name="optimizelist" id="optimizelist" dojoType="dijit.form.FilteringSelect">'
+                        +         '   <option value="optimizeallgene">Optimize all genes in gff</option>'
+                        +         '   <option value="optimizegenelist">Only genes selected will be optimized</option>'
+                        +     ' </select>'
+                    +   '</tbody>'
                     + '</table>';
         var configContent = new ContentPane({
           id: "optimizePane",
@@ -174,7 +313,8 @@
           });
         var optimizeGridPane = new ContentPane({
           id: "optimizeGridPane",
-          region: "right",
+          style: "height: 10em",
+          region: "bottom",
           content: [
             that.featuresGrid.domNode
           ]

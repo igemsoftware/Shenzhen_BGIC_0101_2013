@@ -92,7 +92,7 @@
                 progress.set("indeterminate", true);
           			var enzymes = inputvalue.value;
           			dojo.xhrGet({
-          				url: 'server/tools/toolsManager.php?GetPrice=1&enzyme='+enzymes,
+          				url: 'server/toolsManager.php?GetPrice=1&enzyme='+enzymes,
           				handleAs: 'json',
           				load: function( msg ) {
           						console.log(msg);

@@ -60,9 +60,9 @@
       LinkedTable: null,
 
       constructor: function(args) {
-          this.width = window.screen.width//*0.8
+          this.width = window.screen.width*0.8
                                             ;
-          this.height = window.screen.height//*0.64
+          this.height = window.screen.height*0.64
                                             ;
           this.browser = args.browser;
           this.tooltip = Tooltip("vis-toolTip", 230);
@@ -1022,6 +1022,9 @@
             this.inherited( arguments );
       },
 
+      _fillActionBar:function() {
+          /// 
+      },
       _makeDefaultContent: function() {
           console.log(" "+ this.height + " " + this.width);
           this.idpool = 1;
