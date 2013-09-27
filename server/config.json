@@ -1,0 +1,8 @@
+{
+	"config": {
+		"url": "server/config/",
+		"codonPriority": {
+				"url": "server/config/Optimize/"
+				}
+	}
+}

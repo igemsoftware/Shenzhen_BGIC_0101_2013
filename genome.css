@@ -2,18 +2,18 @@
 @import url("src/dijit/themes/tundra/tundra.css");
 @import url("src/dojo/resources/dojo.css");
 
-@import url("main.css");
-@import url("sequence.css");
-@import url("menubar.css");
-@import url("icons.css");
-@import url("file_dialog.css");
-@import url("combination_tracks.css");
-@import url("export_dialog.css");
+@import url("css/main.css");
+@import url("css/sequence.css");
+@import url("css/menubar.css");
+@import url("css/icons.css");
+@import url("css/file_dialog.css");
+@import url("css/combination_tracks.css");
+@import url("css/export_dialog.css");
 
 /* CSS styles for the various types of feature glyphs */
-@import url("track_styles.css");
-@import url("faceted_track_selector.css");
+@import url("css/track_styles.css");
+@import url("css/faceted_track_selector.css");
 
 
 /* CSS styles specifically for MAKER output */
-@import url("maker.css");
+@import url("css/maker.css");

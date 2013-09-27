@@ -769,6 +769,7 @@ renderDatasetSelect: function( parent ) {
 
     new dijitSelectBox(
         {
+            id: "datasetSelectBox",
             name: 'dataset',
             className: 'dataset_select',
             value: this.config.dataset_id,
@@ -1053,9 +1054,9 @@ reportUsageStats: function() {
     if( this.config.suppressUsageStatistics )
         return;
 
-    //var stats = this._calculateClientStats();
-    //this._reportGoogleUsageStats( stats );
-    //this._reportCustomUsageStats( stats );
+    var stats = this._calculateClientStats();
+    this._reportGoogleUsageStats( stats );
+    this._reportCustomUsageStats( stats );
 },
 
 // phones home to google analytics
