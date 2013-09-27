@@ -342,7 +342,7 @@ return declare( JBrowsePlugin,
 			label: "Download",
 			iconClass: '', 
 			onClick: function() {
-				if (!that.downloadWindow) {
+				if (!that.download) {
 					that.download = new downloadWindow({
 						genovo:that,
 						jbrowse: browser

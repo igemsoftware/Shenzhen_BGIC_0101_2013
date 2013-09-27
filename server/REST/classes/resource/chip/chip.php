@@ -39,7 +39,7 @@ class Resource_chip_chip extends Resource
 			exec($cmd, $result);
 			$this->_data = $result;
 			//return;
-			$pos = strpos($faname);
+			$pos = strpos($faname, '.');
 			if ($pos == false) {
 				$shortfa = $faname;
 			} else {
