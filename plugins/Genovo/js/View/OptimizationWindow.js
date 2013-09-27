@@ -64,6 +64,9 @@
                 className: 'OK',
                 label: 'OK',
                 onClick: function() {
+                    var progress = dijit.byId("globalProgress").set("label", 
+                                            "well, begin work now");
+                    progress.set("indeterminate", true);
                     var content = {
                       baseUrl: that.browser.config.baseUrl,
                       dataset: that.browser.config.dataset_id,
@@ -105,12 +108,15 @@
                       url: "server/REST/index.php/NucleoMod",
                       content: content,
                       load: function( d ) {
-                        var value = that.browser.dataset_id + "_nucleo";
+                        var value = that.browser.config.dataset_id + "_nucleo";
                         that.genovo.updateSelectBox({
                             value: value,
                             label: value
                         });
                         console.log(d);
+                         var progress = dijit.byId("globalProgress").set("label", 
+                                            "I Done lots things for you :)");
+                          progress.set("indeterminate", false);
                       }
                     });
                     that.hide();
