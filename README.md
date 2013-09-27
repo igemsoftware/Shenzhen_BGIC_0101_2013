@@ -1,6 +1,6 @@
-## Genovo ##
+# Genovo ##
 Welcome to Genovo World. We are Shenzhen_BGIC_0101_2013 team.
-# What we do 
+## What we do 
 * NeoChr
    > balabala
 * NucMod 
@@ -8,48 +8,87 @@ Welcome to Genovo World. We are Shenzhen_BGIC_0101_2013 team.
 * SegmMan
   >>> balabala
 
-# install Guid
-## Software Requirment 
 
-         perl
-         python
-	Apache
-	# Features
-	git (for version control plugin)
-	php (for REST api and backend server)
-	Biopython and UNAFoldt (for chip plugin)
-	Blast+ (for NucleoMod Plugin)
+=============================================
 
-## Permissoin Requirment
-	Write in data/
-	Write plugin/tmp_data
-	Write server/tmp_data 
+## install Guid
+Our software are totally based on JBrowse which is next-generation of GBrowse. If you have install JBrowse, just pull git and use.
 
-## Install JBrowse
-	To install JBrowse, see the main JBrowse wiki at http://gmod.org/wiki/JBrowse.
+### Install JBrowse
+   > To install JBrowse, see the main JBrowse wiki at http://gmod.org/wiki/JBrowse.
+   
+   > ### For Short Description: 
+   * unzip the Download file in www root folder `(/home/www is recommand and  do not use /var/www/ as that need root permission)`
+   * cd jbrowse
+   * ./install.sh # Install all perl package needed auto with Internet
+   * # If all goes well, you can open http://localhost/jbrowse/index.html?data=sample_data/json/volvox
 
-### For Short Description
-	unzip the Download file
-	cd jbrowse
-	./install.sh # Install all perl package needed auto with Internet
-	# If all goes well, you can open
-	#   http://localhost/jbrowse/index.html?data=sample_data/json/volvox
+### Software Requirment 
+ * perl5
+ * php5 ( for REST api and backend server )
+ * Apache
+ * Linux ( Tested on Debian )
+ * git ( for version control plugin )
+ * Biopython and UNAFoldt ( for chip plugin )
+ * Blast+ ( for NucleoMod Plugin )
+ * `Chrome and firfox is recommand`
 
-## Install NucleoMod Plugin
-	NucleoMod depend on Blast+, So if you use Debian based System:
-		apt-get install ncbi-blast+
-	Or you can Install From:
-		ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/ 
+### Permissoin Requirment
+ `Writable data, plugin/tmp_data, server/tmp_data, jbrowse_conf.json`
+ `Executable ./bin/  ./server/bin/  ./plugin/bin`
 
-## Install Chip Plugin
-	Download and install UNAFoldt and Biopython from:
-	1、UnaFold
+### Install NucleoMod Plugin
+> NucleoMod depend on Blast+, So if you use Debian based System:
+   `apt-get install ncbi-blast+`
+ 
+> Or you can Install From:
+`ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/` 
+
+### Install Chip Plugin
+Download and install UNAFoldt and Biopython from:
+  >  * 1 UnaFold
 		http://dinamelt.rit.albany.edu/download.php
-	2、Biopython:
+ * 2 Biopython:
 		http://biopython.org/DIST/docs/install/Installation.html
 
-## Any other Plugins is portable
+### install version control plugin
+>>`git is needed`
 
+### Any other Plugins is portable
+
+===================================================
+## File System
+```
+.
+   |-bin              # JBrowse's exec
+   |-build
+   |-data             # Genovo default output 
+   |-doc
+   |-extlib           # All perl 5 Library
+   |-plugins          # JBrowse defaulte plugins folder
+   |---Genovo         # Genovo plugin for JBrowse
+   |-server           # Server side for JBrowse
+   |---bin            # Server side exec
+   |-----gaspserver   # chip plugin
+   |-----GetPrice     # get enzyme's price
+   |-----segmentation # SegmMan Plugin
+   |---config         #  Genovo Server side config 
+   |-----features    
+   |-----geneset
+   |-----globalREmarkup
+   |-----markers
+   |-----Optimize
+   |---doc            # Genovo Document
+   |---lib            # Genovo library Needed
+   |---pathway        # Pathway Data need by NeoChr Plugin
+   |---REST           # Servers side REST implement
+   |---rewire         # Logic genes data for next version 
+   |---system         # REST implement
+
+```
+
+
+===================================================
 
 # Medals Requirement
 
@@ -93,12 +132,12 @@ But for biobrick level, the second module can also assist users to design genes,
  >  Advertisement:
   * [We tried to sell our team shirts to people from BGI.](link_sell) 
 
-* .B Use SBOL in your software documentation.
+* 2 .B Use SBOL in your software documentation.
 We use SBOL as one of the output of first module to describe the genes in new created pathway.
-* 3 A. Develop and document a new technical standard that supports one of the following:
+* 3 .A. Develop and document a new technical standard that supports one of the following:
  > Design of BioBrick Parts or Devices : 
      * [Chromosome Design Standard](link)
      * [Design Operation Standard](link)
-  
- > Construction of BioBrick Parts or Devices : 
+
+  > Construction of BioBrick Parts or Devices : 
      * [Assembly Strategy Standard](link)
