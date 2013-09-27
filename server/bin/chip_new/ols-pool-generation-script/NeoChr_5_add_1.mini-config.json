@@ -1,7 +1,7 @@
 {
     "configDictList": [
         {
-             "fixedIndex":2,
+             "fixedIndex":0,
              "fixedPrimerSetThroughoutFile":"True",
              "positionleeway":10,
              "fixedPlateNumber":2,
@@ -15,7 +15,7 @@
              "lengthleeway":10,
              "insertionSizeToKillRESite":2,
              "forwardPrimersLibraryFile":"primer-library/forward_finalprimers.fasta",
-             "initialPlateNum":4,
+             "initialPlateNum":3,
              "seqsToAvoidInOverlapRegions": [],
              "deltaGThresholdForOverlaps":-3,
              "overlaptemps": [
@@ -25,7 +25,7 @@
              "SearchForRE": "True",
              "buildSequencesFile":"input-seqs/NeoChr_5_add_1.mini",
              "reversePrimersLibraryFile":"primer-library/reverse_finalprimers.fasta",
-             "selfDimersThreshold": 4,
+             "selfDimersThreshold": 3,
              "REVector": [
                     "BtsI",
                     "BsmBI",

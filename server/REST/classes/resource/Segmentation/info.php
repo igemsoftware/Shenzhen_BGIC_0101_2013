@@ -3,12 +3,13 @@
 class Resource_Segmentation_info extends Resource
 {
 
+
 	public function get()
 	{
 
 		$data = $this->get_data();
 		$TopDir = "../../";
-		if (isset($data['baseUrl'])) {
+		if (isset($data['baseUrl']) || isset($data['dataset'])) {
 			chdir($TopDir);
 			$dataUrl = $data['baseUrl'];
 			$dataUrl = rtrim($dataUrl, "/")."/";
@@ -33,6 +34,13 @@ class Resource_Segmentation_info extends Resource
 				exec("ls {$dataUrl}03.mega2chunk2mini/*", $mini);
 				$result['mini'] = $mini;
 			}
+
+			if (in_array("chip_set", $dir)) {
+				exec("ls {$dataUrl}chip_set/*", $chipjson);
+				$result['chip'] = $chipjson;
+			}
+
+
 			$this->_data = $result;
 		} else {
 			$this->_data = "unknow sequence name";

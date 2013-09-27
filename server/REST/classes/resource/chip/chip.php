@@ -10,7 +10,7 @@ class Resource_chip_chip extends Resource
 		$TopDir = "../../";
 		//return;
 
-		if (isset($data['fa'])) {
+		if (isset($data['fa']) && isset($data['baseUrl'])) {
 			chdir($TopDir);
 			$faname = strrchr($data['fa'], '/');//substr($data['fa'], strchr($data['fa'], '/')+1 );
 			$faname = ltrim($faname, '/');
@@ -33,19 +33,23 @@ class Resource_chip_chip extends Resource
 			exec($cmd, $result);
 			$this->_data = $cmd;
 			//return;
-			
 
 			$cmd = "python gasp.py $faname-config.json 2>&1";
 
 			exec($cmd, $result);
 			$this->_data = $result;
 			//return;
-			$shortfa = strchr($faname, ".");
-			exec("ls output-oligos-and-primers/$shortfa*", $list);
-			for ($i in $list) {
-				exec("mv output-oligos-and-primers/ input-seqs/SHORTENED_yeast_chr1_3_16.all_bb.fasta ../../../../".$data['fa']).".chip";
+			$pos = strpos($faname);
+			if ($pos == false) {
+				$shortfa = $faname;
+			} else {
+				$shortfa = substr($faname, 0, $pos);
 			}
-			$this->_data = $result;
+			$baseUrl = $data['baseUrl'];
+			exec("mkdir ../../../../$baseUrl/chip_data");
+			exec("mv output-oligos-and-primers/{$shortfa}* ../../../../".$baseUrl."/chip_data/", $result);
+			$this->_data = "mv output-oligos-and-primers/{$shortfa}* ../../../../".$baseUrl."/chip_data/";
+			//$this->_data = $result;
 			return;
 			//TODO Move $output/sce_chr01_0.mega 
 

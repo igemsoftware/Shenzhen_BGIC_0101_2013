@@ -74,7 +74,8 @@
                         f: dijit.byId("chipf").value,
                         i: dijit.byId("chipi").value,
                         n: dijit.byId("chipn").value,
-                        u: dijit.byId("chipu").value
+                        u: dijit.byId("chipu").value,
+                        baseUrl: that.browser.config.baseUrl
                       },
                       load: function( d ) {
                         var progress = dijit.byId("globalProgress").set("label", "chip is over, long long ago!");

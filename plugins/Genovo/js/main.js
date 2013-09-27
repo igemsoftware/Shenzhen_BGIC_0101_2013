@@ -17,7 +17,7 @@ define(
 				'./View/chip',
 				'dijit/ProgressBar',
 				'./View/chatroom',
-
+				'./View/downloadWindow',
 				'dojo/domReady!'
 			],
 		function(
@@ -37,7 +37,8 @@ define(
 			globalREmarkupWindow,
 			chipWindow,
 			ProgressBar,
-			chatroomWindow
+			chatroomWindow,
+			downloadWindow
 			) {
 return declare( JBrowsePlugin, 
 {
@@ -51,6 +52,7 @@ return declare( JBrowsePlugin,
 	whole2mega: null,
 	chatroom: null,
 	chip: null,
+	download: null,
 
 
 	constructor: function( args ) {
@@ -240,9 +242,9 @@ return declare( JBrowsePlugin,
 		}, browser.menuBar);
 
 
-		browser.addGlobalMenuItem( 'chip', new dijitMenuItem(
+		browser.addGlobalMenuItem( 'Chip', new dijitMenuItem(
 			{
-				label: "chip",
+				label: "Chip",
 				iconClass: 'dijitIconConfigure',
 				onClick: function() {
 					if (!that.chip) {
@@ -256,8 +258,8 @@ return declare( JBrowsePlugin,
 			}
 			));
 
-		browser.renderGlobalMenu( 'chip', {
-			text: 'chip'
+		browser.renderGlobalMenu( 'Chip', {
+			text: 'Chip'
 		}, browser.menuBar);
 
 /*
@@ -335,6 +337,21 @@ return declare( JBrowsePlugin,
 			}
 		));
 
+		browser.addGlobalMenuItem( 'Others', new dijitMenuItem(
+		{
+			label: "Download",
+			iconClass: '', 
+			onClick: function() {
+				if (!that.downloadWindow) {
+					that.download = new downloadWindow({
+						genovo:that,
+						jbrowse: browser
+					});
+				}
+				that.download.show();
+			}
+		}));
+
 		browser.renderGlobalMenu( 'Others', {
 			text: 'Others'
 		}, browser.menuBar);
@@ -348,14 +365,8 @@ return declare( JBrowsePlugin,
 		dojo.addClass(progress.domNode, "menu");
 		browser.menuBar.appendChild(progress.domNode);
 
-
-		/*
-		var i = 0;
-		setInterval(function() {
-			progress.set("value", i++ %100);
-		}, 100);*/
 	}
 
 })
 
-	})
+})
