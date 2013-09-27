@@ -46,8 +46,8 @@ class Resource_decouple extends Resource
 		  //  return;
 		    exec("php server/bin/loadfile.php "
 		    			."	$output $outdir "
-		    			."	server/tmp_data/ server/default_track_conf.json", $result, $code);
-		    $this->_data = $result;
+		    			."	server/tmp_data/ server/NeoChr_track_conf.json", $result, $code);
+		    $this->_data = $cmd;
 		    
 		    return;
 		} else {

@@ -84,7 +84,8 @@
                   url: "server/toolsManager.php?nav=1",
                   handleAs: "json",
                   load: function(msg) {
-                  //  console.log(msg);
+                    console.log(msg);
+
                     for (var species in msg) {
                       var subMenu = new Menu();
                       for (var pathway in msg[species].pathway ) {
@@ -359,8 +360,8 @@
               var n = links[v];
               //for (var u in n) {
                 that.links.push( {
-                  source: that.findNodeByName(n.name1), 
-                  target: that.findNodeByName(n.name2),
+                  source: that.findNodeByName(n.name1, nodes), 
+                  target: that.findNodeByName(n.name2, nodes),
                   left: false,
                   right: true,
                   active: n.active
@@ -392,9 +393,9 @@
       this.removeDraggene(node);
     },
 
-    findNodeByName: function( name ) {
-      for (var v in this.nodes) {
-        if (this.nodes[v].geneName == name) {
+    findNodeByName: function( name, nodes ) {
+      for (var v in nodes) {
+        if (nodes[v].geneName == name) {
           return this.nodes[v];
         }
       }

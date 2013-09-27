@@ -40,7 +40,7 @@ class Resource_modify_Add extends Resource
 			//return;
 			exec("php server/bin/loadfile.php \
 						{$dataset}_add data/{$dataset}_add/ \
-						server/tmp_data/ server/default_track_conf.json > /dev/null &", $result);
+						server/tmp_data/ server/add_track_conf.json > /dev/null &", $result);
 			$this->_data = array_merge($result, 
 							array("url"=>"data/{$dataset}_add") );
 

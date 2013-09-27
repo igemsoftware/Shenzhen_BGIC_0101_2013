@@ -1,0 +1,52 @@
+{
+   "tracks" : [
+	     {
+         "feature" : [
+            "gene",
+         ],
+         "style" : { "color": "#ccff00" },
+         "track" : "gene",
+         "trackType": "JBrowse/View/Track/CanvasFeatures",
+         "type": "CanvasFeatures",
+         "category" : "Genes",
+         "class" : "feature5",
+         "key" : "gene"
+      },
+      {
+         "feature" : [
+            "5UTR"
+         ],
+         "phase" : 1,
+         "description": "Parent",
+         "track" : "part",
+         "trackType": "JBrowse/View/Track/CanvasFeatures",
+         "type": "CanvasFeatures",
+         "category" : "5UTR",
+         "class" : "feature4",
+         "key" : "5UTR"
+      },
+	  {
+         "track" : "Transcript",
+         "description" : 1,
+         "style": { "color": "#E32A3A" },
+         "key" : "CanvasFeatures - transcripts",
+         "trackType": "JBrowse/View/Track/CanvasFeatures",
+         "feature" : [
+            "mRNA"
+         ],
+         "category" : "Genes",
+         "subfeatures" : true,
+         "onClick": "function() { alert('This is an example of a user-provided JavaScript callback!'); };"
+      },
+   ],
+   "TRACK DEFAULTS" : {
+      "autocomplete" : "all",
+      "class" : "feature"
+   },
+   "db_args" : {
+      "-adaptor" : "memory",
+      "-dir" : "server/tmp_data"
+   },
+   "description" : "Uploaded file",
+   "db_adaptor" : "Bio::DB::SeqFeature::Store"
+}
