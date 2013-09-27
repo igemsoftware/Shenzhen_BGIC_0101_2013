@@ -31,7 +31,7 @@ Our software are totally based on JBrowse which is next-generation of GBrowse. I
  * git ( for version control plugin )
  * Biopython and UNAFoldt ( for chip plugin )
  * Blast+ ( for NucleoMod Plugin )
- * `Chrome and firefox is recommand`
+ * ` Chrome, Firefox, and IE10 is recommand`
 
 ### Permissoin Requirment
  `Writable data, plugin/tmp_data, server/tmp_data, jbrowse_conf.json`
