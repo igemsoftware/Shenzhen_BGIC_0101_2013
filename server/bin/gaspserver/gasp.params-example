@@ -1,5 +1,0 @@
-{"SMTPserver":"your.smtp.server.locations",
-"emailAddressFrom":"blah@blah.com",
-"SMTPlogin":"yourLoginNameForYourSMTPServer",
-"SMTPpw":"yourPasswordForYourSMTPServer"
-}

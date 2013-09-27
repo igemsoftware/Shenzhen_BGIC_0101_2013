@@ -1,6 +1,6 @@
 {
    "tracks" : [
-	{
+	     {
          "feature" : [
             "gene",
          ],
@@ -10,13 +10,14 @@
          "type": "CanvasFeatures",
          "category" : "Genes",
          "class" : "feature5",
-         "key" : "Predicted genes"
+         "subfeatures": true,
+         "key" : "genes with subfeatures"
       },
       {
          "feature" : [
             "5UTR",
-	    "mRNA",
-	    "3UTR"
+            "mRNA",
+            "3UTR"
          ],
          "phase" : 1,
          "track" : "part",

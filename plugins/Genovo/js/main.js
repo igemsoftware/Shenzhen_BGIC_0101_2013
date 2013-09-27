@@ -14,8 +14,10 @@ define(
 				'./View/whole2megaWindow',
 				'./View/mega2chunk2miniWindow',
 				'./View/globalREmarkupWindow',
+				'./View/chip',
 				'dijit/ProgressBar',
 				'./View/chatroom',
+
 				'dojo/domReady!'
 			],
 		function(
@@ -33,6 +35,7 @@ define(
 			whole2megaWindow,
 			mega2chunk2miniWindow,
 			globalREmarkupWindow,
+			chipWindow,
 			ProgressBar,
 			chatroomWindow
 			) {
@@ -47,7 +50,7 @@ return declare( JBrowsePlugin,
 	featuresDialog: null,
 	whole2mega: null,
 	chatroom: null,
-
+	chip: null,
 
 
 	constructor: function( args ) {
@@ -62,8 +65,15 @@ return declare( JBrowsePlugin,
 		
 	},
 
-	updateSelectBox: function(label, value) {
-		this.browser.config.datasets['value'] = {
+	updateSelectBox: function( argv ) {
+		var value = argv.value;
+		var label = argv.label;
+		var selectbox = dijit.byId("datasetSelectBox");
+		for (var i in selectbox.options) {
+			if (selectbox.options[i].value == value)
+				return;
+		}
+		this.browser.config.datasets[value] = {
 			url: "index.html?data=data/"+value
 		}
 		dijit.byId("datasetSelectBox").addOption(
@@ -109,11 +119,16 @@ return declare( JBrowsePlugin,
 						dataset: browser.config.dataset_id,
 						baseUrl: browser.config.baseUrl,
 					},
-					handlAs: "test",
+					handlAs: "text",
 					load: function( d ) {
 						console.log(d);
 						var progress = dijit.byId("globalProgress").set("label", "Loxp success...");
         				progress.set("indeterminate", false);
+
+        				that.updateSelectBox({
+        					value: browser.config.dataset_id+"_add",
+        					label: browser.config.dataset_id+"_add"
+        				})
 					}
 				})
 			}
@@ -222,6 +237,27 @@ return declare( JBrowsePlugin,
 
 		browser.renderGlobalMenu( 'SegmMan', {
 			text: 'SegmMan'
+		}, browser.menuBar);
+
+
+		browser.addGlobalMenuItem( 'chip', new dijitMenuItem(
+			{
+				label: "chip",
+				iconClass: 'dijitIconConfigure',
+				onClick: function() {
+					if (!that.chip) {
+						that.chip = new chipWindow({
+							browser: browser,
+							genovo: that
+						})
+					} 
+					that.chip.show();
+				}
+			}
+			));
+
+		browser.renderGlobalMenu( 'chip', {
+			text: 'chip'
 		}, browser.menuBar);
 
 /*

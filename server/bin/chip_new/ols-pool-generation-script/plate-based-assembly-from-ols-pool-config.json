@@ -1,0 +1,57 @@
+{"configDictList":[{
+            "initialPlateNum": 2, 
+            "buildSequencesFile": "input-seqs/SHORTENED_yeast_chr1_3_16.all_bb.fasta", 
+            "RESpacing": [
+                2, 
+                5, 
+                4
+            ], 
+            "REVector": [
+                "BtsI", 
+                "BsmBI", 
+                "BspQI"
+            ], 
+            "SearchForRE": "False", 
+            "REToUse": "BtsI", 
+            "forwardPrimersLibraryFile": "primer-library/forward_finalprimers.fasta", 
+            "reversePrimersLibraryFile": "primer-library/reverse_finalprimers.fasta", 
+            "fixedPrimerSetThroughoutFile": "False",
+            "fixedIndex": 0,
+            "fixedPlateNumber": 1,
+            "avgoverlapsize": 20, 
+            "deltaGThresholdForOverlaps": -3, 
+            "selfDimersThreshold": 3,
+            "insertionSizeToKillRESite": 2,
+            "lengthleeway": 10, 
+            "overlaptemps": [
+                55, 
+                65
+            ], 
+            "positionleeway": 10,
+            "oligoSizeMax": 190,
+            "seqsToAvoidInOverlapRegions":["CATCCGTCGAAGACGGATG"],
+            "skip":["ATbias_Seq1",
+                        "ATbias_Seq2", 
+                        "ATbias_Seq3", 
+                        "ATbias_Seq4", 
+                        "ATbias_Seq5",
+                        "ATbias_Seq6",
+                        "ATbias_Seq7",
+                        "ATbias_Seq8",
+                        "ATbias_Seq9",
+                        "ATbias_Seq10",
+                        "dHp8_Seq6",
+                        "dHp8_Seq9",
+                        "dHp7_Seq10",
+                        "dHp6_Seq6",
+                        "dHp6_Seq9",
+                        "optATbias_Seq3",
+                        "optATbias_Seq4",
+                        "optATbias_Seq6",
+                        "optATbias_Seq8",
+                        "optATbias_Seq9",
+                        "optATbias_Seq10"
+                ]
+        }
+        ]
+}

@@ -13,5 +13,6 @@ return array(
 	'/Segmentation/info'	=> 	'Segmentation/info',
 	'/NucleoMod'	=> 'NucleoMod',
 	'/features/delete'	=> 'features/deleteFeatures',
-	'/stats/config' => 	'stats/config'
+	'/stats/config' => 	'stats/config',
+	'/chip/chip'	=> 	'chip/chip'
 );

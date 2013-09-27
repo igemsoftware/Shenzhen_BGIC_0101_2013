@@ -42,9 +42,10 @@ class Resource_NucleoMod extends Resource
 			if (isset($data["repeatsmash"])) {
 				$cmd .= " -repeatsmash ".$data["repeatsmash"];
 			}
+			//biobrickstandard
 			if (isset($data["biobrickstrand"])) {
 				if ($data["biobrickstrand"] == "biobrickstrand")
-					$cmd .= " -biobrickstrand";
+					$cmd .= " -biobrickstandard";
 				else {
 					$cmd .= " -delenzymelist server/config/Optimize/".$data["biobrickstrand"];
 				}

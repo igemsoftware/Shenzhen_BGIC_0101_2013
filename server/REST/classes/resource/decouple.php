@@ -46,7 +46,7 @@ class Resource_decouple extends Resource
 		  //  return;
 		    exec("php server/bin/loadfile.php "
 		    			."	$output $outdir "
-		    			."	server/tmp_data/ server/default_track_conf.json > /dev/null &", $result, $code);
+		    			."	server/tmp_data/ server/default_track_conf.json", $result, $code);
 		    $this->_data = $result;
 		    
 		    return;

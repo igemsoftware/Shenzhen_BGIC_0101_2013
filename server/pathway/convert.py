@@ -69,6 +69,7 @@ if __name__ == '__main__':
         }
         genes[t][ID] = {
             'type': t,
+            'reaction': '',
             'name': entry.get('name'),
         }
         if( t == 'group' ):
@@ -92,6 +93,9 @@ if __name__ == '__main__':
 
             if( y == 'inhibition' or y == 'regression' ):
                 flag = 2
+
+            if( y == 'link'):
+                flag = 3
                 
         if( flag == 1 ):
             Entry1 = relation_xml.get('entry1')
@@ -102,6 +106,10 @@ if __name__ == '__main__':
             Entry1 = relation_xml.get('entry1')
             Entry2 = relation_xml.get('entry2')
             subtype = 'inhibition'
+
+        if( flag == 3):
+            Entry1 = relation_xml.get('entry1')
+            Entry2 = relation_xml.get('entry2')
             
         if( flag != 0 ):
             key = ( Type, Entry1, Entry2, subtype )

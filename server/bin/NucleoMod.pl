@@ -1,11 +1,11 @@
 #!/bin/env perl -w
 use strict;
 use Getopt::Long;
-#use File::Basename;
+#use Data::Dumper;
 sub usage{
     print STDERR <<USAGE;
     ################################################
-            Version 0.2.2 by Yuxiang Li   2013.09.26
+            Version 0.2.3 by Yuxiang Li   2013.09.26
 
       Usage: $0 [option] >STDOUT
 
@@ -22,7 +22,7 @@ sub usage{
 
       2. Delete enzyme:
       -delenzymelist  <str> : A file of enzyme structure to be deleted.
-      -biobrickstrand <opt> : Use biobrickstrand to delete enzyme.
+      -biobrickstandard <opt> : Use biobrickstandard to delete enzyme.
 
       3. Add enzyme:
       -addenzymelist   <str>: A file of enzyme structure to be add.
@@ -81,7 +81,7 @@ GetOptions(
   "database=s"=>\$species_database,
 
   "delenzymelist=s"=>\$remove_enzyme_file,
-  "biobrickstrand"=>\$remove_biobrick_enzyme,
+  "biobrickstandard"=>\$remove_biobrick_enzyme,
   "addenzymelist=s"=>\$add_enzyme_file,
   "addenzymeconfig=s{1,}"=>\@add_enzyme_config,
 
@@ -126,23 +126,6 @@ my %base_list = (
     'N' => '[ACGT]',
 );
 
-my %complement_base = (
-    'A' => 'T',
-    'C' => 'G',
-    'G' => 'C',
-    'T' => 'A',
-    'M' => 'K',
-    'R' => 'Y',
-    'W' => 'W',
-    'S' => 'S',
-    'Y' => 'R',
-    'K' => 'M',
-    'V' => 'B',
-    'H' => 'D',
-    'D' => 'H',
-    'B' => 'V',
-    'N' => 'N',
-);
 
 my %int_base = (
     0 => 'A',
@@ -177,6 +160,7 @@ my %cds_code = (
 
 my %aa_code;
 my %syn_code;
+my %base_check;
 
 my %exist_enzyme;
 my @enzyme_regexp;
@@ -194,9 +178,11 @@ my %codon_score;
 
 &Init_aa_code(\%cds_code, \%aa_code);
 &Init_syn_code(\%cds_code, \%syn_code);
+&Init_base_check(\%base_list, \%base_check);
 &Init_optimize_syn_code($codon_optimize_file, \%codon_score) if($codon_optimize_file);
 &Constructe_data_structure($input_gff_file, $input_fa_file, \%frag, \@fragment_order);
 print "[STEP] Read fasta and gff finished.\n" if($verbose);
+
 
 if($remove_enzyme_file){
     open ENZ, "<$remove_enzyme_file" or die("Can't read file:$remove_enzyme_file\n");
@@ -375,6 +361,10 @@ sub Search_crispr_candidate_site {
                     next if(defined $crispr_lib{$syn_seq});
                     if(&Substitute_frag_base($gene_id, $this_pos, $cb, $frag_p) == 1){
                         $fin_number{$gene_id}++;
+                        if($fp->{'origin_strand'} eq '-'){
+                            $this_pos = $fp->{'gene'}[1] - $this_pos + $fp->{'gene'}[0];
+                            $cb = &Reverse_complement($cb);
+                        }
                         push @{$fp->{'anno'}{'crispr'}}, [$criseq{$id}[1], $criseq{$id}[1] + 22, '+', "Parent=$gene_id;CRISPR_seq=$criseq{$id}[2];sub_seq=$criseq{$id}[3];change_pos=$this_pos;change_base=$cb;"];
                         &Lock_position($gene_id, $frag_p, $criseq{$id}[1], $criseq{$id}[1] + 22);
                         $last_end = $criseq{$id}[1] + 22;
@@ -463,6 +453,7 @@ sub Constructe_data_structure {
         my $fp = $frag_p->{'gene'}{$gene};
 
         ####### Reverse sequence
+        $fp->{'origin_strand'} = $fp->{'gene'}[2];
         &Reverse_gene($gene, $frag_p) if($fp->{'gene'}[2] eq '-');
 
         ####### CDS annotate
@@ -546,70 +537,58 @@ sub Reverse_gene {
 #############################
 sub Init_enzyme_design_library {
     my ($input_enzyme_file, $change_method_p) = @_;
-    if(1){
-        open IN, "<$input_enzyme_file" or die("Can't read file:$input_enzyme_file\n");
-        while(my $line=<IN>){
-            my @info = split /\s+/, $line;
-            next if($info[0]=~/^#/);
-            #### EcoRI  GAATTC
-            $info[2]=~s/[^ACGTMRWSYKVHDBN]//g;
+    open IN, "<$input_enzyme_file" or die("Can't read file:$input_enzyme_file\n");
+    while(my $line=<IN>){
+        my @info = split /\s+/, $line;
+        next if($info[0]=~/^#/);
+        #### NEB EcoRI  GAATTC
+        $info[2]=~s/[^ACGTMRWSYKVHDBN]//g;
 
-            my $enzyme_len = length $info[2];
-            my $min_len = $enzyme_len + ($enzyme_len % 3);
-            my $max_len = $min_len + 3;
-            push @{$change_method_p->{$info[1]}{'len'}}, ($min_len, $max_len);
+        my $enzyme_len = length $info[2];
+        $change_method_p->{$info[1]}{'len'} = $enzyme_len;
+        $change_method_p->{$info[1]}{'seq'} = $info[2];
+        # my $min_len = $enzyme_len + ($enzyme_len % 3);
+        # my $max_len = $min_len + 3;
+        # push @{$change_method_p->{$info[1]}{'len'}}, ($min_len, $max_len);
 
-            ##### in 3 frame
-            for my $i (0..2) {
-                ####### eg CTGCAG:  CTG|CAG  NCT|GCA|GNN  NNC|TGC|AGN
-                my $tail_number = 3 - (($enzyme_len + $i) % 3);
-                $tail_number = 0 if($tail_number == 3);
-                my $new_seq = ('N' x $i).$info[2].('N' x $tail_number);
-                my %design_enzyme;
-                &Init_exist_enzyme($new_seq, $info[1], 0, \%base_list, \%design_enzyme);
+        ##### in 3 frame
+        for my $i (0..2) {
+            ####### eg CTGCAG:  CTG|CAG  NCT|GCA|GNN  NNC|TGC|AGN
+            my $tail_number = 3 - (($enzyme_len + $i) % 3);
+            $tail_number = 0 if($tail_number == 3);
+            my $new_seq = ('N' x $i).$info[2].('N' x $tail_number);
+            my %design_enzyme;
+            &Init_exist_enzyme($new_seq, $info[1], 0, \%base_list, \%design_enzyme);
 
-                foreach my $e (keys %design_enzyme) {
-                    my $this_aa = '';
-                    for (my $k = 0; $k + 2<= (length $e) - 1; $k+=3) {
-                        $this_aa.= $cds_code{substr($e, $k, 3)};
+            my %enzyme_pos;
+            ########## different style of specific enzyme  GAATTN -> GAATTA, GAATTC, GAATTG, GAATTT
+            foreach my $e (keys %design_enzyme) {
+
+                ####### every codons
+                for (my $k = 0; $k + 3 <= (length $e); $k+=3) {
+
+                    ###### every syn mutation of this codon
+                    foreach my $j (@{$aa_code{$cds_code{substr($e, $k, 3)}}}) {
+
+                        ###### every position of this codon in enzyme
+                        for my $p (0..2) {
+                            my $pos_in_enzyme = $p + $k;
+                            $enzyme_pos{$pos_in_enzyme}{substr ($j, $p, 1)} = 1;
+                        }
                     }
-                    &Init_syn_codon_from_aa('', $this_aa, $i, $info[2], $info[1], $change_method_p);
                 }
             }
-        }
-        close IN;
-    }
-}
 
-#############################
-#
-#     Init_syn_codon_from_aa
-#
-#  Depend: %aa_code
-#
-#############################
-sub Init_syn_codon_from_aa {
-    my ($codon_seq, $aa_seq, $shift_pos, $enzyme_seq, $enzyme_name, $change_method_p) = @_;
-
-    if($aa_seq){
-        my @all_codon = @{$aa_code{substr($aa_seq, 0, 1)}};
-        substr ($aa_seq, 0, 1) = '';
-        foreach my $codon_base (@all_codon) {
-            my $new_codon = $codon_seq.$codon_base;
-            &Init_syn_codon_from_aa($new_codon, $aa_seq, $shift_pos, $enzyme_seq, $enzyme_name, $change_method_p);
-        }
-    }else{
-        return 1 if(defined $change_method_p->{$enzyme_name} and defined $change_method_p->{$enzyme_name}{$codon_seq});
-        my $end_pos = (length $enzyme_seq) - 1 + $shift_pos;
-        for my $i ($shift_pos..$end_pos) {
-            my $enzyme_base = substr ($enzyme_seq, $i - $shift_pos, 1);
-            if(substr ($codon_seq, $i, 1) ne $enzyme_base){
-                push @{$change_method_p->{$enzyme_name}{$codon_seq}}, [$i, $enzyme_base];
+            for my $p (0..(length $new_seq) - 1) {
+                my $base_type = join '', (sort keys %{$enzyme_pos{$p}});
+                if(length $base_type > 1){
+                    $base_type = "[$base_type]";
+                }
+                $change_method_p->{$info[1]}{$i} .= $base_type;
             }
         }
-        push @{$change_method_p->{$enzyme_name}{$codon_seq}}, [$shift_pos, $enzyme_seq];
-        return 1;
     }
+    close IN;
 }
 
 #############################
@@ -624,34 +603,57 @@ sub Create_new_enzyme_site_exon {
     my $fp = $frag_p->{'gene'}{$gene_id};
     my $cm = $change_method_p->{$enzyme_name};
 
-    # my $change_seq = substr ($fp->{'seq'}, $start + 1, $end - $start + 1);
-    for (my $i = $start - 1; $i <= $end; $i++) {
-        DIF_LEN:foreach my $e (@{$cm->{'len'}}) {
-            next if($i + 1 + $e > $end);
-            my $this_seq = substr($frag_p->{'seq'}, $i, $e);
-            next if(!defined $cm->{$this_seq});
+    my ($new_st, $new_ed) = ($start, $end);
+    if($fp->{'origin_strand'} eq '-'){
+        ($new_st, $new_ed) = ($fp->{'gene'}[1] - $end + $fp->{'gene'}[0], $fp->{'gene'}[1] - $start + $fp->{'gene'}[0]);
+    }
 
-            ####### Check the position can be changed.
-            foreach my $j (@{$cm->{$this_seq}}) {
-                last if(length $j->[1] != 1);
-                if( &Substitute_frag_base($gene_id, $i+$j->[0]+1, $j->[1], $frag_p, 'test') != 1){
-                    next DIF_LEN;
+    my $target_seq = substr ($frag_p->{'seq'}, $new_st - 1, $new_ed - $new_st + 1);
+    MAIN_LOOP:foreach my $shift_num (0..2) {
+        my $search_regexp = qr/$cm->{$shift_num}/i;
+        DETECT:while(1){
+            $target_seq =~/$search_regexp/g;
+            last if(!defined pos($target_seq) or pos($target_seq) >= length ($target_seq));
+            pos($target_seq) = $-[0] + 1;
+
+            my $match_seq = $&;
+            my $match_start = $-[0] + $new_st;
+            my $enzyme_st = $match_start + $shift_num;
+            next if($fp->{'pos'}{$enzyme_st}{'shift'} != $shift_num);
+            my $enzyme_ed = $enzyme_st + $cm->{'len'} - 1;
+            my $enzyme_candidate_seq = substr($frag_p->{'seq'}, $enzyme_st - 1, $cm->{'len'});
+            next if($enzyme_candidate_seq eq $cm->{'seq'});
+
+            my @substitute_list;
+            for my $i ($enzyme_st..$enzyme_ed) {
+                my $this_pos = $i - $enzyme_st;
+                my $enzyme_base = substr ($cm->{'seq'}, $this_pos, 1);
+                my $match_base = substr($enzyme_candidate_seq, $this_pos, 1);
+                if(!defined $base_check{$enzyme_base}){
+                    next if($match_base eq $enzyme_base);
+                }else{
+                    next if(defined $base_check{$enzyme_base}{$match_base});
+                    $enzyme_base = (sort keys %{$base_check{$enzyme_base}})[0];
                 }
-            }
-            foreach my $j (@{$cm->{$this_seq}}) {
-                last if(length $j->[1] != 1);
-                &Substitute_frag_base($gene_id, $i+$j->[0]+1, $j->[1], $frag_p);
+                push @substitute_list, [$i, $enzyme_base];
             }
 
-            ####### Add the enzyme site to anno
-            my $enzyme_st = $cm->{$this_seq}[-1][0] + $i + 1;
-            my $enzyme_ed = length($cm->{$this_seq}[-1][1]) + $enzyme_st - 1;
-            push @{$fp->{'anno'}{'enzyme'}}, [$enzyme_st, $enzyme_ed, '+', "Parent=$gene_id;name=$enzyme_name;enzyme_seq=$cm->{$this_seq}[-1][1];status=add;"];
-            print "[Add Enzyme] successfully add $enzyme_name enzyme in $gene_id, position $enzyme_st.\n" if($verbose);
-
+            ##########  Check substitute
+            foreach my $e (@substitute_list) {
+                next DETECT if(&Substitute_frag_base($gene_id, $e->[0], $e->[1], $frag_p, 'test') != 1);
+            }
+            foreach my $e (@substitute_list) {
+                &Substitute_frag_base($gene_id, $e->[0], $e->[1], $frag_p);
+            }
+            &Lock_position($gene_id, $frag_p, $enzyme_st, $enzyme_ed);
+            if($fp->{'origin_strand'} eq '-'){
+                $enzyme_st = $fp->{'gene'}[1] - $enzyme_ed + $fp->{'gene'}[0];
+            }
+            print "[Add Enzyme] Successfully add $enzyme_name enzyme in $gene_id, position $enzyme_st.\n" if($verbose);
             return 1;
         }
     }
+    print "[Add Enzyme] Can not find candidate $enzyme_name sites in $gene_id, position $start-$end\n" if($verbose);
     return 0;
 }
 
@@ -853,11 +855,6 @@ sub Create_fasta_and_gff {
     open FA, ">", "$output_fasta_file" or die("Can't write file:$output_fasta_file\n");
     open GFF, ">", "$output_gff_file" or die("Can't write file:$output_gff_file\n");
 
-    print FA ">$chr_name\n";
-    $frag_p->{'seq'}=~s/\w{60}/$&\n/g;
-    chomp $frag_p->{'seq'};
-    print FA $frag_p->{'seq'};
-    print FA "\n";
 
     foreach my $f (@{$fragment_order_p}) {
         my $fn = $frag_p->{$f->[0]}{$f->[1]};
@@ -882,6 +879,12 @@ sub Create_fasta_and_gff {
             }
         }
     }
+
+    print FA ">$chr_name\n";
+    $frag_p->{'seq'}=~s/\w{60}/$&\n/g;
+    chomp $frag_p->{'seq'};
+    print FA $frag_p->{'seq'};
+    print FA "\n";
 
     close GFF;
     close FA;
@@ -988,7 +991,6 @@ sub Find_enzyme_and_substitute {
                             last CHANGE_ENZYME;
                         }
                     }
-
                 }
             }
         }
@@ -1039,24 +1041,6 @@ sub Test_new_enzyme_site {
 
 }
 
-#############################
-#
-#     Find_enzyme
-#
-#  description
-#
-#############################
-sub Find_enzyme {
-    my ($seq_p, $regexp_p, $start, $length) = @_;
-    if(substr(${$seq_p}, $start, $length)=~/${$regexp_p}/){
-        my $match_start = $start + $-[0];
-        my $match_enzyme = $&;
-        my $match_length = length $&;
-        return ($match_enzyme, $match_start, $match_length);
-    }else{
-        return ('');
-    }
-}
 
 #############################
 #
@@ -1085,31 +1069,6 @@ sub Create_enzyme_regexp {
 }
 
 
-#############################
-#
-#     Substitute_enzyme_exon
-#
-#  description
-#
-#############################
-sub Substitute_enzyme_exon {
-    my ($match_enzyme, $exist_enzyme_p, $base_list_p, $cds_code_p, $aa_code_p, $exon_st_pos ) = @_;
-
-    for (my $i = $exon_st_pos; $i + 3 <= length $match_enzyme; $i+=3) {
-        my $this_code = substr($match_enzyme, $i, 3);
-        my $this_aa = $cds_code_p->{$this_code};
-        if(@{$aa_code_p->{$this_aa}} > 1){
-            foreach my $e (@{$aa_code_p->{$this_aa}}) {
-                next if($e eq $this_code);
-                my $new_seq = $match_enzyme;
-                substr($new_seq, $i, 3) = $e;
-                return $new_seq if(!defined $exist_enzyme_p->{$new_seq});
-            }
-        }
-    }
-    print STDERR "Can not find substitute method in $match_enzyme\n";
-    return $match_enzyme;
-}
 
 #############################
 #
@@ -1147,7 +1106,7 @@ sub Init_exist_enzyme {
 #  Reverse and complement the geiven sequencing.
 #
 #  Type:   Shared method.
-#  Depend: %complement_base
+#  Depend: 
 #
 ###########################################
 sub Reverse_complement {
@@ -1191,6 +1150,23 @@ sub Init_syn_code {
             }
         }
     }
+}
+
+#############################
+#
+#     Init_base_check
+#
+#  Depend: 
+#
+#############################
+sub Init_base_check {
+    my ($base_list_p, $base_check_p) = @_;
+    foreach my $e (keys %{$base_list_p}) {
+        my $text = $base_list_p->{$e};
+        $text =~s/\W//g;
+        map { $base_check_p->{$e}{$_} = 1 } (split '', $text);
+    }
+    return 1;
 }
 
 #############################
