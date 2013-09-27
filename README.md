@@ -20,7 +20,7 @@ Our software are totally based on JBrowse which is next-generation of GBrowse. I
    > ### For Short Description: 
    * unzip the Download file in www root folder `(/home/www is recommand and  do not use /var/www/ as that need root permission)`
    * cd jbrowse
-   * ./install.sh # Install all perl package needed auto with Internet
+   * ./install.sh # Install all perl package needed with cpan
    * # If all goes well, you can open http://localhost/jbrowse/index.html?data=sample_data/json/volvox
 
 ### Software Requirment 
@@ -31,7 +31,7 @@ Our software are totally based on JBrowse which is next-generation of GBrowse. I
  * git ( for version control plugin )
  * Biopython and UNAFoldt ( for chip plugin )
  * Blast+ ( for NucleoMod Plugin )
- * `Chrome and firfox is recommand`
+ * `Chrome and firefox is recommand`
 
 ### Permissoin Requirment
  `Writable data, plugin/tmp_data, server/tmp_data, jbrowse_conf.json`
@@ -96,10 +96,10 @@ Download and install UNAFoldt and Biopython from:
 
 *  1 Register the team, have a great summer, and have fun attending the Jamboree
 *  2 Create and share a description of the team's project via the iGEM wiki
->[Overview of project](link)
+> [Overview of project](link)
 * 3 Present a Poster and Talk at the iGEM Jamboree.
 * 4 Develop and make available via the The Registry of Software Tools an open source software tool that supports synthetic biology based on BioBrick standard biological parts
->>Our software in Github
+>> Our software in Github
 >> 
 Note:
 Our giant software aims at operating Biobrick of device level based on synthesized DNA fragments.
@@ -121,7 +121,7 @@ But for biobrick level, the second module can also assist users to design genes,
     * [We have software team Shenzhen_BGIC_ATCG to use the second module to design their genes](link).
  * [SC2.0 project also try out SegmMan module on chrVII’s segmentation](link).
 * 2 .A Outline and detail how your software effects Human Practices in Synthetic Biology.
- >Share:
+ > Share:
  * Web-based server for public to use
  * Software assessment and comparison with Biostudio.
  * Regional workshop
@@ -129,8 +129,8 @@ But for biobrick level, the second module can also assist users to design genes,
  > Innovation:
  * [We interview with core leader, Dr. Patrick Yizhi Cai and talk about Genovo’s design and application.](link)
  
- >  Advertisement:
-  * [We tried to sell our team shirts to people from BGI.](link_sell) 
+ > Advertisement:
+ * [We tried to sell our team shirts to people from BGI.](link_sell) 
 
 * 2 .B Use SBOL in your software documentation.
 We use SBOL as one of the output of first module to describe the genes in new created pathway.
