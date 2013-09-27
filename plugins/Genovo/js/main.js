@@ -48,34 +48,39 @@ return declare( JBrowsePlugin,
 	whole2mega: null,
 	chatroom: null,
 
+
+
 	constructor: function( args ) {
 		var that = this;
 		this.browser = args.browser;
 		
 		args.browser.afterMilestone('completely initialized', 
 			function() {
-				that.addTool();
+				that.addTools();
 			}
 		);
 		
 	},
 
-	openChromosome: function() {
-	    new UploadDialog({ browser: this })
-	        .show({
-	            openCallback: dojo.hitch( this, function( results ) {
-
-	            })
-	        });
+	updateSelectBox: function(label, value) {
+		this.browser.config.datasets['value'] = {
+			url: "index.html?data=data/"+value
+		}
+		dijit.byId("datasetSelectBox").addOption(
+			{
+				lable:label,
+				value:value
+			})
 	},
 
-	addTool: function() {
+	addTools: function() {
 		var that = this;
 		var browser = this.browser;
 
-		browser.addGlobalMenuItem( 'Genovo_tools', new dijitMenuItem(
+		browser.addGlobalMenuItem( 'Neochr', new dijitMenuItem(
 			{
 				label: "Pathway",
+				iconClass: 'dijitIconConnector',
 				onClick: function() {
 					//new PathwayWindow( {browser: browser } ).show();
 					if (!that.pathwayWindow) {
@@ -91,8 +96,10 @@ return declare( JBrowsePlugin,
 		));
 
 		var modify = new Menu();
-		modify.addChild(new dijitMenuItem({
-			label: "Add loxp",
+		//modify.addChild(new dijitMenuItem({
+		browser.addGlobalMenuItem( 'Neochr', new dijitMenuItem( {
+			label: "Add",
+			iconClass: 'dijitIconEditTask',
 			onClick: function() {
 				var progress = dijit.byId("globalProgress").set("label", "We are adding loxp for you.");
        			progress.set("indeterminate", true);
@@ -112,40 +119,37 @@ return declare( JBrowsePlugin,
 			}
 		}));
 
-		modify.addChild(new dijitMenuItem({
-			label: "Delete gene or features",
+		browser.addGlobalMenuItem( 'Neochr', new dijitMenuItem( {
+		//modify.addChild(new dijitMenuItem({
+			label: "Delete",
+			iconClass: 'dijitIconDelete',
 			onClick: function() {
 				if (!that.featuresDialog) {
 					that.featuresDialog = new FeaturesDialog({
 								browser:browser,
 								title: "Delete Features",
-								genovo: that/*,
-								callback: function() {
-									dojo.xhrGet({
-										url: "server/REST/index.php/Delete",
-										content: {
-
-										},
-										load: function() {
-
-										}
-									});
-								}*/
+								genovo: that
 							});
 				}
 				that.featuresDialog.show();
 			}
 		}));
 
+		browser.renderGlobalMenu( 'Neochr', {
+			text: 'NeoChr'
+		}, browser.menuBar);
+
+/*
 		browser.addGlobalMenuItem( 'Genovo_tools', new PopupMenuItem({
 			label: "Modify",
 			popup: modify
 		}));
+*/
 
-
-		browser.addGlobalMenuItem( 'Genovo_tools', new dijitMenuItem(
+		browser.addGlobalMenuItem( 'NucleoMod', new dijitMenuItem(
 			{
 				label: "NucleoMod",
+				iconClass: 'dijitIconConfigure',
 				onClick: function() {
 					if (!that.codenOptimizeWindow) {
 						that.codenOptimizeWindow = new CodenOptimizeWindow({
@@ -157,27 +161,18 @@ return declare( JBrowsePlugin,
 				}
 			}
 			));
-		browser.addGlobalMenuItem( 'Genovo_tools', new dijitMenuItem(
-			{
-				label: "fetch enzymes' Price",
-				onClick: function() {
-					if (!that.getPriceWindow) {
-						that.getPriceWindow = new GetPriceWindow( 
-									{
-										browser: browser,
-										genovo: that
-									});
-					}
-					that.getPriceWindow.show();
-				}
-			}
-		));
 
-		
+		browser.renderGlobalMenu( 'NucleoMod', {
+			text: 'NucleoMod'
+		}, browser.menuBar);
+
+
 
 		var pSubMenu = new Menu();
-		pSubMenu.addChild(new dijitMenuItem({
+		browser.addGlobalMenuItem( 'SegmMan', new dijitMenuItem( {
+		//pSubMenu.addChild(new dijitMenuItem({
 			label: "whole2mega",
+
 			onClick: function() {
 				if (!that.whole2mega) {
 					that.whole2mega = whole2megaWindow(
@@ -193,7 +188,8 @@ return declare( JBrowsePlugin,
 			}
 		}));
 
-		pSubMenu.addChild(new dijitMenuItem({
+		browser.addGlobalMenuItem( 'SegmMan', new dijitMenuItem( {
+		//pSubMenu.addChild(new dijitMenuItem({
 			label: "globalREmarkup",
 			onClick: function() {
 				if (!that.globalREmarkup) {
@@ -207,7 +203,9 @@ return declare( JBrowsePlugin,
 				
 			}
 		}))
-		pSubMenu.addChild(new dijitMenuItem({
+
+		browser.addGlobalMenuItem( 'SegmMan', new dijitMenuItem( {
+		//pSubMenu.addChild(new dijitMenuItem({
 			label: "mega2chunk2mini",
 			onClick: function() {
 				if (!that.mega2chunk2mini) {
@@ -220,16 +218,21 @@ return declare( JBrowsePlugin,
 				that.mega2chunk2mini.show();
 				
 			}
-		}))
+		}));
 
+		browser.renderGlobalMenu( 'SegmMan', {
+			text: 'SegmMan'
+		}, browser.menuBar);
+
+/*
 		browser.addGlobalMenuItem( 'Genovo_tools', new PopupMenuItem(
 			{
 				label: "Segmentation",
 				popup: pSubMenu
 			}
 		));
-
-		browser.addGlobalMenuItem( 'Genovo_tools', new dijitMenuItem( 
+*/
+		browser.addGlobalMenuItem( 'Others', new dijitMenuItem( 
         {
                     label: 'Add New chromosome', 
                     iconClass: 'dijitIconFolderOpen',
@@ -247,17 +250,29 @@ return declare( JBrowsePlugin,
                     }
         }));
 
+		browser.addGlobalMenuItem( 'Others', new dijitMenuItem(
+			{
+				label: "fetch enzymes' Price",
+				iconClass: 'dijitIconDatabase',
+				onClick: function() {
+					if (!that.getPriceWindow) {
+						that.getPriceWindow = new GetPriceWindow( 
+									{
+										browser: browser,
+										genovo: that
+									});
+					}
+					that.getPriceWindow.show();
+				}
+			}
+		));
 
+		
 
-		browser.renderGlobalMenu( 'Genovo_tools', {
-			text: 'Tools'
-		}, browser.menuBar);
-
-
-		browser.addGlobalMenuItem( 'History', new dijitMenuItem(
+		browser.addGlobalMenuItem( 'Others', new dijitMenuItem(
 			{
 				label: "Edit History",
-				class: "share",
+				iconClass: 'dijitIconUndo',
 				onClick: function() {
 					if (!that.historyWindow) {
 						//alert("TODO POP HIST");
@@ -271,15 +286,10 @@ return declare( JBrowsePlugin,
 			}
 		));
 
-
-
-		browser.renderGlobalMenu( 'History', {
-			text: 'History'
-		}, browser.menuBar);
-
-		browser.addGlobalMenuItem( 'Socity', new dijitMenuItem(
+		browser.addGlobalMenuItem( 'Others', new dijitMenuItem(
 			{
 				label: "Chat room",
+				iconClass: 'dijitIconSearch',
 				onClick: function() {
 					if (!that.chatroom) {
 						that.chatroom = new chatroomWindow({genovo:that});
@@ -289,9 +299,10 @@ return declare( JBrowsePlugin,
 			}
 		));
 
-		browser.renderGlobalMenu( 'Socity', {
-			text: "Socity"
+		browser.renderGlobalMenu( 'Others', {
+			text: 'Others'
 		}, browser.menuBar);
+	
 		var progress = new ProgressBar({
 			style: "width: 300px",
 			id: "globalProgress",

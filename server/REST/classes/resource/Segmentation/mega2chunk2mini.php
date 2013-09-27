@@ -22,11 +22,11 @@ class Resource_Segmentation_mega2chunk2mini extends Resource
 			//chdir("../server");
 			$sg = isset($data['sg'])? $data['sg']:"03.mega2chunk2mini";
 			$ps = isset($data['ps'])? $data['ps']:"03.mega2chunk2mini";
-			$cmd = "perl server/bin/segmentation/03.mega2chunk2mini.pl \
-						-re server/config/globalREmarkup/{$re} \
-						-sg {$sg} \
-						-ps {$ps} \
-						-ot {$dataUrl}03.mega2chunk2mini 2&>1";
+			$cmd = "perl server/bin/segmentation/03.mega2chunk2mini.pl"
+					."	-re server/config/globalREmarkup/{$re} "
+					."	-sg {$sg}"
+					."	-ps {$ps}"
+					."	-ot {$dataUrl}03.mega2chunk2mini 2>&1";
 
 			exec($cmd, $result);
 			$this->_data = $cmd;

@@ -402,7 +402,7 @@ sub Decouple
 				$check=Synsubstitution_Check($gene2,$replace_site+1,\%frag,\%syn_aa_base);
 			}
 		}
-		$check == 0 ? print "$gene1 and $gene2 can not decouple in the $replace_site\n" : print "$gene1 and $gene2 decoulpe successed in the $replace_site\n";
+		$check == 0 ? print "$gene1 and $gene2 can not be decoupled in the $replace_site\n" : print "$gene1 and $gene2 are decoulped successed in the $replace_site\n";
 	}
 
 }

@@ -23,7 +23,7 @@ if ($flg == 2) {
 //    error_log(print_r($datasetname, true));
     $outdir = 'data/'.$datasetname.'/';
     chdir('..');
-    mkdir($outdir);
+    mkdir($outdir, 0777);
     copy('server/tmp_data/'.$fasta, $outdir.$datasetname.".fa");
     copy('server/tmp_data/'.$gff, $outdir.$datasetname.".gff");
     $err = Array(); 

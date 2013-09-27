@@ -2,11 +2,10 @@
 use strict;
 use Getopt::Long;
 #use File::Basename;
-#use Data::Dumper;
 sub usage{
     print STDERR <<USAGE;
     ################################################
-            Version 0.2.2 by Wing-L   2013.09.24
+            Version 0.2.2 by Yuxiang Li   2013.09.26
 
       Usage: $0 [option] >STDOUT
 
@@ -86,7 +85,7 @@ GetOptions(
   "addenzymelist=s"=>\$add_enzyme_file,
   "addenzymeconfig=s{1,}"=>\@add_enzyme_config,
 
-  "repeatsmash"=>\$repeat_smash_len,
+  "repeatsmash=s"=>\$repeat_smash_len,
 
   
   "codonoptimize=s"=>\$codon_optimize_file,
@@ -197,7 +196,7 @@ my %codon_score;
 &Init_syn_code(\%cds_code, \%syn_code);
 &Init_optimize_syn_code($codon_optimize_file, \%codon_score) if($codon_optimize_file);
 &Constructe_data_structure($input_gff_file, $input_fa_file, \%frag, \@fragment_order);
-print "[STEP] Read fasta and gff finished\n" if($verbose);
+print "[STEP] Read fasta and gff finished.\n" if($verbose);
 
 if($remove_enzyme_file){
     open ENZ, "<$remove_enzyme_file" or die("Can't read file:$remove_enzyme_file\n");
@@ -226,12 +225,12 @@ if($remove_biobrick_enzyme){
     $remove_regexp = qr/$remove_regexp/i;
 }
 
-print "[STEP] Initialization finished\n" if($verbose);
+print "[STEP] Initialization finished.\n" if($verbose);
 
 if($crispr_design_number and $species_database){
     my $crispr_design_tmp_fa = "$data_path/crispr_design_query.fa";
     &Search_crispr_candidate_site(\%frag, $species_database, $crispr_design_number, $crispr_design_tmp_fa);
-    print "[STEP] Design CRISPR site finished\n" if($verbose);
+    print "[STEP] Design CRISPR site finished.\n" if($verbose);
 }
 
 if($remove_regexp){
@@ -240,9 +239,9 @@ if($remove_regexp){
         foreach my $cds (@{$frag{'gene'}{$gene}{'anno'}{'CDS'}}) {
             $is_all_remove = 0  if(&Find_enzyme_and_substitute($gene, \%frag, \$remove_regexp, \%exist_enzyme, $cds->[0], $cds->[1]) != 1);
         }
-        print "[Delete Enzyme] Can not remove all enzyme in $gene, recorded in gff\n" if($is_all_remove != 1 and $verbose);
+        print "[Delete Enzyme] Can not remove all enzyme in $gene, recorded in new gff.\n" if($is_all_remove != 1 and $verbose);
     }
-    print "[STEP] Remove enzyme site finished\n" if($verbose);
+    print "[STEP] Remove enzyme site finished.\n" if($verbose);
 }
 
 ######## Create new enzyme of RFC32
@@ -256,7 +255,7 @@ if($add_enzyme_file and @add_enzyme_config){
         my @add_list = split /,/, $block;
         &Create_new_enzyme_site_exon($add_list[0], \%frag, $add_list[1], $add_list[2], $add_list[3], \%change_method);
     }
-    print "[STEP] Add enzyme site finished\n" if($verbose);
+    print "[STEP] Add enzyme site finished.\n" if($verbose);
 }
 
 if($codon_optimize_file and ($optimize_gene_list or $optimize_all_gene)){
@@ -267,18 +266,23 @@ if($codon_optimize_file and ($optimize_gene_list or $optimize_all_gene)){
         @opt_gene_list = keys %{$frag{'gene'}};
     }
     &Optimize_selected_gene(\@opt_gene_list, \%frag, \%codon_score);
-    print "[STEP] Codon optimization finished\n" if($verbose);
+    print "[STEP] Codon optimization finished.\n" if($verbose);
 }
 
 if($repeat_smash_len){
     foreach my $g (keys %{$frag{'gene'}}) {
         &Break_tandem_base($g, \%frag, $repeat_smash_len);
     }
-    print "[STEP] Repeat-smash finished\n" if($verbose);
+    print "[STEP] Repeat-smash finished.\n" if($verbose);
+}
+
+if($codon_optimize_file){
+    &Ranking_optimize_gene(\%frag, \%codon_score);
+    print "[STEP] Ranking optimization finished.\n" if($verbose);
 }
 
 &Create_fasta_and_gff(\@fragment_order, \%frag, $output_fa_file, $output_gff_file);
-print "[STEP] Create new chromosome fasta and gff finished\nAll Finished!\n" if($verbose);
+print "[STEP] Create new chromosome fasta and gff finished\n[STEP] All Finished!\n" if($verbose);
 
 ############################   END  MAIN  ############################
 
@@ -334,8 +338,6 @@ sub Search_crispr_candidate_site {
                 last if(!defined pos($cds_seq) or pos($cds_seq) >= $cds_len);
                 my $uniq_seq = substr ($crispr_seq, 8, 12); ## the first uniq base is 8 in crispr sequence
 
-                # print ">$cri_id\n$uniq_seq\n";
-
                 @{$criseq{$cri_id}} = ($gene_id, $crispr_st + $e->[0], $crispr_seq, $uniq_seq);
                 $genecri{$gene_id}{$cri_id} =  $criseq{$cri_id};
                 print FA ">$cri_id\n$uniq_seq\n";
@@ -385,7 +387,7 @@ sub Search_crispr_candidate_site {
 
     foreach my $gene (sort keys %{$frag_p->{'gene'}}) {
         $fin_number{$gene} ||= 0;
-        print "[CRISPR] Design $fin_number{$gene} CRISPR site(s) in $gene\n" if($verbose);
+        print "[CRISPR] Design $fin_number{$gene} CRISPR site(s) in $gene.\n" if($verbose);
     }
 }
 
@@ -462,10 +464,6 @@ sub Constructe_data_structure {
 
         ####### Reverse sequence
         &Reverse_gene($gene, $frag_p) if($fp->{'gene'}[2] eq '-');
-        # if($fp->{'gene'}[2] eq '-'){
-        #     print Dumper($fp);
-        #     last;
-        # }
 
         ####### CDS annotate
         my $this_code = '';
@@ -552,6 +550,7 @@ sub Init_enzyme_design_library {
         open IN, "<$input_enzyme_file" or die("Can't read file:$input_enzyme_file\n");
         while(my $line=<IN>){
             my @info = split /\s+/, $line;
+            next if($info[0]=~/^#/);
             #### EcoRI  GAATTC
             $info[2]=~s/[^ACGTMRWSYKVHDBN]//g;
 
@@ -574,7 +573,6 @@ sub Init_enzyme_design_library {
                     for (my $k = 0; $k + 2<= (length $e) - 1; $k+=3) {
                         $this_aa.= $cds_code{substr($e, $k, 3)};
                     }
-                    # print "$this_aa\t$info[0]\t$info[1]\t$new_seq\t$e\t$i\n";
                     &Init_syn_codon_from_aa('', $this_aa, $i, $info[2], $info[1], $change_method_p);
                 }
             }
@@ -603,7 +601,6 @@ sub Init_syn_codon_from_aa {
     }else{
         return 1 if(defined $change_method_p->{$enzyme_name} and defined $change_method_p->{$enzyme_name}{$codon_seq});
         my $end_pos = (length $enzyme_seq) - 1 + $shift_pos;
-        # print "$codon_seq\t|$aa_seq|\t$shift_pos\t$end_pos\t$enzyme_seq\t$enzyme_name\n";
         for my $i ($shift_pos..$end_pos) {
             my $enzyme_base = substr ($enzyme_seq, $i - $shift_pos, 1);
             if(substr ($codon_seq, $i, 1) ne $enzyme_base){
@@ -650,7 +647,7 @@ sub Create_new_enzyme_site_exon {
             my $enzyme_st = $cm->{$this_seq}[-1][0] + $i + 1;
             my $enzyme_ed = length($cm->{$this_seq}[-1][1]) + $enzyme_st - 1;
             push @{$fp->{'anno'}{'enzyme'}}, [$enzyme_st, $enzyme_ed, '+', "Parent=$gene_id;name=$enzyme_name;enzyme_seq=$cm->{$this_seq}[-1][1];status=add;"];
-            print "[Add Enzyme] successfully add $enzyme_name enzyme in $gene_id, position $enzyme_st\n" if($verbose);
+            print "[Add Enzyme] successfully add $enzyme_name enzyme in $gene_id, position $enzyme_st.\n" if($verbose);
 
             return 1;
         }
@@ -690,6 +687,7 @@ sub Break_tandem_base {
             $match_number++;
             my $change_start = $fp->{'pos'}{$match_start}{'shift'} == 1 ? $match_start + 1 : $match_start + 2;
 
+
             while($change_start <= $match_end){
                 my $this_shift = $fp->{'pos'}{$change_start}{'shift'};
                 my $this_code = $fp->{'pos'}{$change_start}{'code'};
@@ -720,7 +718,7 @@ sub Break_tandem_base {
         }
     }
 
-    $fp->{'gene'}[3].= "repeat_smash=$change_number/$match_number;"
+    $fp->{'gene'}[3].= "repeat_smash=$change_number/$match_number;";
 }
 
 #############################
@@ -798,12 +796,38 @@ sub Optimize_selected_gene {
 
                 ########### If the first syn will be better
                 if($codon_score_p->{$first_syn} > $codon_score_p->{$this_codon}){
-                    if(&Test_new_enzyme_site($g, $frag_p, \$remove_regexp, [[$i, $first_base]]) == 1 and &Substitute_frag_base($g, $i, $first_base, $frag_p, 'mutable')){
+                    if(&Test_new_enzyme_site($g, $frag_p, \$remove_regexp, [[$i, $first_base]]) == 1 and &Substitute_frag_base($g, $i, $first_base, $frag_p, 'mutable') == 1){
                         push @{$frag_p->{'gene'}{$g}{'anno'}{'codonoptimize'}}, [$i, $i, '+', "Parent=$g;origin_codon=$this_codon;optimize_codon=$first_syn;"] if($show_detail_in_gff);
                     }
                 }
             }
         }
+    }
+    return 1;
+}
+
+#############################
+#
+#     Ranking_optimize_gene
+#
+#  description
+#
+#############################
+sub Ranking_optimize_gene {
+    my ($frag_p, $codon_score_p) = @_;
+
+    foreach my $gene (keys %{$frag_p->{'gene'}}) {
+        my $codon_count = 0;
+        my $best_count = 0;
+        foreach my $cds (@{$frag_p->{'gene'}{$gene}{'anno'}{'CDS'}}) {
+            for (my $i = $cds->[0]; $i <= $cds->[1]; $i+=3) {
+                $codon_count++;
+                my $this_codon = $frag_p->{'gene'}{$gene}{'pos'}{$i}{'code'};
+                $best_count++ if($codon_score_p->{$this_codon} == 2);
+            }
+        }
+        my $best_codon_rate = sprintf "%.2f", $best_count/$codon_count;
+        $frag_p->{'gene'}{$gene}{'gene'}[3] .= "best_codon_rate=$best_codon_rate;";
     }
     return 1;
 }
@@ -899,7 +923,14 @@ sub Substitute_frag_base {
         $pp->{'change'} = substr($frag_p->{'seq'}, $pos - 1, 1) if(!defined $pp->{'change'});
 
         ########## change the codon if the pos is in CDS.
-        substr ($pp->{'code'}, $pp->{'shift'}, 1) = $new_base if($pp->{'type'} eq 'CDS');
+        if($pp->{'type'} eq 'CDS'){
+            my $this_shift = $pp->{'shift'};
+            for my $i ($pos - $this_shift..$pos + 2 - $this_shift) {
+                if(defined $frag_p->{'gene'}{$gene_id}{'pos'}{$i} and $frag_p->{'gene'}{$gene_id}{'pos'}{$i}{'type'} eq 'CDS'){
+                    substr ($frag_p->{'gene'}{$gene_id}{'pos'}{$i}{'code'}, $this_shift, 1) = $new_base;
+                }
+            }
+        }
 
         ########## modify the sequence of gene.
         substr ($frag_p->{'seq'}, $pos - 1, 1) = $new_base;

@@ -17,10 +17,11 @@
    //     			$result, $code);
        // echo json_encode($result);
     }
-    if (isset($_REQUEST['decouple']))
+    //if (isset($_REQUEST['decouple']))
     if (isset($_REQUEST['GetPrice']) && isset($_REQUEST['enzyme'])) {
     	$enzyme = $_REQUEST['enzyme'];
-  	exec("perl GetPrice/getPrice.pl -E $enzyme 2>&1", $result, $code);
+      chdir("bin");
+  	  exec("perl GetPrice/getPrice.pl -E $enzyme 2>&1", $result, $code);
     	echo json_encode($result);
     }
 ?>

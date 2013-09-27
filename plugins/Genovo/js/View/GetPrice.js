@@ -80,7 +80,7 @@
           var inputvalue = 	dojo.create("input", {
                   						id: 'enzymesValue',
                   						type: 'text',
-                  						value: 'SspI',
+                  						value: 'AatII',
                   						size: 25,
                   					});
           var inputbutton = dojo.create('button', {
@@ -97,7 +97,7 @@
           				load: function( msg ) {
           						console.log(msg);
           						that.data.items = [];
-          						msg = msg.slice(1);
+          			//			msg = msg.slice(1);
           						for ( var v in msg ) {
           							console.log(msg[v]);
           							var a = msg[v].split('\t');

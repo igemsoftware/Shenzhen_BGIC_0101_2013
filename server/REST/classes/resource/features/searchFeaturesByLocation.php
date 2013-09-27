@@ -34,7 +34,7 @@ class Resource_features_searchFeaturesByLocation extends Resource
 		//return;
 
 		if (isset($data['baseUrl']) && isset($data['refseq'])) {
-			chmod("$TopDir");
+			chdir("$TopDir");
 			$seqname = $data['refseq'];
 			$url = $data['baseUrl'];
 			$trackList = json_decode(file_get_contents($url."trackList.json"), true)['tracks'][1];

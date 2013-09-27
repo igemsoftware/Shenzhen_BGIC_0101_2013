@@ -9,8 +9,8 @@ define( [
             'dijit/Dialog',
             'dojox/form/Uploader',
             'dojox/form/uploader/plugins/IFrame',
-            './FileDialog/ResourceList',
-            './FileDialog/TrackList'
+            './FileDialog/ResourceList'//,
+    //        './FileDialog/TrackList'
         ],
         function(
             declare,
@@ -23,8 +23,8 @@ define( [
             Dialog,
             Uploaded,
             ignore,
-            ResourceList,
-            TrackList
+            ResourceList//,
+         //   TrackList
         ) {
 
 return declare( null, {
@@ -42,22 +42,7 @@ return declare( null, {
             'div', {
                 className: 'dijitDialogPaneActionBar'
             });
-
-        var disChoices = this.trackDispositionChoice = [
-            new RadioButton({ id: 'openImmediately',
-                              value: 'openImmediately',
-                              checked: true
-                            }),
-            new RadioButton({ id: 'addToTrackList',
-                              value: 'addToTrackList'
-                            })
-        ];
-
-        var aux = dom.create('div',{className:'aux'},actionBar);
-        disChoices[0].placeAt(aux);
-        dom.create('label', { "for": 'openImmediately', innerHTML: 'Open immediately' }, aux ),
-        disChoices[1].placeAt(aux);
-        dom.create('label', { "for": 'addToTrackList', innerHTML: 'Add to tracks' }, aux );
+        var that = this;
 
 
         new Button({ iconClass: 'dijitIconDelete', label: 'Cancel',
@@ -70,15 +55,10 @@ return declare( null, {
         new Button({ iconClass: 'dijitIconFolderOpen',
                      label: 'Open',
                      onClick: dojo.hitch( this, function() {
-                         openCallback && openCallback({
-                             trackConfs: this.trackList.getTrackConfigurations(),
-                             trackDisposition: this.trackDispositionChoice[0].checked ? this.trackDispositionChoice[0].value :
-                                               this.trackDispositionChoice[1].checked ? this.trackDispositionChoice[1].value :
-                                                                                        undefined
-                         });
+                    
                         // console.warn(this);
-                        this.uploader.upload({msg: window.urlData});
-                         this.dialog.hide();
+                            this.uploader.upload({msg: that.urlData });
+                            this.dialog.hide();
                      })
                    })
             .placeAt( actionBar );
@@ -94,7 +74,7 @@ return declare( null, {
         var localFilesControl   = this._makeLocalFilesControl();
         var remoteURLsControl   = this._makeRemoteURLsControl();
         var resourceListControl = this._makeResourceListControl();
-        var trackListControl    = this._makeTrackListControl();
+//        var trackListControl    = this._makeTrackListControl();
         var actionBar           = this._makeActionBar( args.openCallback, args.cancelCallback );
 
         // connect the local files control to the resource list
@@ -110,11 +90,12 @@ return declare( null, {
         });
 
         // connect the resource list to the track list
+ /* 
         dojo.connect( resourceListControl, 'onChange', function( resources ) {
   
             trackListControl.update( resources );
         });
-
+*/
         var div = function( attr, children ) {
             var d = dom.create('div', attr );
             array.forEach( children, dojo.hitch( d, 'appendChild' ));
@@ -126,7 +107,7 @@ return declare( null, {
                      [ localFilesControl.domNode, remoteURLsControl.domNode ]
                    ),
                 resourceListControl.domNode,
-                trackListControl.domNode,
+  //              trackListControl.domNode,
                 actionBar.domNode
         ];
         dialog.set( 'content', content );
@@ -186,7 +167,7 @@ return declare( null, {
                    };
         self.input = dom.create( 'textarea', {
                                      className: 'urlInput',
-                                     placeHolder: "http://paste.urls.here/example.bam",
+                                     placeHolder: "http://paste.urls.here/example.fa",
                                      cols: 25,
                                      rows: 5,
                                      spellcheck: false
@@ -227,11 +208,6 @@ return declare( null, {
     _makeResourceListControl: function () {
         var rl = new ResourceList({ dialog: this });
         return rl;
-    },
-    _makeTrackListControl: function() {
-        var tl = new TrackList({ browser: this.browser });
-        this.trackList = tl;
-        return tl;
     }
 });
 });

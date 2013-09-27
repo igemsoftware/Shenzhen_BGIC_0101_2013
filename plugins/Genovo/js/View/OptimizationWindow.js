@@ -105,6 +105,11 @@
                       url: "server/REST/index.php/NucleoMod",
                       content: content,
                       load: function( d ) {
+                        var value = that.browser.dataset_id + "_nucleo";
+                        that.genovo.updateSelectBox({
+                            value: value,
+                            label: value
+                        });
                         console.log(d);
                       }
                     });

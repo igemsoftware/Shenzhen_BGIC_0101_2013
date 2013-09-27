@@ -43,7 +43,6 @@
     //      this.height = window.screen.height*0.64;
           this.browser = args.browser;
 
-
           this.defaultContent = this._makeDefaultContent();
 
           if( ! args.content && ! args.href ) {
@@ -59,6 +58,8 @@
                 className: 'OK',
                 label: 'OK',
                 onClick: function() {
+                    var progress = dijit.byId("globalProgress").set("label", "YES, I'm whole2mega...");
+                        progress.set("indeterminate", true);
                     dojo.xhrGet({
                       url: "server/REST/index.php/Segmentation/whole2mega",
                       content: {
@@ -67,6 +68,8 @@
                         ck: dijit.byId('ck').value
                       },
                       load: function( d ) {
+                        var progress = dijit.byId("globalProgress").set("label", "Do not leave me alone, I'm whole2mega");
+                        progress.set("indeterminate", false);
                         console.log(d);
                       }
                     });

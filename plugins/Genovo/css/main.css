@@ -175,8 +175,29 @@ line.link {
 
 
 
-#draggenes { list-style-type: none; margin: 0; padding: 0;}
-#draggenes li { float:left; margin: 0; padding: 0.4em; padding-left: 0.1em; font-size: 1.4em; height: 18px; }
+#draggenes { 
+  list-style-type: none; 
+  margin: 0; 
+  padding: 0;
+}
+
+#draggenes li {
+  float:left; 
+  margin: 0.1em; 
+  padding: 0.4em; 
+  padding-left: 0.1em; 
+  font-size: 1.4em; 
+  height: 18px;
+}
+#draggenes li[anti=circle] { 
+
+  background: #33CCFF;
+}
+#draggenes li[anti=square] { 
+
+  background: #FFCC00; 
+}
+
 
 
 

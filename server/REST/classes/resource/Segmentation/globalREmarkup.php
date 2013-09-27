@@ -28,10 +28,11 @@ class Resource_Segmentation_globalREmarkup extends Resource
 						-sg $sg\
 						-re server/config/globalREmarkup/$re\
 						-ct server/config/globalREmarkup/$ct \
-						-ot {$dataUrl}02.globalREmarkup";
+						-ot {$dataUrl}02.globalREmarkup 2>&1";
 
 			exec($cmd, $result);
 			$this->_data = $cmd;
+			return;
 			chdir($dataUrl);
 			exec("git add .");
 			exec('git commit -m "02.globalREmarkup created"');

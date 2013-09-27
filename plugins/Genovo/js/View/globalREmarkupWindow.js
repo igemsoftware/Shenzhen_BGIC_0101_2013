@@ -61,6 +61,8 @@
                 className: 'OK',
                 label: 'OK',
                 onClick: function() {
+                    var progress = dijit.byId("globalProgress").set("label", "We are GlobalREmarkup");
+                        progress.set("indeterminate", true);
                     dojo.xhrGet({
                       url: "server/REST/index.php/Segmentation/globalREmarkup",
                       content: {
@@ -70,6 +72,8 @@
                         sg: dijit.byId('sg').displayedValue
                       },
                       load: function( d ) {
+                        var progress = dijit.byId("globalProgress").set("label", "GlobalREmarkup Success!");
+                        progress.set("indeterminate", false);
                         console.log(d);
                       }
                     });

@@ -110,6 +110,12 @@
                                   },
                                   handleAs: "text",
                                   load: function(d) {
+                                     // var value = new Date().getDay();
+                                      var value = that.browser.dataset_id + "_delete";
+                                      that.genovo.updateSelectBox({
+                                          value: value,
+                                          label: value
+                                      });
                                     console.log(d);
                                   }
                                 });

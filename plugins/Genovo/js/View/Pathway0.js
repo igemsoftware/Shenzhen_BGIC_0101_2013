@@ -58,6 +58,7 @@
       geneIdHash: null,
       geneRelation: null,
       LinkedTable: null,
+      genovo: null,
 
       constructor: function(args) {
           this.width = window.screen.width*0.8
@@ -66,7 +67,7 @@
                                             ;
           this.browser = args.browser;
           this.tooltip = Tooltip("vis-toolTip", 230);
-
+          this.genovo = args.genovo;
           this.defaultContent = this._makeDefaultContent();
 
           if( ! args.content && ! args.href ) {
@@ -117,45 +118,6 @@
                     label: "Good Luck",
                     stype: "right: 5em",
                     onClick: function() {
-                      /*
-                      var randomlinks = that.links.filter( function(d) {
-                          return !d.source.created && !d.target.created;
-                      })
-                      var randomnodes = that.nodes.filter( function(d) {
-                          return d.created;
-                      })
-                      for (var i = 0; i < randomStrong; ++i) {
-                        var idx1 = Math.floor(Math.random()*randomnodes.length);
-                        var idx2 = Math.floor(Math.random()*randomnodes.length);
-                        if (idx1 == idx2)
-                          continue;
-                        var tmp = randomnodes[idx1];
-                        randomnodes[idx1] = randomnodes[idx2];
-                        randomnodes[idx2] = tmp;
-                      }
-
-                      for (var i = 0; i < randomnodes.length-1; ++i) {
-                        var link = that.links.filter( function(l) {
-                            return (l.source === randomnodes[i]&&l.target === randomnodes[i+1])
-                                || (l.target === randomnodes[i]&&l.source === randomnodes[i+1]);
-                        } )[0];
-                        if (link == null) {
-                          that.links.push({
-                            source: randomnodes[i],
-                            target: randomnodes[i+1],
-                            left: false,
-                            right: true
-                          });
-                        } else {
-                          link.source = randomnodes[i];
-                          link.target = randomnodes[i+1];
-                        }
-                      }
-               
-                      that.restart();
-                      */
-                      //var arr = that.dragSource.getAllNodes();
-
 
                       that.dragSource.selectAll();
                       that.dragSource.deleteSelectedNodes();
@@ -199,8 +161,8 @@
                         var domlist = dojo.query("#draggenes li");
                         for (var i = 0; i < domlist.length; ++i) {
                           var pos = '+';
-                          var c = domlist[i].getAttribute('class').indexOf("circle");
-                          if (c == -1) {
+                          var c = domlist[i].getAttribute('anti');
+                          if (c == "circle") {
                             pos = '-';
                           }
                           geneorder.push(domlist[i].innerHTML+ " " + pos)
@@ -217,6 +179,13 @@
                               "geneorder"   : geneorder
                             },
                             load: function(d) {
+                              //var weekday = new Array("Sunday","Monday","Tuesday","Wednesday","Thursday",
+                              //          "Friday","Saturday");
+                              var value = new Date().getDay();
+                              that.genovo.updateSelectBox({
+                                  value: "NeoChr_"+value,
+                                  label: "NeoChr_"+value
+                              });
                               console.log(d);
                               progress.set("label", "Decouple Success. :)");
                               progress.set("indeterminate", false);
@@ -263,7 +232,8 @@
       var that = argv.that;
       
       return function() { 
-        var progress = dijit.byId("globalProgress").set("label", "building graph ...");
+        var progress = dijit.byId("globalProgress").set("label", 
+                                                "building graph ...");
         progress.set("indeterminate", true);
         dojo.xhrGet({
           url: "server/toolsManager.php",
@@ -273,14 +243,10 @@
             'pathway':argv.pathway
           },
           load: function( v ) {
-                          //this.catalog.clearItems();
-                       //   console.log(msg);
-            
+   
             that.species = argv.species;
             that.pathway = argv.pathway;
 
-          //  that.nodes = [];
-          //  that.links = [];
       
             for (var i = that.nodes.length-1; i>=0; i--) {
                 if (!that.nodes[i].created) {
@@ -324,10 +290,10 @@
                 && relation[i].entry1.type === "gene") {
                 var name1arr = generateGenes( relation[i].entry1.name ),
                     name2arr = generateGenes( relation[i].entry2.name );
-                for (var i in name1arr) {
-                  for (var j in name2arr) {
-                    name1 = name1arr[i];
-                    name2 = name2arr[j];
+                for (var j in name1arr) {
+                  for (var k in name2arr) {
+                    name1 = name1arr[j];
+                    name2 = name2arr[k];
 
                     if (!in_array(name1, nodes)) {
                       nodes.push({
@@ -373,16 +339,16 @@
                 }
               }
             }
-            //var nodes = msg.nodes;
-            //var links = msg.links;
-        //    var nameID = {};
+            
+            //for (var n in )
+
 
             for (var n in nodes) {
               var node = {
                   id: that.idpool++, 
                   reflexive: false,
-                  x: that.width/2+(Math.random()-1)*that.width/2, 
-                  y: that.height*0.6*Math.random(),
+                  x: Math.random()*that.width/2, 
+                  y: that.height*Math.random(),
                   geneName: nodes[n].name,
                   type: "circle"
               };
@@ -402,7 +368,8 @@
               //}
             }
             callback();
-            progress = dijit.byId("globalProgress").set("label", "Success build Graph...");
+            progress = dijit.byId("globalProgress").set("label", 
+                                            "Success build Graph...");
             progress.set("indeterminate", false);
           }
         });
@@ -464,6 +431,18 @@
                     right: true,
                     active: active
                 });
+      },
+
+      haveSameName: function( node ) {
+        for (var i in this.nodes) {
+
+          if (this.nodes[i].created ) {
+            if (node.geneName == this.nodes[i].geneName) {
+              return true;
+            }
+          }
+        }
+        return false;
       },
 
       checkLinked: function( node ) {
@@ -707,12 +686,12 @@
                 .attr('d', d3.svg.symbol().type( 
                       function(d) { //console.log(d.type); 
                         return d.type;
-                      }).size(400)
+                      }).size(300)
                 )
                 .style('fill', function(d) { 
                                // console.log( d.color + " or " + colors(d.id) );
                                 return d.color?d.color : d.color=colors(d.id);
-                                        //return (d === selected_node) ? d3.rgb(d.color).brighter().toString() : d.color; 
+                                      
                                       })
                 .style('stroke', function(d) { return d3.rgb(colors(d.id)).darker().toString(); })
                 .classed('reflexive', function(d) { return d.reflexive; })
@@ -731,8 +710,24 @@
        
                   if (d3.event.which != 1) return;
                   if (d3.event.shiftKey ) {
-
-                    d.type = d.type === "square" ?  "circle" : "square";
+                    var typeChange = d.type === "square" ?  "circle" : "square";
+                    d.type = typeChange;
+                    var domlist = dojo.query("#draggenes li");
+                    for (var i=0; i < domlist.length; ++i) {
+                      if (domlist[i].getAttribute("pid") == d.id) {
+                        domlist[i].setAttribute("anti", typeChange);
+                        break;
+                      }
+                    }
+                    //domlist[0].setAttribute("anti", "square");
+                    /*
+                    for (var i = 0; i < domlist.length; ++i) {
+                        var c = domlist[i].getAttribute('anti');
+                        if (c == "circle") {
+                          pos = '-';
+                        }
+                        geneorder.push(domlist[i].innerHTML+ " " + pos)
+                    }*/
                     restart();
                   }
                   //console.log(d3.event);
@@ -740,8 +735,12 @@
                   // select node
                   mousedown_node = d;
 
+
                   if ( mousedown_node === selected_node && !d.created) {
-                    
+                    if (that.haveSameName(selected_node)) {
+                      return;
+                    }
+
                     //if (have.length < 2) {
                     var ylen = Math.min(d.y, height-d.y);
 
@@ -756,10 +755,16 @@
                                   }
 
                       //console.log(cnode.y);
+
                     nodes.push(cnode);
                     that.checkLinked(cnode);
-                    //dojo.create("li", { innerHTML: d.geneName, class: d.type+ " "+"dojoDndItem", name: cnode.id }, dojo.byId("draggenes"));
-                    that.dragSource.insertNodes(false, [ { text: d.geneName, pid: cnode.id, class: cnode.type}]);
+                    
+                    that.dragSource.insertNodes(false, [ { 
+                            text: d.geneName, 
+                            pid: cnode.id, 
+                            //class: cnode.type,
+                            "anti": cnode.type   ////// circle mean +
+                          }]);
                      // restart();
                     //}
                   }
@@ -774,7 +779,10 @@
                   drag_line
                     .style('marker-end', 'url(#end-arrow)')
                     .classed('hidden', false)
-                    .attr('d', 'M' + mousedown_node.x + ',' + mousedown_node.y + 'L' + mousedown_node.x + ',' + mousedown_node.y);
+                    .attr('d', 'M' + mousedown_node.x 
+                                + ',' + mousedown_node.y 
+                                + 'L' + mousedown_node.x 
+                                + ',' + mousedown_node.y);
 
                   restart();
                 })
@@ -857,7 +865,10 @@
               if(!mousedown_node) return;
 
               // update drag line
-              drag_line.attr('d', 'M' + mousedown_node.x + ',' + mousedown_node.y + 'L' + d3.mouse(this)[0] + ',' + d3.mouse(this)[1]);
+              drag_line.attr('d', 'M' + mousedown_node.x 
+                                + ',' + mousedown_node.y 
+                                + 'L' + d3.mouse(this)[0] 
+                                + ',' + d3.mouse(this)[1]);
 
               restart();
             }
@@ -960,7 +971,7 @@
 
             function showDetails(d, i) {
               //console.log("asdasda");
-                content = '<p class="main">' + d.id + '</span></p>'
+                content = '<p class="main">' + that.species + '</span></p>'
                 content += '<hr class="tooltip-hr">'
                 content += '<p class="main">' + d.geneName + '</span></p>'
                 that.tooltip.showTooltip(content,d3.event)
@@ -1003,7 +1014,9 @@
                               var myLi = dojo.create( 'li', {
                                   pid: item.pid, 
                                   innerHTML: item.text, 
-                                  class: item.class});
+                                  //class: item.class
+                                  anti: item.anti
+                                });
 
                               if (hint == 'avatar') {
                                 // create your avatar if you want

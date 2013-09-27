@@ -24,7 +24,7 @@ class Resource_decouple extends Resource
 										$data['upstream_extend']:600;
 			$downstream_extend = isset($data['downstream_extend'])?
 										$data['downstream_extend']:100;
-			$output = isset($data['output'])?$data['output']:"NeoChr".date('l');
+			$output = isset($data['output'])?$data['output']:"NeoChr_".date('w');
 			$output = $output;
 
 			$cmd ="perl server/bin/02.GeneDecouple.pl".
@@ -44,9 +44,9 @@ class Resource_decouple extends Resource
 
 			$outdir = 'data/'.$output.'/';
 		  //  return;
-		    exec("php server/bin/loadfile.php \
-		    				$output $outdir \
-		    				server/tmp_data/ server/default_track_conf.json > /dev/null &", $result, $code);
+		    exec("php server/bin/loadfile.php "
+		    			."	$output $outdir "
+		    			."	server/tmp_data/ server/default_track_conf.json > /dev/null &", $result, $code);
 		    $this->_data = $result;
 		    
 		    return;

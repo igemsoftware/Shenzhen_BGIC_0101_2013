@@ -61,6 +61,8 @@
                 className: 'OK',
                 label: 'OK',
                 onClick: function() {
+                    var progress = dijit.byId("globalProgress").set("label", "mega2chunk2mini is working now...");
+                        progress.set("indeterminate", true);
                     dojo.xhrGet({
                       url: "server/REST/index.php/Segmentation/mega2chunk2mini",
                       content: {
@@ -71,6 +73,8 @@
                       },
                       load: function( d ) {
                         console.log(d);
+                        var progress = dijit.byId("globalProgress").set("label", "We are mega, remark, and .. chunk");
+                        progress.set("indeterminate", false);
                       }
                     });
                     that.hide();

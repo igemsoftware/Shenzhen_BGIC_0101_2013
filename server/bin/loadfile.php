@@ -1,7 +1,7 @@
 #!/usr/bin/php
 <?php
 			list($p, $output, $outdir, $tmpfile, $track) = $argv;
-			mkdir($outdir);
+			mkdir($outdir, 0777);
 			///echo $tmpfile;
 			//return;
 		    copy($tmpfile.$output.".fa", $outdir.$output.".fa");

@@ -90,11 +90,8 @@ return declare( null, {
                     options: [
                         { label: '<span class="ghosted">file type?</span>', value: null     },
                         { label: "GFF3",        value: "gff3"   },
-                        { label: "BigWig",      value: "bigwig" },
-                        { label: "BAM",         value: "bam"    },
-                        { label: "BAM index",   value: "bai"    },
-                        { label: "VCF+bgzip",   value: "vcf.gz" },
-                        { label: "Tabix index", value: "tbi"    }
+                        { label: "Fa",      value: "fa" },
+                        { label: "geneBank",         value: "geneBank"    }
                     ],
                     value: this.guessType( name ),
                     onChange: function() {
@@ -142,12 +139,8 @@ return declare( null, {
 
     guessType: function( name ) {
         return ( this._rememberedTypes||{} )[name] || (
-                /\.bam$/i.test( name )          ? 'bam'    :
-                /\.bai$/i.test( name )          ? 'bai'    :
-                /\.gff3?$/i.test( name )        ? 'gff3'   :
-                /\.(bw|bigwig)$/i.test( name )  ? 'bigwig' :
-                /\.vcf\.gz$/i.test( name )      ? 'vcf.gz' :
-                /\.tbi$/i.test( name )          ? 'tbi'  :
+                /\.fa$/i.test( name )          ? 'fa'    :
+                /\.gff3?$/i.test( name )        ? 'gff3':
                                                   null
         );
     }

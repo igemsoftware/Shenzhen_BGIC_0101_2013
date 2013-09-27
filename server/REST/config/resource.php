@@ -11,6 +11,7 @@ return array(
 	'/Segmentation/mega2chunk2mini' => 'Segmentation/mega2chunk2mini',
 	'/Segmentation/whole2mega' => 'Segmentation/whole2mega',
 	'/Segmentation/info'	=> 	'Segmentation/info',
-	'/CodenOptimize'	=> 'CodenOptimize',
-	'/features/delete'	=> 'features/deleteFeatures'
+	'/NucleoMod'	=> 'NucleoMod',
+	'/features/delete'	=> 'features/deleteFeatures',
+	'/stats/config' => 	'stats/config'
 );

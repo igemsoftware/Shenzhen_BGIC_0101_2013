@@ -68,7 +68,7 @@ sub Read_Gff
 		$Del_gene{$g}=1;
 	}
 
-	my ($five_UTR_end,$three_UTR_st,$three_UTR_end,$mRNA_st,$mRNA_end,$CDS_st,$CDS_end,$gene_st,$gene_end,$seq,$left_tel_st,$left_tel_end,$right_tel_st,$right_tel_end,$centr_st,$centr_end,$ars_st,$ars_end,$loxp_len);
+	my ($five_UTR_start,$five_UTR_end,$three_UTR_st,$three_UTR_end,$mRNA_st,$mRNA_end,$CDS_st,$CDS_end,$gene_st,$gene_end,$seq,$left_tel_st,$left_tel_end,$right_tel_st,$right_tel_end,$centr_st,$centr_end,$ars_st,$ars_end,$loxp_len,$decouple_site);
 	open GFF,"$Gff" || die "fail open $Gff";
 	while(my $line = <GFF>)
 	{
@@ -106,13 +106,15 @@ sub Read_Gff
 		}
 		elsif($info[2] eq 'five_prime_UTR_intron' || $info[2] eq "5'-UTR" || $info[2] eq '5UTR')
 		{
+			$five_UTR_start = $info[3] - $gene_st + 1;
 			$five_UTR_end = $info[4] - $gene_st + 1;
-			@{$Info->{$info[0]}{$gene_id}{'5UTR'}} = [1,$five_UTR_end,$info[6]];  #### TODO, should we convert the origin gff to BGI style
+			@{$Info->{$info[0]}{$gene_id}{'5UTR'}} = ($info[6] eq '+' ?  [1,$five_UTR_end,$info[6]] : [$five_UTR_start,$five_UTR_end,$info[6]]);
 		}
-		elsif($info[2] eq 'three_prime_UTR_intron' || $info[2] eq"3'-UTR" || $info[2] eq '3UTR' )
+		elsif($info[2] eq 'three_prime_UTR_intron' || $info[2] eq"3'-UTR" || $info[2] eq '3UTR')
 		{
 			$three_UTR_st = $info[3] - $gene_st + 1;
-			@{$Info->{$info[0]}{$gene_id}{'3UTR'}} = [$three_UTR_st,$gene_end,$info[6]];
+			$three_UTR_end = $info[4] - $gene_st + 1;
+			@{$Info->{$info[0]}{$gene_id}{'3UTR'}} = ($info[6] eq '+' ? [$three_UTR_st,$three_UTR_end,$info[6]] : [1,$three_UTR_end,$info[6]]);
 		}
 		elsif($info[2] eq 'gene')
 		{
@@ -121,6 +123,9 @@ sub Read_Gff
 			$gene_end = length $seq;
 			$Info->{$info[0]}{$gene_id}{'gene'} = [1,$gene_end,$info[6]];
 			$Info->{$info[0]}{$gene_id}{'seq'} = $seq;
+			$info[8] =~/display=([^;]+);?/;
+			my $function = $1;
+			$Info->{$info[0]}{$gene_id}{'function'} = $function;
 		}
 		elsif($info[2] eq 'right_telomere')
 		{
@@ -151,6 +156,11 @@ sub Read_Gff
 			$loxp_len = $info[4] - $info[3] + 1;
 			$Info->{$info[0]}{'loxPsym'}{'len'} = $loxp_len;
 			$Info->{$info[0]}{'loxPsym'}{'info'} = [$gene_id,$info[6]];
+		}
+		elsif($info[2] eq 'decouple')
+		{
+			$decouple_site = $info[3] - $gene_st;	
+			$Info->{$info[0]}{$gene_id}{'decouple'} = $decouple_site;	
 		}
 	}
 	close GFF;
@@ -215,30 +225,67 @@ sub Slim_Chr
 		my $gene_start = $accum_len + 1;
 		my $gene_end = $accum_len + $gene_len;
 		my $gene_direct = $fp->{$Gene}{'gene'}[2];
-		print NEOGFF "NeoChr\tGenovo\tgene\t$gene_start\t$gene_end\t.\t$gene_direct\t.\tID=$Gene;\n";
-#### output 5UTR annotation info
+		my $gene_func = $fp->{$Gene}{'function'};
+		print NEOGFF "NeoChr\tGenovo\tgene\t$gene_start\t$gene_end\t.\t$gene_direct\t.\tID=$Gene;display=$gene_func;\n";
 		my $five_UTR_start = $accum_len + $fp->{$Gene}{'5UTR'}[0][0];
 		my $five_UTR_end = $accum_len + $fp->{$Gene}{'5UTR'}[0][1];
-		print NEOGFF "NeoChr\tGenovo\t5UTR\t$five_UTR_start\t$five_UTR_end\t.\t$gene_direct\t.\tParent=$Gene;\n";
-#### output mRNA annotation info
+
 		my $mRNA_start = $accum_len + $fp->{$Gene}{'CDS'}[0][0];
 		my $mRNA_end = $accum_len + $fp->{$Gene}{'CDS'}[-1][1];
-		print NEOGFF "NeoChr\tGenovo\tmRNA\t$mRNA_start\t$mRNA_end\t.\t$gene_direct\t.\tParent=$Gene;\n";
-#### output gene CDS info
-		for(my $i=0;$i<@{$fp->{$Gene}{'CDS'}};$i++)
-		{
-			my $CDS_st = $accum_len + $fp->{$Gene}{'CDS'}[$i][0];
-			my $CDS_end = $accum_len + $fp->{$Gene}{'CDS'}[$i][1];
-			print NEOGFF "NeoChr\tGenovo\tCDS\t$CDS_st\t$CDS_end\t.\t$gene_direct\t.\tParent=$Gene;\n";
-		}
-#### output LoxP and 3'-UTR info
+
 		my $three_UTR_start = $accum_len + $fp->{$Gene}{'3UTR'}[0][0];
 		my $three_UTR_end = $accum_len + $fp->{$Gene}{'3UTR'}[0][1];
+
 		my $loxp_st = $three_UTR_start + 3;
 		my $loxp_end = $loxp_st + $fp->{'loxPsym'}{'len'};
 		my $loxp_name = $fp->{'loxPsym'}{'info'}[0];
-		my $loxp_direct = $fp->{'loxPsym'}{'info'}[1];
-		print NEOGFF "NeoChr\tGenovo\tloxp\t$loxp_st\t$loxp_end\t.\t$loxp_direct\t.\tID=$loxp_name;Parent=$Gene;\n";
+
+		my $decple_site;
+		if($gene_direct eq '+')
+		{
+#### output 5UTR annotation info
+			print NEOGFF "NeoChr\tGenovo\t5UTR\t$five_UTR_start\t$five_UTR_end\t.\t$gene_direct\t.\tParent=$Gene;\n";
+#### output mRNA annotation info
+			print NEOGFF "NeoChr\tGenovo\tmRNA\t$mRNA_start\t$mRNA_end\t.\t$gene_direct\t.\tParent=$Gene;\n";
+#### output gene CDS info
+			for(my $i=0;$i<@{$fp->{$Gene}{'CDS'}};$i++)
+			{
+				my $CDS_st = $accum_len + $fp->{$Gene}{'CDS'}[$i][0];
+				my $CDS_end = $accum_len + $fp->{$Gene}{'CDS'}[$i][1];
+				print NEOGFF "NeoChr\tGenovo\tCDS\t$CDS_st\t$CDS_end\t.\t$gene_direct\t.\tParent=$Gene;\n";
+			}
+#### output decouple site
+			if(exists $fp->{$Gene}{'decouple'})
+			{
+				$decple_site = $accum_len + $fp->{$Gene}{'decouple'};
+				print NEOGFF "NeoChr\tGenovo\tdecouple\t$decple_site\t$decple_site\t.\t.\t.\tParent=$Gene;\n";
+			}
+#### output LoxP and 3'-UTR info
+			print NEOGFF "NeoChr\tGenovo\tloxp\t$loxp_st\t$loxp_end\t.\t$gene_direct\t.\tID=$loxp_name;Parent=$Gene;\n";
+			print NEOGFF "NeoChr\tGenovo\t3UTR\t$three_UTR_start\t$three_UTR_end\t.\t$gene_direct\t.\tParent=$Gene;\n";
+		}else
+		{
+#### output LoxP and 3'-UTR info
+			print NEOGFF "NeoChr\tGenovo\t3UTR\t$three_UTR_start\t$three_UTR_end\t.\t$gene_direct\t.\tParent=$Gene;\n";
+			print NEOGFF "NeoChr\tGenovo\tloxp\t$loxp_st\t$loxp_end\t.\t$gene_direct\t.\tID=$loxp_name;Parent=$Gene;\n";
+#### output mRNA annotation info
+			print NEOGFF "NeoChr\tGenovo\tmRNA\t$mRNA_start\t$mRNA_end\t.\t$gene_direct\t.\tParent=$Gene;\n";
+#### output gene CDS info
+			for(my $i=0;$i<@{$fp->{$Gene}{'CDS'}};$i++)
+			{
+				my $CDS_st = $accum_len + $fp->{$Gene}{'CDS'}[$i][0];
+				my $CDS_end = $accum_len + $fp->{$Gene}{'CDS'}[$i][1];
+				print NEOGFF "NeoChr\tGenovo\tCDS\t$CDS_st\t$CDS_end\t.\t$gene_direct\t.\tParent=$Gene;\n";
+			}
+#### output decouple site
+			if(exists $fp->{$Gene}{'decouple'})
+			{
+				$decple_site = $accum_len + $fp->{$Gene}{'decouple'};
+				print NEOGFF "NeoChr\tGenovo\tdecouple\t$decple_site\t$decple_site\t.\t.\t.\tParent=$Gene;\n";
+			}
+#### output 5UTR annotation info
+			print NEOGFF "NeoChr\tGenovo\t5UTR\t$five_UTR_start\t$five_UTR_end\t.\t$gene_direct\t.\tParent=$Gene;\n";
+		}
 		$accum_len += $gene_len;
 #### output ARS
 		if($count == $half-1)
