@@ -1,6 +1,0 @@
-NeoChr	Genovo	gene	1	1687	.	+	.	ID=YAL003W;
-NeoChr	Genovo	5UTR	1	600	.	+	.	Parent=YAL003W;
-NeoChr	Genovo	mRNA	601	1587	.	+	.	Parent=YAL003W;
-NeoChr	Genovo	CDS	601	680	.	+	.	Parent=YAL003W;
-NeoChr	Genovo	CDS	1047	1587	.	+	.	Parent=YAL003W;
-NeoChr	Genovo	3UTR	1588	1687	.	+	.	Parent=YAL003W;

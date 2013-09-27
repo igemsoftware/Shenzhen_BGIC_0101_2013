@@ -1,8 +1,0 @@
-NeoChr	Genovo	left_telomere	1	689	.	+	.	ID=universal_telomere_cap_left;
-NeoChr	Genovo	gene	690	2071	.	+	.	ID=YAL004W;
-NeoChr	Genovo	5UTR	690	1289	.	+	.	Parent=YAL004W;
-NeoChr	Genovo	mRNA	1290	1937	.	+	.	Parent=YAL004W;
-NeoChr	Genovo	CDS	1290	1937	.	+	.	Parent=YAL004W;
-NeoChr	Genovo	loxp	1941	1975	.	+	.	ID=site_specific_recombination_target_region;Parent=YAL004W;
-NeoChr	Genovo	3UTR	1938	2071	.	+	.	Parent=YAL004W;
-NeoChr	Genovo	right_telomere	2072	2760	.	+	.	ID=universal_telomere_cap_right;
