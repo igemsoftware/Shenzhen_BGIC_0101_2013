@@ -4,7 +4,7 @@
 .jbrowseIconCancel,
 .jbrowseIconHighlight
 {
-    background-image: url('img/commonIconsEnabled.png');
+    background-image: url('../img/commonIconsEnabled.png');
     width: 16px;
     height: 16px;
 }
@@ -15,7 +15,7 @@
 .dijitDisabled .jbrowseIconCancel,
 .dijitDisabled .jbrowseIconHighlight
 {
-    background-image: url('img/commonIconsDisabled.png');
+    background-image: url('../img/commonIconsDisabled.png');
     width: 16px;
     height: 16px;
 }
@@ -30,7 +30,7 @@
     background-position: -170px;
 }
 .jbrowseIconBusy {
-    background-image: url('img/spinner.gif');
+    background-image: url('../img/spinner.gif');
 }
 .jbrowseIconHighlight {
     background-position: -186px;

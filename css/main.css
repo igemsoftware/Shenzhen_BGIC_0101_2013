@@ -98,7 +98,7 @@ fieldset > legend {
     width:  25px;
     top:    0px;
     right:  0px;
-    background: url("img/commonIconsEnabled.png") no-repeat -73px 6px;
+    background: url("../img/commonIconsEnabled.png") no-repeat -73px 6px;
 
     border-left: 1px inset #fcfcfc;
 }
@@ -267,7 +267,7 @@ div.overview {
     display: block;
     height: 23px;
 
-    background: #FAFAFA url(src/dijit/themes/tundra/images/titleBar.png) repeat-x top left;
+    background: #FAFAFA url(../src/dijit/themes/tundra/images/titleBar.png) repeat-x top left;
 
     border-style: solid;
     border-width: 1px 0px 1px 0px;
@@ -351,7 +351,7 @@ div.track.pinned {
 div#static_track {
     top: 0px;
     position: absolute;
-    background: #FAFAFA url(src/dijit/themes/tundra/images/titleBar.png) repeat-x top left;
+    background: #FAFAFA url(../src/dijit/themes/tundra/images/titleBar.png) repeat-x top left;
     border-top: 1px solid #999;
     border-bottom: 1px solid #444;
     z-index: 20;
@@ -523,7 +523,7 @@ div.track-label .feature-density {
     position: absolute;
     left: 8px;
     top: 7px;
-    background: url("img/spriteArrows.png") no-repeat -28px 0;
+    background: url("../img/spriteArrows.png") no-repeat -28px 0;
 }
 
 .tundra div.track-label:hover .track-menu-button:hover {
@@ -531,16 +531,16 @@ div.track-label .feature-density {
     border-left-color: #ccc;
 }
 .tundra div.track-label .track-close-button {
-    background: url("src/dijit/themes/tundra/images/tabClose.png") no-repeat 40% 50%;
+    background: url("../src/dijit/themes/tundra/images/tabClose.png") no-repeat 40% 50%;
 }
 .tundra div.track-label .track-close-button:hover {
-    background-image: url("src/dijit/themes/tundra/images/tabCloseHover.png");
+    background-image: url("../src/dijit/themes/tundra/images/tabCloseHover.png");
 }
 .tundra div.track-label:hover .track-menu-button:hover div {
     background-position-x: 0px;
 }
 div.track-label:hover {
-    background: #FAFAFA url(src/dijit/themes/tundra/images/titleBar.png) repeat-x top left;
+    background: #FAFAFA url(../src/dijit/themes/tundra/images/titleBar.png) repeat-x top left;
 
     border-width: 1px;
     border-color: #666;
@@ -570,7 +570,7 @@ div.tracklist-container.dojoDndItemSelected .tracklist-label {
 
 #trackPane {
     background: #f2f2f2;
-    background-image: url('img/tracklist_bg.png');
+    background-image: url('../img/tracklist_bg.png');
     background-repeat: repeat-y;
     background-position: right;
 }
