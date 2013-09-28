@@ -58,35 +58,97 @@ Download and install UNAFoldt and Biopython from:
 ### Any other Plugins is portable
 
 ===================================================
-## File System
+
+## Genovo Server Side Tutrorial
+
+### Folder Structure : 
 ```
-.
-   |-bin              # JBrowse's exec
-   |-build
-   |-data             # Genovo default output 
-   |-doc
-   |-extlib           # All perl 5 Library
-   |-plugins          # JBrowse defaulte plugins folder
-   |---Genovo         # Genovo plugin for JBrowse
-   |-server           # Server side for JBrowse
-   |---bin            # Server side exec
-   |-----gaspserver   # chip plugin
-   |-----GetPrice     # get enzyme's price
-   |-----segmentation # SegmMan Plugin
-   |---config         #  Genovo Server side config 
-   |-----features    
-   |-----geneset
-   |-----globalREmarkup
-   |-----markers
-   |-----Optimize
-   |---doc            # Genovo Document
-   |---lib            # Genovo library Needed
-   |---pathway        # Pathway Data need by NeoChr Plugin
-   |---REST           # Servers side REST implement
-   |---rewire         # Logic genes data for next version 
-   |---system         # REST implement
+./data/    
+   |-NeoChr_5_add          # NeoChr Plugin, name as "NeoChr_{weekday}"
+   |---01.whole2mega       # SegmMan plugin  data
+   |---02.globalREmarkup   # SegmMan plugin  data
+   |---03.mega2chunk2mini  # SegmMan plugin  data
+   |---chip_data           # chip design
+   |---names               # prefix for search
+   |---seq                 # crc32 encode refsequence  name path
+   |-----d7f
+   |-------417
+   |---------f1
+   |---tracks             # track display in browser
+   |-----gene             # track cluster
+   |-------NeoChr         # Genome Name 
+   |-----part
+   |-------NeoChr
+   |-----Transcript
+   |-------NeoChr
+```
+```
+ ./server/
+   |-bin
+   |---chip_new           # create new chip data 
+   |-----ols-pool-generation-script
+   |-------output-oligos-and-primers
+   |---GetPrice           # fetch enzyme price
+   |---segmentation       # SegmMod plugin 
+   |-config               # plugins config data
+   |---features            
+   |---geneset
+   |---globalREmarkup
+   |---markers
+   |---Optimize
+   |-doc                    # document about plugins
+   |-lib                    # library used
+   |-pathway                # pathway data used 
+   |-REST                   # end-side REST implement
+   |-------chip
+   |-------features
+   |-------modify
+   |-------Segmentation
+   |-------stats
+   |---config
+   |-rewire
+```
+
+## REST API
+```
+base_url = server/REST/index.php
+
+# output genes data by refname and pos
+GET base_url/features/SearchByLocation?refname&start&end   
+POST base_url/features/delete
+
+# output git verison control for unroll data
+GET base_url/stats/version/(?<dataset>\w+)
+
+# get pathway resource
+GET base_url/pathway/nav
+
+# create and decouple from order genelist data
+POST base_url/decouple?refname&
+
+# add loxp, centremele, ARS and so on
+POST	/modify/Add
+
+#  SegmMod plugin 
+POST 	/Segmentation/globalREmarkup
+	        /Segmentation/mega2chunk2mini
+	        /Segmentation/whole2mega
+GET  	/Segmentation/info
+	
+# Nucleo plugin
+POST     /NucleoMod
+
+# chip plugin
+POST	/chip/chip
+
+GET 	/stats/config 
+
+# for get downloadable data information
+GET /data/info
 
 ```
+
+Besides, our server side implement is flexable. User can config server side data for power usage.
 
 
 ===================================================
