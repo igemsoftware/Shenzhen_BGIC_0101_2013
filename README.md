@@ -159,7 +159,7 @@ Besides, our server side implement is flexable. User can config server side data
 
 *  1 Register the team, have a great summer, and have fun attending the Jamboree
 *  2 Create and share a description of the team's project via the iGEM wiki
-  * [Overview of project](link)
+  * [Overview of project](http://2013.igem.org/Team:Shenzhen_BGIC_0101/Home)
 * 3 Present a Poster and Talk at the iGEM Jamboree.
 * 4 Develop and make available via the The Registry of Software Tools an open source software tool that supports synthetic biology based on BioBrick standard biological parts
   * Our software in Github
@@ -187,7 +187,7 @@ Our giant software aims at operating Biobrick of device level based on synthesiz
 
 >   
 * [We have software team Shenzhen_BGIC_ATCG to use the second module to design their genes](link).
-* [SC2.0 project also try out SegmMan module on chrVII’s segmentation](link).
+* [SC2.0 project also try out SegmMan module on chrVII’s segmentation](http://2013.igem.org/Team:Shenzhen_BGIC_0101/Software).
 
 * 2 .A Outline and detail how your software effects Human Practices in Synthetic Biology.
 
@@ -197,10 +197,10 @@ Our giant software aims at operating Biobrick of device level based on synthesiz
 * Regional workshop
 
 > Innovation:
-* [We interview with core leader, Dr. Patrick Yizhi Cai and talk about Genovo’s design and application.](link)
+* [We interview with core leader, Dr. Patrick Yizhi Cai and talk about Genovo’s design and application.](http://2013.igem.org/Team:Shenzhen_BGIC_0101/Team)
  
 > Advertisement:
-* [We tried to sell our team shirts to people from BGI.](link_sell) 
+* We tried to sell our team shirts to people from BGI.
 
 * 2 .B Use SBOL in your software documentation.
 
@@ -209,8 +209,8 @@ Our giant software aims at operating Biobrick of device level based on synthesiz
 * 3 .A. Develop and document a new technical standard that supports one of the following:
 
 > Design of BioBrick Parts or Devices : 
-  * [Chromosome Design Standard](link)
-  * [Design Operation Standard](link)
+  * [Chromosome Design Standard](http://2013.igem.org/Team:Shenzhen_BGIC_0101/Software)
+  * [Design Operation Standard](http://2013.igem.org/Team:Shenzhen_BGIC_0101/Software)
 
 > Construction of BioBrick Parts or Devices : 
-  * [Assembly Strategy Standard](link)
+  * [Assembly Strategy Standard](http://2013.igem.org/Team:Shenzhen_BGIC_0101/Software)
