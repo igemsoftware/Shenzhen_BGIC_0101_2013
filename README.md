@@ -1,7 +1,7 @@
 # Genovo ##
 Welcome to Genovo World. We are Shenzhen_BGIC_0101_2013 team.
 Please step to  [project page](http://igemsoftware.github.io/Shenzhen_BGIC_0101_2013) for better view. :)
-## What we do 
+## What we do is
 * NeoChr
 
 > Neochr module would assist users to grab related genes in different pathways manually, 
