@@ -122,7 +122,7 @@
 
                       that.dragSource.selectAll();
                       that.dragSource.deleteSelectedNodes();
-        
+                  
 
                       var arr = [];
                       for (var i in that.nodes) {
@@ -169,23 +169,31 @@
                           geneorder.push(domlist[i].innerHTML+ " " + pos)
                         }
                         geneorder = geneorder.join(',');
+                        var refName = prompt("Type in Created Chr's Name",
+                                         "NeoChr");
                         var progress = dijit.byId("globalProgress").set("label", "Working on Decouple...");
                         progress.set("indeterminate", true);
+                        if (refName == null) {
+                          var day = new Date().getDay();
+                          refName = "NeoChr_".day;
+                        }
                         dojo.xhrGet({
                             url: "server/REST/index.php/decouple/",
                             handleAs: "text",
                             content: {
                               "species": that.species,
                               "pathway": that.pathway,
-                              "geneorder"   : geneorder
+                              "geneorder"   : geneorder,
+                              "neochrName": refName,
+                              "output": refName
                             },
                             load: function(d) {
                               //var weekday = new Array("Sunday","Monday","Tuesday","Wednesday","Thursday",
                               //          "Friday","Saturday");
-                              var value = new Date().getDay();
+                
                               that.genovo.updateSelectBox({
-                                  value: "NeoChr_"+value,
-                                  label: "NeoChr_"+value
+                                  value: refName,
+                                  label: refName
                               });
                               console.log(d);
                               progress.set("label", "Decouple Success. :)");

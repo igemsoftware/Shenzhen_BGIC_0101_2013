@@ -19,13 +19,13 @@ class Resource_decouple extends Resource
 			$tmpdataDir = "server/tmp_data/";
 			$species = $data['species'];
 			$geneorder = $data['geneorder'];
+			$neochr = $data['neochrName'];
 			//$geneorder = rtrim($geneorder, '\n');
 			$upstream_extend = isset($data['upstream_extend'])?
 										$data['upstream_extend']:600;
 			$downstream_extend = isset($data['downstream_extend'])?
 										$data['downstream_extend']:100;
 			$output = isset($data['output'])?$data['output']:"NeoChr_".date('w');
-			$output = $output;
 
 			$cmd ="perl server/bin/02.GeneDecouple.pl".
 						" --species $species".
@@ -34,6 +34,7 @@ class Resource_decouple extends Resource
 						" --geneset_dir $genesetDir".
 						" --upstream_extend $upstream_extend".
 						" --downstream_extend $downstream_extend".
+						" --neo_chr_name {$neochr}".
 						" --neo_chr_gff {$tmpdataDir}{$output}.gff".
 						" --neo_chr_fa  {$tmpdataDir}{$output}.fa 2>&1";
 			exec($cmd, $result, $code);

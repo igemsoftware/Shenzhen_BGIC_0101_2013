@@ -120,6 +120,7 @@ return declare( JBrowsePlugin,
 					content: {
 						dataset: browser.config.dataset_id,
 						baseUrl: browser.config.baseUrl,
+						chrname: browser.getCurrentRefSeq().name
 					},
 					handlAs: "text",
 					load: function( d ) {

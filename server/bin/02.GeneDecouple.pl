@@ -7,13 +7,23 @@ use lib "$Bin/lib";
 #use Math::Combinatorics;
 use Data::Dumper;
 
-my ($species,$gene_order,$gene_upstream_len,$gene_downstream_len,$geneset_dir,$fa_file,$gff_file,$neo_chr_fa,$neo_chr_gff,$list_format,$help);
+my $change_log=<<END;
+-version 1.3,2013-09-28
+ 1.add --neo_chr_name to set the new chromosome ID by user.
+
+-version 1.2,2013-09-26
+ 1.change the output features order when generating new chromosome gff.
+
+END
+ 
+my ($species,$gene_order,$gene_upstream_len,$gene_downstream_len,$geneset_dir,$fa_file,$gff_file,$neo_chr_name,$neo_chr_fa,$neo_chr_gff,$list_format,$help);
 my (@Ord,@tmp); 
 GetOptions(
 	'species:s'=>			\$species,
 	'gene_order:s'=>		\$gene_order,
 	'upstream_extend:i'=>	\$gene_upstream_len,
 	'downstream_extend:i'=>	\$gene_downstream_len,
+	'neo_chr_name:s'=>		\$neo_chr_name,
 	'neo_chr_gff:s'=>		\$neo_chr_gff,
 	'neo_chr_fa:s'=>		\$neo_chr_fa,
 	'geneset_dir:s'=>		\$geneset_dir,
@@ -23,9 +33,10 @@ GetOptions(
 
 $gene_upstream_len ||= 600;
 $gene_downstream_len ||= 100;
+$neo_chr_name ||= 'NeoChr';
 if ($help || !$species ||!$gene_order ||!$geneset_dir ||!$neo_chr_gff ||!$neo_chr_fa ||!$list_format)
 {
-	print STDERR "perl GeneDecouple.pl --species <species_name> --gene_order <gene_order_list> --geneset_dir <../gene_set> --upstream_extend <600> --downstream_extend <100> --neo_chr_gff <neochr.gff> --neo_chr_fa <neochr.fa>\n";
+	print STDERR "perl GeneDecouple.pl --species <species_name> --gene_order <gene_order_list> --geneset_dir <../gene_set> --upstream_extend <600> --downstream_extend <100> --neo_chr_name NeoChr --neo_chr_gff <neochr.gff> --neo_chr_fa <neochr.fa>\n";
 	exit;
 }
 
@@ -108,7 +119,7 @@ Extract_gene_fragment($fa_file, \%AnnoInfo, \%Order, \%frag, $gene_upstream_len,
 #print Dumper(\%frag);exit;
 FindOverlap(\%AnnoInfo);
 #print Dumper(\%frag);exit;
-Neo_Gff_Fasta(\@GeneOrder,\%frag,\%Order);
+Neo_Gff_Fasta(\@GeneOrder,\%frag,\%Order,$neo_chr_name, $neo_chr_gff, $neo_chr_fa);
 
 =head2 Init_aa_code
 
@@ -402,7 +413,7 @@ sub Decouple
 				$check=Synsubstitution_Check($gene2,$replace_site+1,\%frag,\%syn_aa_base);
 			}
 		}
-		$check == 0 ? print "$gene1 and $gene2 can not be decoupled in the $replace_site\n" : print "$gene1 and $gene2 are decoulped successed in the $replace_site\n";
+		$check == 0 ? print "$gene1 and $gene2 can not be decoupled in the $replace_site\n" : print "$gene1 and $gene2 are decoulped successfully in the $replace_site\n";
 	}
 
 }
@@ -613,13 +624,13 @@ Output:gff file
 =cut
 sub Neo_Gff_Fasta
 {
-	my ($GeneOrder, $frag_p, $Ord) = @_;
+	my ($GeneOrder, $frag_p, $Ord, $NeoChr, $NeoGff, $NeoFa) = @_;
 	my $accum_len = 0;
 	my $gene_seq;
 
-	open NEOGFF,">$neo_chr_gff" or die "can't open $neo_chr_gff";
-	open NEOFA,">$neo_chr_fa" or die "can't open $neo_chr_fa";
-	print NEOFA ">NeoChr\n";
+	open NEOGFF,">$NeoGff" or die "can't open $NeoGff";
+	open NEOFA,">$NeoFa" or die "can't open $NeoFa";
+	print NEOFA ">$NeoChr\n";
 
 
 	foreach my $Gene (@$GeneOrder)
@@ -642,17 +653,17 @@ sub Neo_Gff_Fasta
 			$mRNA_start=$accum_len + $fp->{'anno'}{'CDS'}[0][0];
 			$mRNA_end=$accum_len + $fp->{'anno'}{'CDS'}[-1][1];
 #### output gene annotation info
-			print NEOGFF "NeoChr\tGenovo\tgene\t$gene_start\t$gene_end\t.\t$gene_direct\t.\tID=$Gene;display=$gene_func;\n";
+			print NEOGFF "$NeoChr\tGenovo\tgene\t$gene_start\t$gene_end\t.\t$gene_direct\t.\tID=$Gene;display=$gene_func;\n";
 #### output gene 5'-UTR info
-			print NEOGFF "NeoChr\tGenovo\t5UTR\t$gene_start\t$five_UTR_end\t.\t$gene_direct\t.\tParent=$Gene;\n";
+			print NEOGFF "$NeoChr\tGenovo\t5UTR\t$gene_start\t$five_UTR_end\t.\t$gene_direct\t.\tParent=$Gene;\n";
 #### output gene mRNA info
-			print NEOGFF "NeoChr\tGenovo\tmRNA\t$mRNA_start\t$mRNA_end\t.\t$gene_direct\t.\tParent=$Gene;\n";
+			print NEOGFF "$NeoChr\tGenovo\tmRNA\t$mRNA_start\t$mRNA_end\t.\t$gene_direct\t.\tParent=$Gene;\n";
 #### output gene CDS info
 			for(my $i=0;$i<@{$fp->{'anno'}{'CDS'}};$i++)
 			{
 				my $CDS_st=$accum_len+$fp->{'anno'}{'CDS'}[$i][0];
 				my $CDS_end=$accum_len+$fp->{'anno'}{'CDS'}[$i][1];
-				print NEOGFF"NeoChr\tGenovo\tCDS\t$CDS_st\t$CDS_end\t.\t$gene_direct\t.\tParent=$Gene;\n";
+				print NEOGFF"$NeoChr\tGenovo\tCDS\t$CDS_st\t$CDS_end\t.\t$gene_direct\t.\tParent=$Gene;\n";
 			}
 #### output decouple site info
 			if(exists $fp->{'anno'}{'change'})
@@ -661,11 +672,11 @@ sub Neo_Gff_Fasta
 				foreach my $site(@{$fp->{'anno'}{'change'}})
 				{
 					my $decoup_site=$accum_len + $site;
-					print NEOGFF "NeoChr\tGenovo\tdecouple\t$decoup_site\t$decoup_site\t.\t.\t.\tParent=$Gene;\n";
+					print NEOGFF "$NeoChr\tGenovo\tdecouple\t$decoup_site\t$decoup_site\t.\t.\t.\tParent=$Gene;\n";
 				}
 			}
 #### output gene 3'-UTR info
-			print NEOGFF "NeoChr\tGenovo\t3UTR\t$three_UTR_start\t$three_UTR_end\t.\t$gene_direct\t.\tParent=$Gene;\n";
+			print NEOGFF "$NeoChr\tGenovo\t3UTR\t$three_UTR_start\t$three_UTR_end\t.\t$gene_direct\t.\tParent=$Gene;\n";
 			$accum_len+=$fp->{'len'};
 		}else
 		{
@@ -681,18 +692,18 @@ sub Neo_Gff_Fasta
 			$mRNA_start=$accum_len + ($gene_len - $fp->{'anno'}{'CDS'}[-1][1] + 1);
 			$mRNA_end=$accum_len + ($gene_len - $fp->{'anno'}{'CDS'}[0][0] + 1);
 #### output gene annotation info
-			print NEOGFF "NeoChr\tGenovo\tgene\t$gene_start\t$gene_end\t.\t$gene_direct\t.\tID=$Gene;display=$gene_func;\n";
+			print NEOGFF "$NeoChr\tGenovo\tgene\t$gene_start\t$gene_end\t.\t$gene_direct\t.\tID=$Gene;display=$gene_func;\n";
 #### output gene 3'-UTR info
-			print NEOGFF "NeoChr\tGenovo\t3UTR\t$gene_start\t$three_UTR_end\t.\t$gene_direct\t.\tParent=$Gene;\n";
+			print NEOGFF "$NeoChr\tGenovo\t3UTR\t$gene_start\t$three_UTR_end\t.\t$gene_direct\t.\tParent=$Gene;\n";
 #### output gene mRNA info
-			print NEOGFF "NeoChr\tGenovo\tmRNA\t$mRNA_start\t$mRNA_end\t.\t$gene_direct\t.\tParent=$Gene;\n";
+			print NEOGFF "$NeoChr\tGenovo\tmRNA\t$mRNA_start\t$mRNA_end\t.\t$gene_direct\t.\tParent=$Gene;\n";
 #### output gene CDS info
 			my $element_num = scalar(@{$fp->{'anno'}{'CDS'}});
 			for(my $i=$element_num-1;$i>=0;$i--)
 			{
 				my $CDS_st=$accum_len + $gene_len - $fp->{'anno'}{'CDS'}[$i][1] + 1;
 				my $CDS_end=$accum_len + $gene_len - $fp->{'anno'}{'CDS'}[$i][0] + 1;
-				print NEOGFF"NeoChr\tGenovo\tCDS\t$CDS_st\t$CDS_end\t.\t$gene_direct\t.\tParent=$Gene;\n";
+				print NEOGFF"$NeoChr\tGenovo\tCDS\t$CDS_st\t$CDS_end\t.\t$gene_direct\t.\tParent=$Gene;\n";
 			}
 #### output decouple site info
 			if(exists $fp->{'anno'}{'change'})
@@ -702,11 +713,11 @@ sub Neo_Gff_Fasta
 				foreach my $site(@{$fp->{'anno'}{'change'}})
 				{
 					my $decoup_site=$accum_len + $gene_len - $site + 1;
-					print NEOGFF "NeoChr\tGenovo\tdecouple\t$decoup_site\t$decoup_site\t.\t.\t.\tParent=$Gene;\n";
+					print NEOGFF "$NeoChr\tGenovo\tdecouple\t$decoup_site\t$decoup_site\t.\t.\t.\tParent=$Gene;\n";
 				}
 			}
 #### output gene 5'-UTR info
-			print NEOGFF "NeoChr\tGenovo\t5UTR\t$five_UTR_start\t$five_UTR_end\t.\t$gene_direct\t.\tParent=$Gene;\n";
+			print NEOGFF "$NeoChr\tGenovo\t5UTR\t$five_UTR_start\t$five_UTR_end\t.\t$gene_direct\t.\tParent=$Gene;\n";
 			$accum_len+=$fp->{'len'};
 		}
 	}

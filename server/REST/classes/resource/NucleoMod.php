@@ -59,7 +59,7 @@ class Resource_NucleoMod extends Resource
 		
 			exec("php server/bin/loadfile.php"
 						." {$dataset}_nucleo data/{$dataset}_nucleo/"
-						." server/tmp_data/ server/default_track_conf.json 2>&1", $result);
+						." server/tmp_data/ server/NucleoMod_track_conf.json 2>&1", $result);
 			$this->_data = $result;
 
 		} else {

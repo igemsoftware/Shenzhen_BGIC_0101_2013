@@ -13,6 +13,21 @@
          "key" : "centromere",
          "style": { "color": "#AA00CC" }
       },
+      
+      {
+         "feature" : [
+            "crispr"
+         ],
+         "phase" : 1,
+         "track" : "crispr",
+         "trackType": "JBrowse/View/Track/CanvasFeatures",
+         "type": "CanvasFeatures",
+         "category" : "NucleoMod",
+         "class" : "feature5",
+         "key" : "crispr",
+         "style": { "color": "#0a00CC" }
+      },
+
       {
          "feature" : [
             "right_telomere"

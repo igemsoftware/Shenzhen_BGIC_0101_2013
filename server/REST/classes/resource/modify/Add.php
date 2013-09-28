@@ -24,7 +24,7 @@ class Resource_modify_Add extends Resource
 			//return;
 			$fa = $fa[0];
 			//return;
-			
+			$chrname = $data["chrname"];
 			$cmd = "perl server/bin/04.Add.pl \
 					--loxp server/config/features/loxPsym.feat \
 					--left_telomere server/config/features/UTC_left.feat \
@@ -33,16 +33,18 @@ class Resource_modify_Add extends Resource
 					--centromere server/config/features/chromosome_I_centromere.feat \
 					--chr_gff $gff \
 					--chr_seq $fa \
-					--neochr_seq server/tmp_data/{$dataset}_add.fa \
-					--neochr_gff server/tmp_data/{$dataset}_add.gff 2>&1";
+					--chr_name $chrname \
+					--neochr_seq server/tmp_data/{$chrname}_add.fa \
+					--neochr_gff server/tmp_data/{$chrname}_add.gff 2>&1";
 			exec($cmd, $result, $code);
-			//$this->_data = $result;
+
+			$this->_data = $cmd;
 			//return;
 			exec("php server/bin/loadfile.php \
-						{$dataset}_add data/{$dataset}_add/ \
+						{$chrname}_add data/{$chrname}_add/ \
 						server/tmp_data/ server/add_track_conf.json > /dev/null &", $result);
 			$this->_data = array_merge($result, 
-							array("url"=>"data/{$dataset}_add") );
+							array("url"=>"data/{$chrname}_add") );
 
 		} else {
 			$this->_data = "unknow sequence name";
