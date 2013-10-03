@@ -13,8 +13,8 @@ to rewire genes’ relationship logically*, and to replace genes with ortholog t
 
 * SegmMan
 
-> This module will grab genes’ detail information in KEGG Makeup Language (KGML) file which can be downloaded in KEGG or get through KEGG API, and it will establish a new standard for data transmission which will convert XML format into JSON format and simplify structures. Furthermore, this module will export genes’ list and its relationships. Choose one pathway and this module will visualize the pathway and rebuild it in the level of genes.
-
+> The synthesizer or synthesis chip can up to 3kb DNA sequence with high accuracy, but chromosome is not that short.
+ SegmMan can settle this problem, it splits chromosome into 30k fragments, after parsing its exited enzyme sites, continues segmentation into 10k and 2k fragments. In 10k and 2k level, its will add vector homologous region and design enzyme sites.
 
 =============================================
 
