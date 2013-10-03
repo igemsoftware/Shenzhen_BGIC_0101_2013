@@ -1,0 +1,142 @@
+{
+   "tracks" : [
+	     {
+         "feature" : [
+            "centromere"
+         ],
+         "phase" : 1,
+         "track" : "centromere",
+         "trackType": "JBrowse/View/Track/CanvasFeatures",
+         "type": "CanvasFeatures",
+         "category" : "ADDED",
+         "class" : "feature5",
+         "key" : "centromere",
+         "style": { "color": "#AA00CC" }
+      },
+      
+      {
+         "feature" : [
+            "crispr"
+         ],
+         "phase" : 1,
+         "track" : "crispr",
+         "trackType": "JBrowse/View/Track/CanvasFeatures",
+         "type": "CanvasFeatures",
+         "category" : "NucleoMod",
+         "class" : "feature5",
+         "key" : "crispr",
+         "style": { "color": "#0a00CC" }
+      },
+
+      {
+         "feature" : [
+            "right_telomere"
+         ],
+         "phase" : 1,
+         "track" : "right_telomere",
+         "trackType": "JBrowse/View/Track/CanvasFeatures",
+         "type": "CanvasFeatures",
+         "category" : "ADDED",
+         "class" : "feature5",
+         "key" : "right_telomere",
+         "style": { "color": "#00AABB" }
+      },
+      {
+         "feature" : [
+            "left_telomere"
+         ],
+         "phase" : 1,
+         "track" : "left_telomere",
+         "trackType": "JBrowse/View/Track/CanvasFeatures",
+         "type": "CanvasFeatures",
+         "category" : "ADDED",
+         "class" : "feature5",
+         "key" : "left_telomere",
+         "style": { "color": "#00AA00" }
+      },
+      {
+         "feature" : [
+            "loxp"
+         ],
+         "phase" : 1,
+         "track" : "loxp",
+         "trackType": "JBrowse/View/Track/CanvasFeatures",
+         "type": "CanvasFeatures",
+         "category" : "ADDED",
+         "class" : "feature5",
+         "key" : "loxp",
+         "style": { "color": "#BB0000" }
+      },
+      {
+         "feature" : [
+            "ARS"
+         ],
+         "phase" : 1,
+         "track" : "ARS",
+         "trackType": "JBrowse/View/Track/CanvasFeatures",
+         "type": "CanvasFeatures",
+         "category" : "ADDED",
+         "class" : "feature5",
+         "key" : "ARS",
+         "style": { "color": "#005500" }
+      },
+      {
+         "feature" : [
+            "5UTR",
+         ],
+         "phase" : 1,
+         "track" : "5UTR",
+         "trackType": "JBrowse/View/Track/CanvasFeatures",
+         "type": "CanvasFeatures",
+         "category" : "Part",
+         "class" : "feature5",
+         "key" : "5UTR"
+      },
+      {
+         "feature" : [
+            "mRNA"
+         ],
+         "phase" : 1,
+         "track" : "mRNA",
+         "trackType": "JBrowse/View/Track/CanvasFeatures",
+         "type": "CanvasFeatures",
+         "category" : "Part",
+         "class" : "feature5",
+         "key" : "mRNA"
+      },
+      {
+         "feature" : [
+            "3UTR"
+         ],
+         "phase" : 1,
+         "track" : "part",
+         "trackType": "JBrowse/View/Track/CanvasFeatures",
+         "type": "CanvasFeatures",
+         "category" : "Part",
+         "class" : "feature5",
+         "key" : "3UTR"
+      },
+	  {
+         "track" : "Transcript",
+         "description" : 1,
+         "style": { "color": "#E32A3A" },
+         "key" : "CanvasFeatures - transcripts",
+         "trackType": "JBrowse/View/Track/CanvasFeatures",
+         "feature" : [
+            "mRNA"
+         ],
+         "category" : "Genes",
+         "subfeatures" : true
+      },
+   ],
+   "TRACK DEFAULTS" : {
+      "autocomplete" : "all",
+      "class" : "feature"
+   },
+   "db_args" : {
+      "-adaptor" : "memory",
+      "-dir" : "server/tmp_data"
+   },
+   "description" : "Uploaded file",
+   "db_adaptor" : "Bio::DB::SeqFeature::Store"
+}

@@ -35,8 +35,8 @@ class Resource_Segmentation_info extends Resource
 				$result['mini'] = $mini;
 			}
 
-			if (in_array("chip_set", $dir)) {
-				exec("ls {$dataUrl}chip_set/*", $chipjson);
+			if (in_array("chip_data", $dir)) {
+				exec("ls {$dataUrl}chip_data/*", $chipjson);
 				$result['chip'] = $chipjson;
 			}
 
