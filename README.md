@@ -41,9 +41,22 @@ Our software are totally based on JBrowse which is next-generation of GBrowse. I
  * ` Chrome, Firefox, and IE10 is recommand`
 
 ### Permissoin Requirment
+
+> You Need change apache permission by Edit /etc/apache2/envvars 
+  export APACHE_RUN_USER=`whoami`
+  export APACHE_RUN_GROUP=`whoami`
+  And 
+  sudo chown `whoami`:`whoami` /var/lock/apache2/
+  sudo /etc/init.d/apache2 restart
+
+
  `Writable data, plugin/tmp_data, server/tmp_data, jbrowse_conf.json`
 
  `Executable ./bin/  ./server/bin/  ./plugin/bin`
+
+
+### Install Genovo 
+   Copy plugins/, server/ to Jbrowse.
 
 ### Install NucleoMod Plugin
 > NucleoMod depend on Blast+, So if you use Debian based System:
